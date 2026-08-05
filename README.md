@@ -361,7 +361,9 @@ constraint.
 
 
 
-### It's what happens anywhere capital arrives faster than
+## Where this goes: India
+
+The thesis isn't American. It's what happens anywhere capital arrives faster than
 permitting capacity, and India has that gap wider than anywhere.
 
 ### India Expansion
