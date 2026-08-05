@@ -1,4 +1,4 @@
-# Deliverable, in plain English
+# Groundtruth, in plain English
 
 Read this before you record. No code. Every term is defined the first time it
 appears.

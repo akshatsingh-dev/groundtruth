@@ -1,4 +1,4 @@
-# Deliverable
+# Groundtruth
 
 Works out which air permit a data center power project needs at a specific parcel.
 When the answer is bad, it goes and finds a parcel or a plant design where it isn't.
@@ -28,6 +28,61 @@ Now ask the next question.
 Same machine. Same fuel. 34 months apart, decided by the dirt.
 
 Developers buy for power, fiber and price. They find this out at month nine.
+
+---
+
+## The problem, properly
+
+The chips exist. The money exists. The power doesn't.
+
+Morgan Stanley puts US data center need at another **68 GW between 2026 and 2028**.
+15 GW is under construction, another 15 GW is covered by available or contracted grid
+capacity. That's a **38 GW hole** before mitigations. Their base case still leaves 1 to
+11 GW short through 2028 even after gas turbines and miner conversions.
+
+Everyone announces anyway. **16 GW announced for 2026, closer to 5 GW actually on the
+ground**, once you account for permitting, grid constraints, transformer lead times
+running five years, and turbine order books full into 2030. Of ~140 tracked projects
+slated to finish in 2026, only ~5 GW was actively under construction. Sightline expects
+30 to 50% of that pipeline to slip.
+
+Then it gets blocked. Q1 2026 alone: **75 projects worth roughly $130 billion blocked or
+delayed**, matching the entire prior year in a single quarter. Active opposition groups
+went from 396 at the end of 2025 to **833 across 49 states**.
+
+Routing around the grid hits the same wall. Of ~90 GW of announced behind-the-meter
+generation across 59 projects, **2.2% is operating** and about 60% is still only an
+announcement. New Mexico's Land Commissioner denied the right-of-way for the pipeline
+feeding Project Jupiter, twice. Virginia DEQ has approved **exactly one** air permit for
+a data center campus with onsite gas.
+
+Nebius is the case worth getting right, because the ending is the interesting part. 36
+Bergen gas engines, 403 MW, Vineland NJ, under a $17.4B Microsoft deal. The NJDEP
+application stalled. It was never denied. On **20 May 2026 they abandoned combustion
+entirely** and switched to 328 MW of Bloom fuel cells. Groundtruth's config search, run
+on inputs frozen at 1 March 2026, recommends exactly that swap.
+
+Every number here is checked source by source in `docs/evidence.md`. 13 confirmed,
+5 reworded, 1 deleted as unsupported.
+
+### Musk said the quiet part on Dwarkesh
+
+Published 5 February 2026. Verbatim:
+
+> "They have to do a study for a year. A year later, they'll come back to you with their
+> interconnect study."
+
+> "The utility industry is a very slow industry. They pretty much impedance match to the
+> government, to the Public Utility Commissions."
+
+> "I think it's pretty hard to cover Nevada in solar panels. You have to get permits. Try
+> getting the permits for that. See what happens."
+
+Dwarkesh's own summary: you can't plug into the utilities because the interconnect queues
+are too long, you can't go behind the meter because turbine lead times stretch past 2030,
+and you can't do solar because of permits and tariffs.
+
+His answer was to leave the planet. This one is to find the ground that says yes.
 
 ---
 
@@ -189,31 +244,96 @@ JavaScript off.
 
 ---
 
-## What sits next to Mireye
+## What Mireye is combined with
 
-Mireye is the physical layer. Everything about the ground comes from it: parcel,
-terrain, land cover, transmission, gas, receptors, hazards. No EIA ingest, no routing
-layer, no FERC scraper. `docs/mireye-api-notes.md` has the engineering note, including
-a credit cost model that reproduces their meter exactly, 884 modelled against 884 billed.
+Mireye is the physical layer and it does all of it. Parcel, terrain, land cover,
+transmission, substation, gas pipeline, receptors, hazards, interconnection queue. No EIA
+ingest, no routing layer, no FERC scraper. `docs/mireye-api-notes.md` is the engineering
+note, including a credit cost model that reproduces their meter exactly. 884 modelled
+against 884 billed.
 
-The interesting part is what sits next to it.
+Four sources sit next to it. Three are from the contest's own list of examples.
 
-| Source | Answers | State |
-|---|---|---|
-| **EPA Green Book** *(permit databases)* | Is this county nonattainment, for what, how badly | Live. 463 designations across 245 counties, parsed out of EPA's dBASE files. There's no CSV. 171 partial-county areas flagged instead of silently applied countywide. |
-| **CourtListener / RECAP** *(court filings)* | Has this developer or county been sued | Live. Pulls *NAACP v. X.AI Corp.*, 3:26-cv-00074, N.D. Miss., cause 42:7413(b) Clean Air Act. |
-| **County posture file** | Moratoria, zoning stance, board voting history | 27 counties, entered by hand from primary sources. Every record carries a URL. |
+### Permit databases → EPA Green Book
 
-Each one changes the answer rather than decorating it. The Green Book is what moves a
-project from PSD to nonattainment NSR, which is a 50 tpy threshold instead of 100 and an
-offset market instead of a control standard. The docket search is what turned up
-*Montgomery v. DataOne USA LLC* against the developer at our own demo parcel.
+Whether a county is in nonattainment, for which pollutant, at what severity. **463
+designations across 245 counties**, parsed straight out of EPA's `nayro.dbf` and
+`areadata.dbf`. EPA publishes dBASE and BIFF, no CSV, and dBASE III is 60 lines of
+`struct.unpack`, so there's no GIS stack in this repo. 171 partial-county areas are
+flagged rather than silently applied countywide.
 
-Three more are being wired in and this table gets updated when they land, with results
-rather than intentions: Sentinel-2 construction verification, spot GPU pricing to price
-the delay in dollars, and a live local-news opposition signal.
+**What it changes:** everything. Attainment means PSD at 100 or 250 tpy. Nonattainment
+means NSR at a threshold that scales with severity, down to 10 tpy in an extreme area,
+plus LAER with no cost defense, plus offsets you have to buy from an existing source at
+up to 1.5:1. In a severe area those credits are often unavailable at any price, which is
+a hard stop rather than a delay. One field flips a project between two different worlds.
+
+### Court filings → CourtListener / RECAP
+
+Federal dockets by developer and by county. Live, not cached fixtures. Pulls
+*National Association for the Advancement of Colored People v. X.AI Corp.*,
+3:26-cv-00074, N.D. Miss., filed 14 April 2026, cause 42:7413(b) Clean Air Act.
+
+**What it changes:** it found *Montgomery v. DataOne USA LLC*, D.N.J., filed 26 May 2026,
+against the developer at our own demo parcel. Litigation adds months and signals a
+county that fights. It also caught a factual error in our own source material: the xAI
+suit is over Colossus 2 in Southaven, Mississippi, not Memphis.
+
+### Plus one that isn't on their list
+
+**A hand-entered county posture file.** 27 counties with moratoria, zoning stance and
+board voting history, entered by hand from primary sources. Not a scraper. Faster and
+more accurate at this scale, every record carries a source URL, and a county moratorium
+is a hard stop that no permit pathway routes around.
+
+### In progress
+
+Three more are being wired in. This section gets updated with results when they land, not
+before.
+
+- **Satellite imagery, Sentinel-2.** Is there a hole in the ground yet. Compares the
+  announced groundbreaking date against observable clearing on the parcel. 60% of
+  announced behind-the-meter generation exists only as an announcement, and this is how
+  you tell which 60%. Validating against xAI Memphis as a positive control, because that
+  one did get built and any method that can't see it is broken.
+- **Spot GPU pricing.** Converts a permit delay into foregone compute revenue, which is
+  the unit a fund actually underwrites in.
+- **Local news signal.** Opposition shows up in a county newspaper months before it shows
+  up in a permit denial. Being reconciled against the 27 hand-entered records to see
+  whether it reproduces postures that were verified by hand.
 
 ---
+
+## Where this goes next: India
+
+The thesis is not American. It's what happens anywhere capital arrives faster than
+permitting capacity, and India is the clearest second case.
+
+Axis Capital says India's announced targets of **6 to 8 GW by 2030 look inflated**, and
+puts the realistic figure at **3.4 to 3.6 GW** operational by mid-2030, with a downside
+case around 2.8 GW. Operational stock today is about **1.8 GW of IT load** (Savills, H1
+2026, up 36.6% year on year). **More than 10.5 GW sits in land banking**, which is the
+Indian phrasing for announced and not broken ground.
+
+The constraints rhyme but they aren't identical. Gensets from the three global brands
+that matter, Caterpillar, Cummins and MTU, are booked out two years, and they're diesel,
+which carries a different emissions and siting problem than gas. Power connections run
+about 18 months. An operator on the record: *"The 28-36 month timeline is the real story
+here. In Singapore or parts of the US you can get a facility up in 12-18 months. We're
+doing vertical builds because land is expensive and permits are a nightmare."*
+
+Same gap. Different regulator, different fuel, different failure mode.
+
+**Why the code is already shaped for it.** `providers/base.py` defines a
+`PhysicalFactsProvider` interface and `providers/mireye.py` is the US implementation of
+it. The agent, the emissions estimator and the pathway engine never import Mireye. That
+cost about twenty lines and it means going international is a data problem, not a rewrite.
+The permit logic itself is jurisdiction-specific and would need rebuilding for CPCB and
+the state pollution control boards, but the shape holds: resolve a parcel, read the
+ground, estimate emissions, work out which consent you need, search for better ground.
+
+**What's missing is the substrate.** There's no Mireye for India, and no equivalent. The
+request for one is drafted at `outputs/drafts/mireye-region-request.md`.
 
 ## Setup
 
@@ -312,3 +432,26 @@ docs/            evidence ledger, API notes, plain-English explainer, glossary.
 
 `BUILD-LOG.md` walks the whole thing end to end, including everything that turned out
 to be wrong along the way.
+
+---
+
+## Local UI
+
+```bash
+.venv/bin/python -m uvicorn ui.server:app --port 8000
+```
+
+A browser front end for driving the agent by hand. It is a client over the agent that
+already exists — it calls `Planner.run`, streams the trace, renders the assessment. No
+logic moved into it and nothing in `agent/` was restructured to serve it. The agent is the
+submission; this is a window onto it.
+
+The run is a POST that returns Server-Sent Events, so every trace step appears as it
+happens rather than after a spinner: the model stating its plan, each tool call with its
+payload, each result, then source category, threshold, attainment status, increment,
+overlays. Steps carry what they billed and cache hits are marked `0 cr`. The alternate-site
+search is held behind its own button with the candidate count and worst-case credit cost
+shown before it fires, and a refused geocode renders as a stated decision rather than an
+error. `outputs/demo/*.json` replays through the same page with no model and no credits.
+
+`ui/README.md` has the rest.

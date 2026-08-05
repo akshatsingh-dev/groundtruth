@@ -1,4 +1,4 @@
-# Deliverable
+# Groundtruth
 
 **Announced ≠ deliverable.** An agent that works out which air permit a data center
 power project needs at that exact parcel, and then goes and finds ground where the

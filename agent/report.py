@@ -8,6 +8,7 @@ All three carry the same things, in the same order:
 - the headline probability, with the model that produced it stated inline
 - the pathway and its months range
 - every trigger that fired, with its citation
+- what the delay costs in dollars, with the counterfactual stated
 - the alternate site and the delta
 - the config alternatives with their honest cost
 - a provenance appendix listing every physical fact with source, fetch
@@ -64,6 +65,27 @@ def _fired(assessment: ProjectAssessment) -> list[Trigger]:
     return assessment.pathway.fired if assessment.pathway else []
 
 
+def _economics(assessment: ProjectAssessment):
+    """The compute-economics valuation for this assessment, or None.
+
+    Memoised on the assessment because all three renderers ask for it and the
+    pricing fetch, though cached, is not free. Wrapped because a pricing source
+    going down must not take the permit assessment with it — the section
+    disappears and the rest of the report is unchanged.
+    """
+    cached = getattr(assessment, "_economics", None)
+    if cached is not None:
+        return cached[0]
+    try:
+        from . import economics
+
+        valuation = economics.value_for_assessment(assessment)
+    except Exception:
+        valuation = None
+    object.__setattr__(assessment, "_economics", (valuation,))
+    return valuation
+
+
 def _provenance_rows(assessment: ProjectAssessment) -> list[tuple[str, str, str, str, str]]:
     rows: list[tuple[str, str, str, str, str]] = []
     for key, fact in assessment.facts.facts.items():
@@ -114,7 +136,7 @@ def render_terminal(assessment: ProjectAssessment, console: Any = None) -> None:
     pathway = assessment.pathway
 
     console.print()
-    console.rule("[bold]Deliverable — project assessment")
+    console.rule("[bold]Groundtruth — project assessment")
 
     head = Text()
     head.append(f"{project.name or project.address}\n", style="bold")
@@ -200,6 +222,80 @@ def render_terminal(assessment: ProjectAssessment, console: Any = None) -> None:
         console.print(table)
         console.print(Text(f"  {est.basis['hours_basis']}", style="dim italic"))
         console.print(Text(f"  {est.basis['emission_factors']}", style="dim italic"))
+
+    # What the delay costs.
+    econ = _economics(assessment)
+    if econ is not None:
+        from .economics import usd
+
+        month = econ.month_value()
+        body = Text()
+        body.append(f"{econ.headline()}\n\n", style="bold")
+        for step in econ.chain:
+            body.append(f"  {step}\n", style="dim")
+        body.append(
+            f"\nOne month of delay here is {usd(month['likely'])} "
+            f"({usd(month['low'])} to {usd(month['high'])}).\n"
+        )
+        if econ.contracted_lease_case:
+            body.append(
+                f"At the contracted lease rate rather than spot: "
+                f"{usd(econ.contracted_lease_case.usd)}.\n",
+                style="dim",
+            )
+        body.append(f"\n{econ.rate_basis}\n", style="italic dim")
+        console.print(
+            Panel(body, title="What the delay costs", title_align="left", border_style="magenta")
+        )
+
+        # Rendered as prose rather than a table: the basis text is a paragraph
+        # each, and a four-column table squeezes it to one word per line.
+        body = Text()
+        for assumption in econ.assumptions:
+            body.append(f"{assumption.name}: ", style="bold")
+            body.append(f"{assumption.value}\n")
+            body.append(f"{assumption.basis}\n\n", style="dim")
+        console.print(
+            Panel(body, title="Assumptions behind that number", title_align="left",
+                  border_style="magenta")
+        )
+
+        caveats = Text()
+        for line in econ.counterfactual:
+            caveats.append(f"• {line}\n")
+        for line in econ.spread_drivers:
+            caveats.append(f"• {line}\n")
+        for line in econ.notes:
+            caveats.append(f"• {line}\n")
+        if econ.cross_check:
+            check = econ.cross_check
+            caveats.append(
+                f"• Cross-check against {check['contract']}: "
+                f"{usd(check['contract_usd_per_mw_year'])}/MW-year signed against "
+                f"{usd(check['implied_usd_per_mw_year_likely'])}/MW-year implied here, "
+                f"{check['ratio_likely']:.2f}x. {check['verdict']}\n"
+            )
+            caveats.append(f"• {check['high_case_note']}\n")
+        console.print(
+            Panel(caveats, title="What that number assumes", title_align="left",
+                  border_style="yellow")
+        )
+
+        if econ.mitigations:
+            table = Table(title="What recovers it", title_justify="left", expand=True)
+            table.add_column("Route", style="bold", no_wrap=True)
+            table.add_column("Months", justify="right", width=7)
+            table.add_column("Recovers", justify="right", width=10)
+            table.add_column("Detail")
+            for mitigation in econ.mitigations:
+                table.add_row(
+                    mitigation.label,
+                    f"{mitigation.months_saved:+.0f}",
+                    usd(mitigation.usd_recovered),
+                    mitigation.note,
+                    style="green",
+                )
+            console.print(table)
 
     # The act — alternate site.
     alt = assessment.alternate
@@ -387,6 +483,86 @@ def render_markdown(assessment: ProjectAssessment) -> str:
         add(f"- Controls: {est.basis['controls']}")
         add("")
 
+    econ = _economics(assessment)
+    if econ is not None:
+        from .economics import usd
+
+        month = econ.month_value()
+        add("## What the delay costs")
+        add("")
+        add(f"**{econ.headline()}**")
+        add("")
+        add(f"One month of delay at this site is {usd(month['likely'])} "
+            f"({usd(month['low'])} to {usd(month['high'])}). That is the number a screen is "
+            f"measured against, and it does not depend on guessing how long the delay runs.")
+        add("")
+        add("### The arithmetic")
+        add("")
+        for step in econ.chain:
+            add(f"- {step}")
+        add("")
+        add("| Case | Accelerators | Utilisation | $/GPU-hr | Rate basis | Foregone |")
+        add("|---|---:|---:|---:|---|---:|")
+        rows = [econ.low, econ.likely, econ.high]
+        if econ.published_list_case:
+            rows.append(econ.published_list_case)
+        if econ.contracted_lease_case:
+            rows.append(econ.contracted_lease_case)
+        for scenario in rows:
+            add(f"| {scenario.label} | {scenario.accelerators:,} | "
+                f"{scenario.utilisation:.0%} | ${scenario.usd_per_gpu_hour:.2f} | "
+                f"{scenario.rate_kind.replace('_', ' ')}, {scenario.rate_source} | "
+                f"{usd(scenario.usd)} |")
+        add("")
+        add(f"*{econ.rate_basis}. Fetched {econ.rate_fetched}.*")
+        add("")
+        add("### Assumptions")
+        add("")
+        add("| Assumption | Value | Basis |")
+        add("|---|---|---|")
+        for assumption in econ.assumptions:
+            basis = assumption.basis.replace("|", "\\|").replace("\n", " ")
+            add(f"| {assumption.name} | {assumption.value} | {basis} |")
+        add("")
+        add("### What that number assumes")
+        add("")
+        for line in econ.counterfactual:
+            add(f"- {line}")
+        add("")
+        add("What drives the spread:")
+        add("")
+        for line in econ.spread_drivers:
+            add(f"- {line}")
+        add("")
+        if econ.cross_check:
+            check = econ.cross_check
+            add("### Cross-check")
+            add("")
+            add(f"{check['contract']}: {usd(check['contract_usd'])} over "
+                f"{check['contract_years']:.0f} years for {check['contract_it_load_mw']:.0f} MW "
+                f"of IT load = **{usd(check['contract_usd_per_mw_year'])} per MW-year**.")
+            add("")
+            add(f"This valuation implies {usd(check['implied_usd_per_mw_year_likely'])} per "
+                f"MW-year, {check['ratio_likely']:.2f}x the signed rate. {check['verdict']}")
+            add("")
+            add(f"{check['high_case_note']}")
+            add("")
+            add(f"*{check['source']}*")
+            add("")
+        if econ.mitigations:
+            add("### What recovers it")
+            add("")
+            add("| Route | Months saved | Recovers | Detail |")
+            add("|---|---:|---:|---|")
+            for mitigation in econ.mitigations:
+                note = mitigation.note.replace("|", "\\|")
+                add(f"| {mitigation.label} | {mitigation.months_saved:+.0f} | "
+                    f"{usd(mitigation.usd_recovered)} | {note} |")
+            add("")
+        for note in econ.notes:
+            add(f"> {note}")
+            add("")
+
     alt = assessment.alternate
     add("## Alternate site")
     add("")
@@ -474,7 +650,10 @@ def render_markdown(assessment: ProjectAssessment) -> str:
 
 
 def to_json(assessment: ProjectAssessment, indent: int | None = 2) -> str:
-    return json.dumps(assessment.to_dict(), indent=indent, default=str)
+    payload = assessment.to_dict()
+    econ = _economics(assessment)
+    payload["compute_economics"] = econ.to_dict() if econ is not None else None
+    return json.dumps(payload, indent=indent, default=str)
 
 
 def write_json(assessment: ProjectAssessment, path: str) -> str:

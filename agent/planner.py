@@ -1,21 +1,5 @@
 """The agent loop.
 
-GUARDRAIL — read this before adding anything to this file.
-
-    This agent never takes an external-facing or irreversible action. There is
-    no email client here, no HTTP POST to a third party, no form automation, no
-    git command, no posting anywhere. The only network egress in the whole
-    package is a read against the physical-facts provider.
-
-    "Acts" in the judging criterion means acts *on the analysis* — searching
-    parcels, testing configurations, re-planning which provider calls to make.
-    It does not mean acting on the world without a human. An agent that emails
-    a county on its own is a liability, not a feature. Drafts go to
-    `outputs/drafts/` as plain files and a person decides whether to send them.
-
-    This is enforced by construction, not by a line in the system prompt. There
-    is nothing in `agent/tools.py` that can send, post, submit or commit.
-
 What this file is
 -----------------
 
@@ -316,7 +300,7 @@ class Trace:
             return
 
         console = console or Console()
-        header = f"Deliverable — agent trace · {self.mode}"
+        header = f"Groundtruth — agent trace · {self.mode}"
         if self.model:
             header += f" · {self.model}"
         console.rule(f"[bold]{header}")
@@ -353,7 +337,7 @@ class Trace:
             )
 
     def _render_plain(self) -> None:
-        print(f"=== Deliverable agent trace — {self.mode} ===")
+        print(f"=== Groundtruth agent trace — {self.mode} ===")
         for step in self.steps:
             tag = _KIND_STYLE.get(step.kind, ("", step.kind.upper()))[1]
             print(f"\n[{step.index:>2}] {tag} · {step.stage} · {step.title}  ({step.elapsed_s:.2f}s)")

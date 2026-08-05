@@ -4,3 +4,5 @@ claude-agent-sdk>=0.2  # OAuth-token path: Claude subscription, no API billing
 python-dotenv>=1.0
 rich>=13.7
 pytest>=8.0
+fastapi>=0.115  # ui/ only — the local client. Nothing in agent/ imports it.
+uvicorn>=0.30   # ui/ only

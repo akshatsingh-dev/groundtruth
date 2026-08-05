@@ -21,14 +21,10 @@ Two rules this module holds:
     tool asks Claude for a number and then believes it. `estimate_emissions`
     runs AP-42 math, `determine_pathway` runs the decision tree. The model's
     job is query planning and sequencing.
-*   **Nothing here reaches out.** No email, no POST to a third party, no form
-    submission. The only network egress is the physical-facts provider, which
-    is a read. See the guardrail note at the top of `planner.py`.
 
-The `ingest/` modules (Green Book, dockets, counties) are being written in
-parallel, so `get_regulatory_context` resolves them by duck-typing at call
-time and degrades to "not available" rather than importing something that may
-not exist yet. That keeps this file runnable today.
+`get_regulatory_context` resolves the `ingest/` modules (Green Book, dockets,
+counties) by duck-typing at call time and degrades to "not available" rather
+than failing an import. That keeps the file runnable with any subset present.
 """
 
 from __future__ import annotations
@@ -412,6 +408,73 @@ TOOL_SCHEMAS: list[dict] = [
                 "label": {"type": "string", "description": "Short name for this option."},
             },
             "required": ["config_changes"],
+        },
+    },
+    {
+        "name": "price_the_delay",
+        "description": (
+            "Turn the permit timeline into dollars. Megawatts of blocked IT load become an "
+            "accelerator count at a stated watts-per-GPU and PUE, times the delayed hours, "
+            "times utilisation, times today's spot $/GPU-hour. No credits — the pricing feed "
+            "is public and cached. Call it after determine_pathway, once you know the "
+            "timeline, and after the searches if you have run them, because it reports how "
+            "much of the loss a better config or a better parcel recovers.\n"
+            "Read the output before you quote it. It is an opportunity cost under an explicit "
+            "and generous counterfactual: that the whole blocked load would have been sold at "
+            "spot, at that utilisation, for the whole delay. An operator on a contracted lease "
+            "has a smaller number and the tool reports that case separately when a reference "
+            "contract exists for the site.\n"
+            "Two ways to get this wrong. First, double counting: if the campus is grid-"
+            "connected and the onsite plant is firming rather than the sole source, the air "
+            "permit is not blocking the whole IT load, and you must pass "
+            "plant_share_of_it_load. Second, treating the total as a forecast: spot GPU rates "
+            "move daily, so present the figure as 'at today's rate' and never as an expected "
+            "value over a multi-year delay."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "mw_it_load": {
+                    "type": "number",
+                    "description": "Megawatts of IT load, not plant nameplate. Omit and it is "
+                    "derived from the project's generation size divided by PUE, which the "
+                    "output flags as derived.",
+                },
+                "months_delayed": {
+                    "type": "number",
+                    "description": "Months of delay to price. Omit to use the negative slack "
+                    "against the announced energization date, which is the honest default.",
+                },
+                "gpu_class": {
+                    "type": "string",
+                    "description": "Accelerator class to price in. Default H100 SXM, the "
+                    "market's unit of account.",
+                },
+                "utilisation": {
+                    "type": "number",
+                    "description": "Fraction of accelerator-hours actually sold, 0-1. Omit to "
+                    "use the 60/80/92% range. Supplying it pins that axis and narrows the "
+                    "reported spread, which the output states.",
+                },
+                "rate": {
+                    "type": "number",
+                    "description": "$/GPU-hour override. Omit to use the fetched marketplace "
+                    "spot rate. A supplied rate is labelled as caller-supplied and unsourced.",
+                },
+                "pue": {
+                    "type": "number",
+                    "description": "Power usage effectiveness. Default 1.30. Ignored when both "
+                    "an IT load and a plant size are known, because the pair implies it.",
+                },
+                "plant_share_of_it_load": {
+                    "type": "number",
+                    "description": "Fraction of the IT load this permitted plant actually "
+                    "serves, 0-1. Default 1.0. Set it below 1.0 whenever the campus has grid "
+                    "service and the plant is firming — leaving it at 1.0 there overstates the "
+                    "loss by the grid-served share.",
+                },
+            },
+            "required": [],
         },
     },
     {
@@ -1080,10 +1143,29 @@ def pathway_summary(result: PathwayResult) -> dict:
 # --------------------------------------------------------------------------
 
 
+def _same_address(a: str | None, b: str | None) -> bool:
+    """Whether two address strings name the same input.
+
+    Deliberately strict. A coordinate that differs in the fifth decimal is a
+    different parcel for our purposes, and treating it as the same one is how a
+    permit answer ends up attached to the wrong county.
+    """
+    if not a or not b:
+        return False
+    return " ".join(str(a).split()).strip().lower() == " ".join(str(b).split()).strip().lower()
+
+
 def _exec_resolve_site(ctx: ToolContext, args: dict) -> dict:
     address = args.get("address") or ctx.project.address
     min_confidence = float(args.get("min_confidence", 0.8))
     project = ctx.project
+
+    # Only the announced parcel becomes ctx.site. A model exploring the map will
+    # call this on a candidate coordinate, and letting that overwrite the origin
+    # produced a report describing Cumberland County NJ's pathway under Kent
+    # County DE's name. Getting the jurisdiction wrong on an air permit answer is
+    # the exact failure this product exists to catch, so it must not happen here.
+    is_origin = ctx.site is None or _same_address(address, project.address)
 
     try:
         ctx.spend("geocode")
@@ -1092,7 +1174,7 @@ def _exec_resolve_site(ctx: ToolContext, args: dict) -> dict:
         ctx.resolved = False
         ctx.resolution_note = str(exc)
         declared = project.declared_jurisdiction()
-        if declared:
+        if declared and is_origin:
             ctx.site = SiteContext(
                 state=declared["state"],
                 county=declared["county"],
@@ -1152,16 +1234,18 @@ def _exec_resolve_site(ctx: ToolContext, args: dict) -> dict:
     state = location.state or (lookup.get("state") if lookup else None)
     fips = location.county_fips or (lookup.get("county_fips") if lookup else None)
 
-    ctx.site = SiteContext(
+    resolved_site = SiteContext(
         state=normalize_state(state, fips),
         county=normalize_county(county),
         county_fips=fips,
         latitude=location.latitude,
         longitude=location.longitude,
     )
-    fold_facts_into_site(ctx)
+    if is_origin:
+        ctx.site = resolved_site
+        fold_facts_into_site(ctx)
 
-    overlay = overlay_for(ctx.site.state)
+    overlay = overlay_for(resolved_site.state, resolved_site.county)
     return {
         "resolved": True,
         "formatted_address": location.formatted_address,
@@ -1370,6 +1454,74 @@ def _exec_test_config(ctx: ToolContext, args: dict) -> dict:
     }
 
 
+def _exec_price_the_delay(ctx: ToolContext, args: dict) -> dict:
+    from types import SimpleNamespace
+
+    from . import economics  # local import keeps the module graph acyclic
+    from .planner import energization_probability
+
+    if ctx.pathway is None:
+        raise ToolError(
+            "No pathway yet. Call determine_pathway first — the delay is priced against the "
+            "timeline that produces, not against the config."
+        )
+    gpu_class = args.get("gpu_class") or economics.DEFAULT_GPU_CLASS
+    try:
+        economics.power_for(gpu_class)
+    except KeyError as exc:
+        raise ToolError(str(exc)) from exc
+
+    months = args.get("months_delayed")
+    probability = energization_probability(ctx.project, ctx.pathway)
+    if months is None and probability.slack_months is None:
+        raise ToolError(
+            "No announced energization date, so there is no delay to price against it. Pass "
+            "months_delayed explicitly if you want the pathway's own duration valued, and say "
+            "in your conclusion that is what you priced."
+        )
+
+    valuation = economics.value_for_assessment(
+        SimpleNamespace(
+            project=ctx.project,
+            site=ctx.site,
+            pathway=ctx.pathway,
+            probability=probability,
+            configs=ctx.config_search,
+            alternate=ctx.alternate,
+        ),
+        it_load_mw=float(args["mw_it_load"]) if args.get("mw_it_load") is not None else None,
+        gpu_class=gpu_class,
+        utilisation=float(args["utilisation"]) if args.get("utilisation") is not None else None,
+        rate=float(args["rate"]) if args.get("rate") is not None else None,
+        pue=float(args["pue"]) if args.get("pue") is not None else None,
+        plant_share_of_it_load=float(args.get("plant_share_of_it_load", 1.0)),
+        months_delayed=float(months) if months is not None else None,
+    )
+    if valuation is None:
+        raise ToolError(
+            "Could not price the delay. Either no spot rate was available for this GPU class "
+            "and none was supplied, or the inputs were out of range. Do not substitute a rate "
+            "of your own — report that the delay is not priced."
+        )
+
+    out = valuation.to_dict()
+    out["cost_of_being_wrong"] = economics.cost_of_being_wrong(
+        valuation.it_load_mw,
+        gpu_class=gpu_class,
+        plant_share_of_it_load=float(args.get("plant_share_of_it_load", 1.0)),
+    )
+    out["quoting_rules"] = [
+        "Quote the likely figure with its range, never the point alone.",
+        "Say 'at today's spot rate'. It is a mark, not a forecast, and a multi-year "
+        "extrapolation of a spot GPU price is not defensible.",
+        "Say it is an opportunity cost under the counterfactual printed above, and that a "
+        "contracted lease produces a smaller number.",
+        "If the plant is not the sole power source, the figure is an upper bound until "
+        "plant_share_of_it_load is set.",
+    ]
+    return out
+
+
 def _exec_search_alternate_sites(ctx: ToolContext, args: dict) -> dict:
     from .search import search_alternate_sites  # local import keeps the module graph acyclic
 
@@ -1488,6 +1640,7 @@ EXECUTORS: dict[str, Callable[[ToolContext, dict], dict]] = {
     "estimate_emissions": _exec_estimate_emissions,
     "determine_pathway": _exec_determine_pathway,
     "test_config": _exec_test_config,
+    "price_the_delay": _exec_price_the_delay,
     "search_alternate_sites": _exec_search_alternate_sites,
     "ask_mireye": _exec_ask_mireye,
     "request_field": _exec_request_field,

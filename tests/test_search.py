@@ -195,3 +195,25 @@ def test_config_search_says_so_when_equipment_is_not_the_lever():
     result = search_configs(site, config)
     if result.best is None:
         assert any("location" in n.lower() for n in result.notes)
+
+
+# --------------------------------------------------------------------------
+# Jurisdiction drift
+# --------------------------------------------------------------------------
+
+
+def test_resolving_a_candidate_does_not_overwrite_the_announced_parcel():
+    """The model explores. It calls resolve_site on candidate coordinates.
+
+    Letting that overwrite the origin produced a report that described Cumberland
+    County NJ's pathway under Kent County DE's name: the right answer attached to
+    the wrong jurisdiction. That is the exact failure this product exists to
+    catch, so it must not happen inside it.
+    """
+    from agent.tools import _same_address
+
+    assert _same_address("39.4862,-75.0257", "39.4862,-75.0257")
+    assert _same_address(" 39.4862,-75.0257 ", "39.4862,-75.0257")
+    assert not _same_address("39.4862,-75.0257", "39.1000,-75.7248")
+    assert not _same_address("39.4862,-75.0257", None)
+    assert not _same_address(None, None)

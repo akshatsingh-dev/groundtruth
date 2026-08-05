@@ -1,5 +1,5 @@
-# This UI is a local client over the agent in agent/: it calls the agent and renders what comes back. No permitting logic lives here, nothing in agent/ was restructured to serve it, and it is not the deliverable.
-"""Local web UI for the Deliverable agent.
+# This UI is a local client over the agent in agent/: it calls the agent and renders what comes back. No permitting logic lives here, nothing in agent/ was restructured to serve it, and the agent is the submission, not this page.
+"""Local web UI for the Groundtruth agent.
 
 Start it:
 
@@ -370,11 +370,15 @@ PRESETS = [
         "target": "2027-12-01",
     },
     {
-        "id": "ellis",
-        "name": "Ellis County, TX",
+        # The counterexample the README runs on. Ellis County was the old one and
+        # it is wrong — Ellis sits in the Dallas-Fort Worth severe-15 ozone area,
+        # so the same plant lands on major nonattainment NSR with an offset hard
+        # stop. Anderson County is the Texas parcel that is actually fast.
+        "id": "anderson",
+        "name": "Anderson County, TX",
         "subtitle": "Same machine, Texas dirt.",
-        "address": "32.3865,-96.8484",
-        "county": "Ellis",
+        "address": "31.8413,-95.6617",
+        "county": "Anderson",
         "state": "TX",
         "mw": 500,
         "prime_mover": PrimeMover.COMBINED_CYCLE_TURBINE.value,
@@ -555,7 +559,7 @@ def _alternate_payload(result: AlternateSiteSearchResult) -> dict:
 # App
 # --------------------------------------------------------------------------
 
-app = FastAPI(title="Deliverable — local client")
+app = FastAPI(title="Groundtruth — local client")
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 _LAST: dict[str, Any] = {}
@@ -748,7 +752,7 @@ async def run(req: RunRequest):
         finally:
             done.set()
 
-    threading.Thread(target=worker, name="deliverable-run", daemon=True).start()
+    threading.Thread(target=worker, name="groundtruth-run", daemon=True).start()
 
     async def stream():
         try:
@@ -865,7 +869,7 @@ async def alternate(req: AlternateRequest):
             _ALLOW_ALTERNATE.clear()
             done.set()
 
-    threading.Thread(target=worker, name="deliverable-alt", daemon=True).start()
+    threading.Thread(target=worker, name="groundtruth-alt", daemon=True).start()
 
     async def stream():
         try:

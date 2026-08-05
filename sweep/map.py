@@ -1074,7 +1074,7 @@ text{{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}}
 </g>
 {''.join(swatches)}
 <text class="cap" x="120" y="{caption_y}">Screening layer, county resolution. It cannot see parcel-level PSD increment, terrain, or pipeline distance &#8212; the parcel run is the real answer.</text>
-<text class="cap" x="120" y="{caption_y + 170}">Sources: EPA Green Book nonattainment designations, 2025 Census cartographic boundaries, AP-42 emission factors, 40 CFR 51/52. Built with Deliverable.</text>
+<text class="cap" x="120" y="{caption_y + 170}">Sources: EPA Green Book nonattainment designations, 2025 Census cartographic boundaries, AP-42 emission factors, 40 CFR 51/52. Built with Groundtruth.</text>
 </svg>
 """
 

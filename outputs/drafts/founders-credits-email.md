@@ -19,7 +19,7 @@ I'm building for the Build Challenge, signed up on the Build tier with code BUIL
 You said to email if we needed room to work, so here are real numbers rather than
 a vague ask.
 
-The entry is called Deliverable. It works out which air permit a data center power
+The entry is called Groundtruth. It works out which air permit a data center power
 project needs at a specific parcel, and when the answer is bad it searches outward
 for a parcel or a generation config where the answer flips. Announced ≠ deliverable.
 

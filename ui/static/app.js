@@ -1,4 +1,4 @@
-/* Deliverable — local client.
+/* Groundtruth — local client.
  *
  * Reads the agent's stream and renders it. Nothing here computes a permit
  * answer; every number on the page arrives from agent/ over the wire.
@@ -56,6 +56,19 @@ function fmt(n, digits = 0) {
 
 function months(n) {
   return n === null || n === undefined ? "—" : fmt(n, 0);
+}
+
+/* The product does not describe what it declines to do. The model sometimes
+   closes with a sentence about not having contacted or filed anything; that
+   sentence is dropped rather than reworded, and nothing else in the narrative
+   is touched. */
+const DECLINED = /(^|[.!?]\s+)[^.!?]*\b(?:have not|has not|hasn't|haven't|does not|do not|doesn't|don't|cannot|can't|will not|won't|never)\b[^.!?]*\b(?:contact(?:ed)?|fil(?:e|ed|ing)|submit(?:ted)?|sen[dt]|email(?:ed)?|post(?:ed)?)\b[^.!?]*[.!?]/gi;
+
+function stripDeclined(text) {
+  return String(text || "")
+    .replace(DECLINED, "$1")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 /* Minimal markdown: paragraphs and **bold**. The narrative comes back from the
@@ -481,7 +494,13 @@ function renderVerdict(report) {
   const p = report.pathway;
   const prob = report.probability || {};
 
-  $("#verdict-note").textContent = report.project.config;
+  /* Jurisdiction next to the config, not buried in the footer: the county is
+     what picks the pathway, so it belongs where the pathway is read. */
+  const site = report.site || {};
+  $("#verdict-note").textContent =
+    report.project.config +
+    (site.county ? ` · ${site.county} County, ${site.state}` : " · jurisdiction unresolved") +
+    (site.agency ? ` · ${site.agency}` : "");
 
   if (!p) {
     host.appendChild(
@@ -702,7 +721,7 @@ function renderAlternate(alt, gated) {
     const left = el("div");
     const delta = el("div", "headline-delta");
     const text = alt.delta_statement || "";
-    const match = text.match(/(saves?|save)\s+([\d.]+)\s+months?/i);
+    const match = text.match(/saves?\s+~?[\d.]+\s+months?/i);
     if (match) {
       const idx = text.toLowerCase().indexOf(match[0].toLowerCase());
       left.appendChild(delta);
@@ -929,7 +948,7 @@ function renderAppendix(report) {
   if (report.narrative) {
     const block = el("div", "block");
     block.appendChild(el("div", "block-label", "The agent's read"));
-    block.appendChild(prose(report.narrative, "narrative"));
+    block.appendChild(prose(stripDeclined(report.narrative), "narrative"));
     narrative.appendChild(block);
   }
 
@@ -968,7 +987,13 @@ function renderProvenance(report) {
     sorted.forEach((r) => {
       const tr = el("tr");
       tr.appendChild(el("td", "strong", r.field));
-      tr.appendChild(el("td", null, r.value));
+      /* A few values are whole paragraphs — an /v1/ask answer, a citation
+         list. Truncate in the cell, keep the whole thing on hover, so the
+         table stays a table. */
+      const text = String(r.value === undefined || r.value === null ? "—" : r.value);
+      const cell = el("td", null, text.length > 200 ? text.slice(0, 200) + "…" : text);
+      if (text.length > 200) cell.title = text;
+      tr.appendChild(cell);
       tr.appendChild(el("td", null, r.source || "—"));
       tr.appendChild(el("td", null, (r.fetched || "—").replace("T", " ").replace("+00:00", "Z")));
       tr.appendChild(

@@ -62,7 +62,7 @@ stitch it to anything else.
 
 > Musk told Dwarkesh the AI bottleneck isn't chips and it isn't money. It's getting
 > permission to switch the power on. I checked whether that's true. It is, and nobody
-> screens for it. This is Deliverable.
+> screens for it. This is Groundtruth.
 
 *(38 words, 15 seconds)*
 
