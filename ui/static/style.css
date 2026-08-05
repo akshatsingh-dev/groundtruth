@@ -562,13 +562,17 @@ input:hover, select:hover { border-color: var(--rule-strong); }
 
 .range-track {
   position: relative;
-  height: 8px;
-  border-bottom: 1px solid var(--rule-strong);
+  height: 14px;
+  /* End caps: the axis is bounded, and the bounds are real numbers. */
+  border-left: 1px solid var(--ink-3);
+  border-right: 1px solid var(--ink-3);
 }
 
-.range-span {
+.range-fill {
   position: absolute;
-  top: 3px;
+  left: 0;
+  right: 0;
+  top: 6px;
   height: 2px;
   background: var(--ink-4);
 }
@@ -576,23 +580,32 @@ input:hover, select:hover { border-color: var(--rule-strong); }
 .range-mark {
   position: absolute;
   top: 0;
-  width: 2px;
-  height: 8px;
-  background: var(--ink-2);
+  width: 3px;
+  height: 14px;
+  margin-left: -1px;
+  background: var(--ink);
 }
 
-.range-likely { background: var(--ink); height: 12px; top: -2px; }
 .sev-crit .range-likely { background: var(--crit); }
 .sev-warn .range-likely { background: var(--warn); }
 .sev-good .range-likely { background: var(--good); }
 
 .range-scale {
+  position: relative;
   display: flex;
   justify-content: space-between;
   font-size: 10.5px;
   color: var(--ink-4);
-  padding-top: 3px;
+  padding-top: 4px;
   font-variant-numeric: tabular-nums;
+}
+
+.range-likely-label {
+  position: absolute;
+  top: 4px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: var(--ink-2);
 }
 
 .hardstop {

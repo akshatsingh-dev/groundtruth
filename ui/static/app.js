@@ -549,30 +549,27 @@ function renderVerdict(report) {
   });
 }
 
-/* Low ── likely ── high. One row, one axis, no decoration. */
+/* One axis, running optimistic → pessimistic, with the likely month marked at
+   its true position between them. No zero baseline: the number that matters is
+   where "likely" sits inside the spread, not its distance from nothing. */
 function rangeMeter(low, likely, high) {
   const wrap = el("div", "range");
+  const spread = Math.max(high - low, 0.0001);
+  const raw = ((likely - low) / spread) * 100;
+  const at = Math.max(0, Math.min(100, raw));
+
   const track = el("div", "range-track");
-  const max = Math.max(high * 1.05, 12);
-  const pct = (v) => `${Math.max(0, Math.min(100, (v / max) * 100))}%`;
-
-  const span = el("div", "range-span");
-  span.style.left = pct(low);
-  span.style.width = `calc(${pct(high)} - ${pct(low)})`;
-  track.appendChild(span);
-
-  [["range-mark", low], ["range-mark range-likely", likely], ["range-mark", high]].forEach(
-    ([cls, v]) => {
-      const mark = el("div", cls);
-      mark.style.left = pct(v);
-      track.appendChild(mark);
-    }
-  );
+  track.appendChild(el("div", "range-fill"));
+  const mark = el("div", "range-mark range-likely");
+  mark.style.left = `${at}%`;
+  track.appendChild(mark);
   wrap.appendChild(track);
 
   const scale = el("div", "range-scale");
   scale.appendChild(el("span", null, `${months(low)} optimistic`));
-  scale.appendChild(el("span", null, `${months(likely)} likely`));
+  const mid = el("span", "range-likely-label", `${months(likely)} likely`);
+  mid.style.left = `${Math.max(14, Math.min(86, at))}%`;
+  scale.appendChild(mid);
   scale.appendChild(el("span", null, `${months(high)} pessimistic`));
   wrap.appendChild(scale);
   return wrap;

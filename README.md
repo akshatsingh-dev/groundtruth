@@ -191,14 +191,27 @@ JavaScript off.
 
 ## What sits next to Mireye
 
-| Source | Answers | Result |
-|---|---|---|
-| **EPA Green Book** | Is this county nonattainment, for what, how badly | 463 designations across 245 counties, parsed out of EPA's dBASE files. There's no CSV. 171 partial-county areas flagged instead of silently applied countywide. |
-| **CourtListener / RECAP** | Has this developer or county been sued | Live. Pulls *NAACP v. X.AI Corp.*, 3:26-cv-00074, N.D. Miss. |
+Mireye is the physical layer. Everything about the ground comes from it: parcel,
+terrain, land cover, transmission, gas, receptors, hazards. No EIA ingest, no routing
+layer, no FERC scraper. `docs/mireye-api-notes.md` has the engineering note, including
+a credit cost model that reproduces their meter exactly, 884 modelled against 884 billed.
 
-Everything physical is Mireye. No EIA ingest, no routing layer, no FERC scraper.
-`docs/mireye-api-notes.md` has the engineering note, including a credit cost model
-that reproduces their meter exactly. 884 modelled against 884 billed.
+The interesting part is what sits next to it.
+
+| Source | Answers | State |
+|---|---|---|
+| **EPA Green Book** *(permit databases)* | Is this county nonattainment, for what, how badly | Live. 463 designations across 245 counties, parsed out of EPA's dBASE files. There's no CSV. 171 partial-county areas flagged instead of silently applied countywide. |
+| **CourtListener / RECAP** *(court filings)* | Has this developer or county been sued | Live. Pulls *NAACP v. X.AI Corp.*, 3:26-cv-00074, N.D. Miss., cause 42:7413(b) Clean Air Act. |
+| **County posture file** | Moratoria, zoning stance, board voting history | 27 counties, entered by hand from primary sources. Every record carries a URL. |
+
+Each one changes the answer rather than decorating it. The Green Book is what moves a
+project from PSD to nonattainment NSR, which is a 50 tpy threshold instead of 100 and an
+offset market instead of a control standard. The docket search is what turned up
+*Montgomery v. DataOne USA LLC* against the developer at our own demo parcel.
+
+Three more are being wired in and this table gets updated when they land, with results
+rather than intentions: Sentinel-2 construction verification, spot GPU pricing to price
+the delay in dollars, and a live local-news opposition signal.
 
 ---
 
