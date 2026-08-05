@@ -15,10 +15,10 @@ disclosed rather than hidden behind alphabetical order.
 | Days | County | Pathway | Why |
 |---:|---|---|---|
 | 609 | Brewster, TX (+233 tied in TX) | Major PSD | State air toxics program on top of federal HAP (+2 mo); Title V operating permit |
-| 694 | Ashtabula, OH (+87 tied in OH) | Major PSD | Title V operating permit; NSPS KKKK — the Jan 2026 turbine rule closed the fast path |
-| 730 | Yukon-Koyukuk, AK (+28 tied in AK) | Major PSD | Title V operating permit; NSPS KKKK — the Jan 2026 turbine rule closed the fast path |
-| 730 | Nye, NV (+15 tied in NV) | Major PSD | Title V operating permit; NSPS KKKK — the Jan 2026 turbine rule closed the fast path |
-| 730 | Harney, OR (+34 tied in OR) | Major PSD | Title V operating permit; NSPS KKKK — the Jan 2026 turbine rule closed the fast path |
+| 694 | Ashtabula, OH (+87 tied in OH) | Major PSD | Title V operating permit; NSPS KKKK/KKKKa — the trailer-mounted fast path is unsettled, not closed |
+| 730 | Yukon-Koyukuk, AK (+28 tied in AK) | Major PSD | Title V operating permit; NSPS KKKK/KKKKa — the trailer-mounted fast path is unsettled, not closed |
+| 730 | Nye, NV (+15 tied in NV) | Major PSD | Title V operating permit; NSPS KKKK/KKKKa — the trailer-mounted fast path is unsettled, not closed |
+| 730 | Harney, OR (+34 tied in OR) | Major PSD | Title V operating permit; NSPS KKKK/KKKKa — the trailer-mounted fast path is unsettled, not closed |
 
 ### Slowest five
 

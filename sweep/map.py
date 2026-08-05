@@ -381,7 +381,7 @@ _TRIGGER_LABELS = {
     "ej_denial_authority": "State can deny on environmental justice grounds",
     "state_toxics": "State air toxics program on top of federal HAP",
     "title_v": "Title V operating permit",
-    "nsps_turbine": "NSPS KKKK — the Jan 2026 turbine rule closed the fast path",
+    "nsps_turbine": "NSPS KKKK/KKKKa — the trailer-mounted fast path is unsettled, not closed",
     "nsps_rice": "NSPS IIII/JJJJ and NESHAP ZZZZ",
     "county_moratorium": "County data center moratorium",
     "zoning_posture": "County has denied recent data center applications",
