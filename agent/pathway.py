@@ -753,12 +753,19 @@ def determine_pathway(est: EmissionsEstimate, site: SiteContext) -> PathwayResul
             Trigger(
                 "nsps_turbine",
                 True,
-                "NSPS Subpart KKKK applies to new stationary combustion turbines. As of the EPA "
-                "rule published 15 January 2026 (91 Fed. Reg. 1910), a turbine providing primary "
-                "power at a fixed site needs Clean Air Act permits whether or not it is trailer "
-                "mounted — the 'nonroad engine' reading that let xAI energise in weeks is closed. "
-                "Assume no fast path.",
-                "40 CFR 60 Subpart KKKK; 91 Fed. Reg. 1910 (15 Jan 2026)",
+                "NSPS Subpart KKKK applies, and EPA's 15 January 2026 rule (91 Fed. Reg. 1910) "
+                "added Subpart KKKKa. That rule did not settle the trailer-mounted question, and "
+                "it did not settle it in the direction most coverage claims. It finalised a "
+                "conditional exclusion removing turbines from the 'stationary combustion turbine' "
+                "definition where the unit qualifies as a nonroad engine and is certified under "
+                "Title II. The exclusion is not operative: it takes effect only if EPA adopts "
+                "Title II standards for portable turbines, a separate rulemaking that has not "
+                "happened. Meanwhile the NAACP is asking a federal court in Mississippi to shut "
+                "down 27 unpermitted turbines at xAI's Colossus 2, with a preliminary injunction "
+                "hearing set for late August 2026. Underwriting a trailer-mounted fast path today "
+                "means underwriting an open legal question, not a loophole.",
+                "40 CFR 60 Subpart KKKK and new Subpart KKKKa; 91 Fed. Reg. 1910 (15 Jan 2026); "
+                "NAACP v. xAI (N.D. Miss.), PI hearing late Aug 2026",
             )
         )
     elif config.prime_mover in (PrimeMover.RECIP_LEAN_BURN, PrimeMover.RECIP_RICH_BURN, PrimeMover.DIESEL_RECIP):

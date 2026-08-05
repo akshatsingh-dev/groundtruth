@@ -1,0 +1,77 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/lookup",
+    "body": {
+      "input": "21571 Beaumeade Cir, Ashburn, VA 20147",
+      "include_parcel": true
+    }
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "seconds": 1.25,
+  "response_headers": {
+    "fly-request-id": "01KZ8KRHTM25TS186J8T6ANSWC-sjc",
+    "x-request-id": "req_d5159a1b006c"
+  },
+  "response": {
+    "disposition": "resolved",
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+    "resolved_location": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "source": "address"
+    },
+    "county_fips": "51107",
+    "county": "Loudoun County",
+    "tract_geoid": "51107611006",
+    "state_fips": "51",
+    "state": "Virginia",
+    "block_group_geoid": "511076110061",
+    "block_geoid": "511076110061014",
+    "congressional_district": "VA-10",
+    "cbsa_name": "Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area",
+    "cbsa_code": "47900",
+    "elevation_m": 75.96440124511719,
+    "fema_flood_zone": "X",
+    "within_floodplain": false,
+    "coastal_high_hazard": false,
+    "county_market": {
+      "population": 449749,
+      "population_growth_1yr_pct": 1.3521,
+      "net_domestic_migration": -142,
+      "building_permits_total_annual": 1561,
+      "building_permits_sf_annual": 641,
+      "building_permits_yoy_pct": -52.8968,
+      "hpi_yoy_pct": 6.87,
+      "employment_total": 204885,
+      "employment_yoy_pct": 3.4183,
+      "median_household_income_usd": 178707
+    },
+    "in_opportunity_zone": false,
+    "timezone": "America/New_York",
+    "parcel": {
+      "parcel_id": "c3ac3375-bcd3-49d1-a74f-dca89793d948",
+      "apn": "060202337000",
+      "address": "21571 BEAUMEADE CIR",
+      "area_m2": 57288.75638380647,
+      "geometry": "{\"type\":\"Polygon\",\"coordinates\":[[[-77.453279,39.0207205],[-77.4529655,39.020521],[-77.451291,39.0221215],[-77.4536065,39.023514],[-77.455313,39.021045],[-77.455293,39.021038],[-77.4552715,39.0210335],[-77.4552495,39.0210315],[-77.4552275,39.021032],[-77.455206,39.0210355],[-77.4550735,39.021061],[-77.454939,39.0210795],[-77.4548035,39.0210915],[-77.4546675,39.0210965],[-77.454531,39.021095],[-77.454395,39.0210865],[-77.4542605,39.0210715],[-77.454127,39.0210495],[-77.4539955,39.021021],[-77.4538665,39.0209865],[-77.453741,39.020945],[-77.453619,39.0208975],[-77.453501,39.0208445],[-77.4533875,39.0207855],[-77.453279,39.0207205]]]}",
+      "geometry_wkt": "POLYGON((-77.453279 39.0207205, -77.4529655 39.020521, -77.451291 39.0221215, -77.4536065 39.023514, -77.455313 39.021045, -77.455293 39.021038, -77.4552715 39.0210335, -77.4552495 39.0210315, -77.4552275 39.021032, -77.455206 39.0210355, -77.4550735 39.021061, -77.454939 39.0210795, -77.4548035 39.0210915, -77.4546675 39.0210965, -77.454531 39.021095, -77.454395 39.0210865, -77.4542605 39.0210715, -77.454127 39.0210495, -77.4539955 39.021021, -77.4538665 39.0209865, -77.453741 39.020945, -77.453619 39.0208975, -77.453501 39.0208445, -77.4533875 39.0207855, -77.453279 39.0207205))",
+      "owner": "MONTEREY DC ASSETS LLC",
+      "zoning": "IP",
+      "land_use": "Data Center",
+      "assessed_value_usd": 81269500.0,
+      "last_sale_date": "2020-01-16",
+      "last_sale_price_usd": 52820000.0,
+      "match_type": "exact_intersect",
+      "match_distance_m": 0.0,
+      "match_radius_m": 0.0,
+      "source": "regrid_paid"
+    },
+    "parcel_unavailable": false,
+    "match_method": "geocode_rooftop+point_in_parcel",
+    "confidence": 0.95
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/geocode",
+    "body": {
+      "address": "Ashburn, VA"
+    }
+  },
+  "http_status": 404,
+  "credits_charged": 0,
+  "seconds": 0.7,
+  "response_headers": {
+    "fly-request-id": "01KZ8KPC1VG4QKGFT6YH6JPJPN-sjc",
+    "x-request-id": "req_c0994c25b00c"
+  },
+  "response": {
+    "detail": {
+      "error": "address_too_coarse",
+      "message": "resolved only to place, which is not specific enough to identify a property",
+      "retryable": false
+    }
+  }
+}

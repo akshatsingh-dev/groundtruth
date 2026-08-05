@@ -1,0 +1,67 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/fetch",
+    "body": {
+      "address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+      "fields": [
+        "parcel_id",
+        "parcel_area_m2"
+      ]
+    }
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "seconds": 0.04,
+  "response_headers": {
+    "fly-request-id": "01KZ8KX3PEW20EFW70SRE9MRV3-sjc",
+    "x-request-id": "req_feb29fd8ae7c"
+  },
+  "response": {
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "fetched_at": "2026-08-05T09:26:05.796328+00:00",
+    "fields": {
+      "parcel_id": {
+        "value": "c3ac3375-bcd3-49d1-a74f-dca89793d948",
+        "unit": null,
+        "source": "REGRID",
+        "source_url": "https://app.regrid.com/api/v2/parcels/point",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:23:37.552468+00:00",
+        "dataset_vintage": "2026-03-24",
+        "ttl_seconds": 86400,
+        "notes": "Regrid exact point lookup; point intersects returned parcel. Regrid freshness metadata: last_refresh=2026-03-24; updated_at=2026-06-06 05:01:43 -0400; last_ownership_transfer_date=2020-01-16; saledate=2020-01-16.",
+        "status": "ok"
+      },
+      "parcel_area_m2": {
+        "value": 57288.75638380647,
+        "unit": "square_meters",
+        "source": "REGRID",
+        "source_url": "https://app.regrid.com/api/v2/parcels/point",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:23:37.552399+00:00",
+        "dataset_vintage": "2026-03-24",
+        "ttl_seconds": 86400,
+        "notes": "Regrid exact point lookup; point intersects returned parcel. Regrid freshness metadata: last_refresh=2026-03-24; updated_at=2026-06-06 05:01:43 -0400; last_ownership_transfer_date=2020-01-16; saledate=2020-01-16.",
+        "status": "ok"
+      }
+    },
+    "partial_failures": [],
+    "geocode": {
+      "accuracy": 1.0,
+      "accuracy_type": "rooftop",
+      "match_type": "building_centroid",
+      "normalized_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+      "provider": "geocodio",
+      "source": "Loudoun",
+      "parcel_grade": true,
+      "precision_note": null
+    },
+    "resolved_location": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "source": "address"
+    }
+  }
+}

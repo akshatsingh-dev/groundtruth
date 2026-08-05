@@ -149,6 +149,11 @@ class ToolContext:
     notes: list[str] = field(default_factory=list)
     #: Cache of resolved alternate-site candidates, shared across search calls.
     candidate_cache: dict = field(default_factory=dict)
+    #: Results of the two search loops, kept as objects rather than as the JSON
+    #: the model saw, so the report renders engine output and not a round trip
+    #: through the model.
+    alternate: Any = None
+    config_search: Any = None
 
     # ---- budget ----
 
@@ -670,8 +675,8 @@ _GREENBOOK_FUNCS = (
     "county_status",
     "lookup",
 )
-_COUNTY_FUNCS = ("county_record", "for_county", "record_for", "lookup", "county")
-_DOCKET_FUNCS = ("cases_for", "search_cases", "dockets_for", "for_county", "search", "lookup")
+_COUNTY_FUNCS = ("for_fips", "county_record", "for_county", "record_for", "lookup", "county")
+_DOCKET_FUNCS = ("for_county", "cases_for", "search_cases", "dockets_for", "search", "lookup")
 
 
 def _as_nonattainment(raw: Any) -> list[NonattainmentStatus]:
@@ -717,9 +722,21 @@ def _as_county_record(raw: Any) -> dict:
     if isinstance(raw, dict):
         return raw
     out = {}
-    for key in ("moratorium", "moratorium_note", "zoning_posture", "note", "source"):
+    for key in (
+        "moratorium",
+        "moratorium_note",
+        "zoning_posture",
+        "board_history",
+        "note",
+        "source",
+        "source_name",
+        "source_url",
+        "confidence",
+    ):
         if hasattr(raw, key):
             out[key] = getattr(raw, key)
+    if "source" not in out and out.get("source_name"):
+        out["source"] = f"{out['source_name']} — {out.get('source_url', '')}".strip(" —")
     return out
 
 
@@ -732,6 +749,8 @@ def _as_cases(raw: Any) -> list[str]:
     for item in raw:
         if isinstance(item, str):
             out.append(item)
+        elif hasattr(item, "summary") and callable(item.summary):
+            out.append(item.summary())
         elif isinstance(item, dict):
             name = (
                 item.get("caseName")
@@ -1255,6 +1274,7 @@ def _exec_search_alternate_sites(ctx: ToolContext, args: dict) -> dict:
         cache=ctx.candidate_cache,
     )
     ctx.notes.extend(result.notes)
+    ctx.alternate = result
     return result.to_dict()
 
 

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "19-fetch-by-address-parcel-group",
+    "path": "/v1/fetch",
+    "payload": {
+      "address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+      "fields": [
+        "parcel_id",
+        "parcel_area_m2"
+      ]
+    },
+    "status": 200,
+    "credits": 0,
+    "seconds": 0.04,
+    "headers": {
+      "fly-request-id": "01KZ8KX3PEW20EFW70SRE9MRV3-sjc",
+      "x-request-id": "req_feb29fd8ae7c"
+    }
+  }
+]

@@ -1,0 +1,149 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/fetch",
+    "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+        "in_air_quality_nonattainment",
+        "air_quality_nonattainment_pollutants",
+        "in_air_quality_maintenance",
+        "air_quality_maintenance_pollutants",
+        "air_quality_worst_classification",
+        "air_district_name",
+        "nearest_class_i_area_distance_m",
+        "nearest_class_i_area_name",
+        "nearest_class_i_area_agency"
+      ]
+    }
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "seconds": 0.05,
+  "response_headers": {
+    "fly-request-id": "01KZ8KPBPWBT5P5P0QFCVNYT2A-sjc",
+    "x-request-id": "req_7266e27c156f"
+  },
+  "response": {
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "fetched_at": "2026-08-05T09:22:24.637895+00:00",
+    "fields": {
+      "in_air_quality_nonattainment": {
+        "value": true,
+        "unit": null,
+        "source": "EPA_GREEN_BOOK",
+        "source_url": "https://www.epa.gov/green-book",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:18.241184+00:00",
+        "dataset_vintage": "EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer)",
+        "ttl_seconds": 2592000,
+        "notes": "True if the point intersects any CURRENT-NAAQS nonattainment area (ozone/PM2.5/PM10/CO/SO2/NO2/lead combined layer); Maintenance/Attainment areas do not set it",
+        "status": "ok"
+      },
+      "air_quality_nonattainment_pollutants": {
+        "value": "8-Hour Ozone (2015 Standard)",
+        "unit": null,
+        "source": "EPA_GREEN_BOOK",
+        "source_url": "https://www.epa.gov/green-book",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:18.241261+00:00",
+        "dataset_vintage": "EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer)",
+        "ttl_seconds": 2592000,
+        "notes": "comma-joined distinct nonattainment pollutant_name values",
+        "status": "ok"
+      },
+      "in_air_quality_maintenance": {
+        "value": true,
+        "unit": null,
+        "source": "EPA_GREEN_BOOK",
+        "source_url": "https://www.epa.gov/green-book",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:18.241293+00:00",
+        "dataset_vintage": "EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer)",
+        "ttl_seconds": 2592000,
+        "notes": "True if the point intersects any CURRENT-NAAQS maintenance area (anti-backsliding NSR obligations); Nonattainment/Attainment areas do not set it",
+        "status": "ok"
+      },
+      "air_quality_maintenance_pollutants": {
+        "value": "8-Hour Ozone (2008 Standard)",
+        "unit": null,
+        "source": "EPA_GREEN_BOOK",
+        "source_url": "https://www.epa.gov/green-book",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:18.241303+00:00",
+        "dataset_vintage": "EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer)",
+        "ttl_seconds": 2592000,
+        "notes": "comma-joined distinct maintenance pollutant_name values",
+        "status": "ok"
+      },
+      "air_quality_worst_classification": {
+        "value": "Moderate",
+        "unit": null,
+        "source": "EPA_GREEN_BOOK",
+        "source_url": "https://www.epa.gov/green-book",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:18.241273+00:00",
+        "dataset_vintage": "EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer)",
+        "ttl_seconds": 2592000,
+        "notes": "worst ozone/CO classification among matches (Extreme>Severe>Serious>Moderate>Marginal); blank for PM/lead/SO2/NO2",
+        "status": "ok"
+      },
+      "air_district_name": {
+        "value": null,
+        "unit": null,
+        "source": "CARB_AIR_DISTRICTS",
+        "source_url": "https://ww2.arb.ca.gov/california-air-districts",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:18.241325+00:00",
+        "dataset_vintage": "CARB California air-district boundaries (local gpkg mirror of the CARB MapServer)",
+        "ttl_seconds": 5184000,
+        "notes": "point is outside any CARB California air district (CA-only)",
+        "status": "absent"
+      },
+      "nearest_class_i_area_distance_m": {
+        "value": 63478.439179638815,
+        "unit": "meters",
+        "source": "EPA_CLASS_I_AREAS",
+        "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:18.354199+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_class_i_area_name": {
+        "value": "Shenandoah NP",
+        "unit": null,
+        "source": "EPA_CLASS_I_AREAS",
+        "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:18.354110+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_class_i_area_agency": {
+        "value": "USDI-NPS",
+        "unit": null,
+        "source": "EPA_CLASS_I_AREAS",
+        "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:18.354182+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      }
+    },
+    "partial_failures": [],
+    "resolved_location": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "source": "coordinate"
+    }
+  }
+}

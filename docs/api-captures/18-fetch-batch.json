@@ -1,0 +1,125 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/fetch/batch",
+    "body": {
+      "locations": [
+        {
+          "lat": 39.022183,
+          "lng": -77.453578
+        },
+        {
+          "lat": 39.0438,
+          "lng": -77.4874
+        },
+        {
+          "lat": 10.0,
+          "lng": -74.0
+        }
+      ],
+      "fields": [
+        "elevation",
+        "in_air_quality_nonattainment"
+      ]
+    }
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "seconds": 0.71,
+  "response_headers": {
+    "fly-request-id": "01KZ8KRK0KGN01AK4NGAXZ3034-sjc",
+    "x-request-id": "req_f23d0622ddd5"
+  },
+  "response": {
+    "fetched_at": "2026-08-05T09:23:38.302081+00:00",
+    "results": [
+      {
+        "index": 0,
+        "ok": true,
+        "lat": 39.022183,
+        "lng": -77.453578,
+        "fetched_at": "2026-08-05T09:23:37.637070+00:00",
+        "fields": {
+          "in_air_quality_nonattainment": {
+            "value": true,
+            "unit": null,
+            "source": "EPA_GREEN_BOOK",
+            "source_url": "https://www.epa.gov/green-book",
+            "confidence": "high",
+            "fetched_at": "2026-08-05T09:21:18.241184+00:00",
+            "dataset_vintage": "EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer)",
+            "ttl_seconds": 2592000,
+            "notes": "True if the point intersects any CURRENT-NAAQS nonattainment area (ozone/PM2.5/PM10/CO/SO2/NO2/lead combined layer); Maintenance/Attainment areas do not set it",
+            "status": "ok"
+          },
+          "elevation": {
+            "value": 75.96440124511719,
+            "unit": "meters",
+            "source": "USGS_3DEP_COG",
+            "source_url": "https://www.usgs.gov/3d-elevation-program",
+            "confidence": "medium",
+            "fetched_at": "2026-08-05T09:21:10.585620+00:00",
+            "dataset_vintage": "3DEP 1/3 arc-second seamless DEM",
+            "ttl_seconds": 31536000,
+            "notes": null,
+            "status": "ok"
+          }
+        },
+        "partial_failures": [],
+        "resolved_location": {
+          "lat": 39.022183,
+          "lng": -77.453578,
+          "source": "coordinate"
+        }
+      },
+      {
+        "index": 1,
+        "ok": true,
+        "lat": 39.0438,
+        "lng": -77.4874,
+        "fetched_at": "2026-08-05T09:23:38.301963+00:00",
+        "fields": {
+          "in_air_quality_nonattainment": {
+            "value": true,
+            "unit": null,
+            "source": "EPA_GREEN_BOOK",
+            "source_url": "https://www.epa.gov/green-book",
+            "confidence": "high",
+            "fetched_at": "2026-08-01T20:16:46.100360+00:00",
+            "dataset_vintage": "EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer)",
+            "ttl_seconds": 2592000,
+            "notes": "True if the point intersects any CURRENT-NAAQS nonattainment area (ozone/PM2.5/PM10/CO/SO2/NO2/lead combined layer); Maintenance/Attainment areas do not set it",
+            "status": "ok"
+          },
+          "elevation": {
+            "value": 89.63117218017578,
+            "unit": "meters",
+            "source": "USGS_3DEP_COG",
+            "source_url": "https://www.usgs.gov/3d-elevation-program",
+            "confidence": "medium",
+            "fetched_at": "2026-08-05T09:23:38.250641+00:00",
+            "dataset_vintage": "3DEP 1/3 arc-second seamless DEM",
+            "ttl_seconds": 31536000,
+            "notes": null,
+            "status": "ok"
+          }
+        },
+        "partial_failures": [],
+        "resolved_location": {
+          "lat": 39.0438,
+          "lng": -77.4874,
+          "source": "coordinate"
+        }
+      },
+      {
+        "index": 2,
+        "ok": false,
+        "error": {
+          "error": "coord_out_of_bounds",
+          "message": "lat=10.0 outside US envelope [18.0, 72.0]",
+          "retryable": false
+        }
+      }
+    ]
+  }
+}

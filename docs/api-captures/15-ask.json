@@ -1,0 +1,92 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/ask",
+    "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "question": "Is this county in air quality nonattainment, and how far is the nearest Class I federal area?",
+      "include_trace": true
+    }
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "seconds": 13.18,
+  "response_headers": {
+    "fly-request-id": "01KZ8KQ70KBNZKYXBZ06Q15PKE-sjc",
+    "x-request-id": "req_f0c54670ff5e"
+  },
+  "response": {
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "question": "Is this county in air quality nonattainment, and how far is the nearest Class I federal area?",
+    "answered_at": "2026-08-05T09:22:52.589268+00:00",
+    "answer": "Loudoun County is in EPA NAAQS nonattainment for the 8-Hour Ozone (2015 Standard), meaning any new or modified combustion source (e.g., backup diesel generators, gas turbines) that clears major-source thresholds will face stricter Nonattainment New Source Review permitting, including emission offsets and best available control technology requirements \u2014 raising both cost and timeline.\n\nThe nearest Class I federal area is Shenandoah National Park, at a geodesic distance of approximately 63,478 meters (63.5 km). While that is well within the conventional 300 km PSD screening radius, a project at this coordinate that triggers PSD major-source thresholds would require mandatory Federal Land Manager consultation and visibility/air-quality-related-values modeling with Shenandoah NP \u2014 an additional permitting lead-time and cost escalator on top of the nonattainment NNSR obligations.",
+    "confidence": "high",
+    "citations": [
+      {
+        "source": "EPA_CLASS_I_AREAS",
+        "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas",
+        "fields": [
+          "nearest_class_i_area_distance_m",
+          "nearest_class_i_area_name"
+        ],
+        "fetched_at": "2026-08-05T09:21:18.354199+00:00",
+        "confidence": "high"
+      },
+      {
+        "source": "EPA_GREEN_BOOK",
+        "source_url": "https://www.epa.gov/green-book",
+        "fields": [
+          "air_quality_nonattainment_pollutants",
+          "in_air_quality_nonattainment"
+        ],
+        "fetched_at": "2026-08-05T09:21:18.241184+00:00",
+        "confidence": "high"
+      },
+      {
+        "source": "OVERTURE_DIVISIONS",
+        "source_url": "https://overturemaps.org/documentation/divisions/",
+        "fields": [
+          "political_county"
+        ],
+        "fetched_at": "2026-08-05T09:22:59.505976+00:00",
+        "confidence": "high"
+      }
+    ],
+    "fields_used": [
+      "air_quality_nonattainment_pollutants",
+      "in_air_quality_nonattainment",
+      "nearest_class_i_area_distance_m",
+      "nearest_class_i_area_name",
+      "political_county"
+    ],
+    "data_gaps": [],
+    "trace": {
+      "planner_model": "claude-haiku-4-5",
+      "synthesizer_model": "claude-sonnet-4-6",
+      "planner_reasoning": "The user explicitly asked for air-quality nonattainment status and the distance to the nearest Class I federal area. These map directly to `in_air_quality_nonattainment`, `air_quality_nonattainment_pollutants`, and `nearest_class_i_area_distance_m` / `nearest_class_i_area_name`. I added `political_county` as inferred context to help identify the county the point falls in, since the user asked about \"this county.\"",
+      "fields_requested": [
+        "in_air_quality_nonattainment",
+        "air_quality_nonattainment_pollutants",
+        "nearest_class_i_area_distance_m",
+        "nearest_class_i_area_name",
+        "political_county"
+      ],
+      "preset_expanded": null,
+      "latency_ms": {
+        "planner_ms": 2836,
+        "fetch_ms": 4081,
+        "synth_ms": 6188,
+        "total_ms": 13108
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 49749
+    },
+    "resolved_location": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "source": "coordinate"
+    }
+  }
+}

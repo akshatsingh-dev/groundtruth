@@ -407,6 +407,39 @@ def for_county(fips: str) -> list[NonattainmentStatus]:
     return [GreenBookRecord(**row).to_status() for row in rows]
 
 
+def load_nonattainment() -> list[dict]:
+    """One entry per nonattainment county, for consumers that key on name.
+
+    sweep/counties.py joins on (state, county name) rather than FIPS because its
+    county index comes from a different file. It probes for this function first
+    and falls back to scraping the Green Book HTML page if it is missing, so this
+    exists to keep the national sweep on the parsed dBASE export instead of a
+    screen-scrape of the same facts.
+    """
+    out: list[dict] = []
+    for fips, rows in _cached()["counties"].items():
+        records = [GreenBookRecord(**row) for row in rows]
+        out.append(
+            {
+                "fips": fips,
+                "state": records[0].state,
+                "county": records[0].county,
+                "part_county": any(r.partial for r in records),
+                "nonattainment": [
+                    {
+                        "pollutant": r.pollutant,
+                        "classification": r.classification,
+                        "area_name": r.note,
+                        "source": f"EPA Green Book ({r.naaqs_label})",
+                        "fetched": r.export_date,
+                    }
+                    for r in records
+                ],
+            }
+        )
+    return out
+
+
 def records_for_county(fips: str) -> list[GreenBookRecord]:
     rows = _cached()["counties"].get(str(fips).zfill(5), [])
     return [GreenBookRecord(**row) for row in rows]

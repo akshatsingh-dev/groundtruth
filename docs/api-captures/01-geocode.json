@@ -1,0 +1,26 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/geocode",
+    "body": {
+      "address": "21571 Beaumeade Cir, Ashburn, VA 20147"
+    }
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "seconds": 0.74,
+  "response_headers": {
+    "fly-request-id": "01KZ8KKF49HRBF1VDPEQF8ZH3T-sjc",
+    "x-request-id": "req_d9fb4ece503f"
+  },
+  "response": {
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "accuracy": 1.0,
+    "accuracy_type": "rooftop",
+    "match_type": "building_centroid",
+    "normalized_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+    "provider": "geocodio",
+    "source": "Loudoun"
+  }
+}

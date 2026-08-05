@@ -1,0 +1,27 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/proximity",
+    "body": {
+      "op": "nearest",
+      "origin": "39.022183,-77.453578",
+      "set": "@transmission",
+      "n": 1,
+      "mode": "straightline"
+    }
+  },
+  "http_status": 422,
+  "credits_charged": 0,
+  "seconds": 0.03,
+  "response_headers": {
+    "fly-request-id": "01KZ8KQ6YA1Y4MWHZ1AFDB37HC-sjc",
+    "x-request-id": "req_cdc3ed3d7265"
+  },
+  "response": {
+    "detail": {
+      "error": "unknown_set",
+      "message": "unknown curated set ref: '@transmission'",
+      "retryable": false
+    }
+  }
+}

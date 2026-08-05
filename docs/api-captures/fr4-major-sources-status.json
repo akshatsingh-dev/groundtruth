@@ -1,0 +1,100 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/v1/field-requests/fr_20b6653a4a584fd0ae00d022be197a49"
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "response": {
+    "request_id": "fr_20b6653a4a584fd0ae00d022be197a49",
+    "status": "queued",
+    "waiting_on": null,
+    "phase": null,
+    "queue_position": 3,
+    "estimated_ready_at": "2026-08-06T09:24:58.538416+00:00",
+    "resolved_locations": [
+      {
+        "index": 0,
+        "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+        "resolved_location": {
+          "lat": 39.022183,
+          "lng": -77.453578,
+          "source": "address"
+        }
+      }
+    ],
+    "disposition": [
+      {
+        "ask": "Count of permitted major stationary air pollution sources within a radius (default 50 km)",
+        "reason": "No candidate field enumerates major stationary sources or their count within a radius; existing hazards candidates cover air quality nonattainment status and lightning, not source inventory.",
+        "resume": {
+          "url": "https://api.mireye.com/v1/fetch",
+          "body": {
+            "lat": 39.022183,
+            "lng": -77.453578,
+            "fields": [
+              "count_of_permitted_major_stationary_air_pollution_sources_wi"
+            ]
+          },
+          "method": "POST"
+        },
+        "field_id": "count_of_permitted_major_stationary_air_pollution_sources_wi",
+        "disposition": "accepted_new",
+        "feasibility_class": "source_uncertain",
+        "estimated_ready_at": "2026-08-06T09:24:58.538416+00:00"
+      },
+      {
+        "ask": "Permitted or reported annual emissions in tons per year for NOx, SO2, PM2.5, and CO from those sources",
+        "reason": "No candidate field supplies pollutant-specific emission rates (tons/year) from major stationary sources; the candidate set includes utilities and climate layers but no EPA NEI or Title V permit emission data.",
+        "resume": {
+          "url": "https://api.mireye.com/v1/fetch",
+          "body": {
+            "lat": 39.022183,
+            "lng": -77.453578,
+            "fields": [
+              "permitted_or_reported_annual_emissions_in_tons_per_year_for_"
+            ]
+          },
+          "method": "POST"
+        },
+        "field_id": "permitted_or_reported_annual_emissions_in_tons_per_year_for_",
+        "disposition": "accepted_new",
+        "feasibility_class": "source_uncertain",
+        "estimated_ready_at": "2026-08-06T09:24:58.538416+00:00"
+      },
+      {
+        "ask": "Facility name, distance, and pollutant totals for each source",
+        "reason": "No candidate field provides facility-level attribution (name, distance) paired with emission totals; this requires source-specific detail beyond the current candidate catalog.",
+        "resume": {
+          "url": "https://api.mireye.com/v1/fetch",
+          "body": {
+            "lat": 39.022183,
+            "lng": -77.453578,
+            "fields": [
+              "facility_name_distance_and_pollutant_totals_for_each_source"
+            ]
+          },
+          "method": "POST"
+        },
+        "field_id": "facility_name_distance_and_pollutant_totals_for_each_source",
+        "disposition": "accepted_new",
+        "feasibility_class": "source_uncertain",
+        "estimated_ready_at": "2026-08-06T09:24:58.538416+00:00"
+      }
+    ],
+    "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+        "lat": 39.022183,
+        "lng": -77.453578,
+        "fields": [
+          "count_of_permitted_major_stationary_air_pollution_sources_wi"
+        ]
+      },
+      "method": "POST"
+    },
+    "context_blob": null,
+    "created_at": "2026-08-05T09:24:54.431142+00:00",
+    "updated_at": "2026-08-05T09:24:58.552860+00:00"
+  }
+}

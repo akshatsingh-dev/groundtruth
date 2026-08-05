@@ -1,0 +1,27 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/proximity",
+    "body": {
+      "op": "nearest",
+      "origin": "39.022183,-77.453578",
+      "set": "@airports",
+      "n": 1,
+      "mode": "driving"
+    }
+  },
+  "http_status": 503,
+  "credits_charged": 0,
+  "seconds": 0.11,
+  "response_headers": {
+    "fly-request-id": "01KZ8KQ6SHZH60BE9ZCFAMGNVY-sjc",
+    "x-request-id": "req_dc510634f998"
+  },
+  "response": {
+    "detail": {
+      "error": "proximity_data_unavailable",
+      "message": "curated set @airports asset is missing column(s) ['use'] that its default filter requires -- the filter would match every row and the set would return wrong answers, so it is refused instead. Rebuild the asset.",
+      "retryable": true
+    }
+  }
+}

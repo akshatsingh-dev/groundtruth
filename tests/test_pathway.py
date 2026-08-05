@@ -280,12 +280,22 @@ def test_moratorium_is_a_hard_stop_regardless_of_air_pathway():
 
 
 def test_january_2026_turbine_rule_always_fires_for_turbines():
-    """The loophole that let xAI energise in weeks is closed. If this stops
-    firing, the tool is quietly telling people a fast path exists."""
+    """The trailer-mounted path is unsettled, not closed.
+
+    Most coverage of the 15 January 2026 rule says it shut the nonroad-engine
+    reading. It did the opposite in direction: it finalised a conditional
+    exclusion that is not yet operative. The tool must not tell anyone a fast
+    path is available, and must not tell them it is definitively gone either.
+    Both errors are expensive in different directions.
+    """
     result = determine_pathway(small_turbine(mw=30), SiteContext(state="TN", county="Shelby"))
     nsps = next(t for t in result.fired if t.name == "nsps_turbine")
     assert "91 Fed. Reg. 1910" in nsps.citation
-    assert "trailer" in nsps.detail.lower()
+    assert "KKKKa" in nsps.citation
+    detail = nsps.detail.lower()
+    assert "not operative" in detail
+    assert "open legal question" in detail
+    assert "closed" not in detail, "the rule did not close the nonroad reading"
 
 
 def test_complex_terrain_adds_modeling_time():

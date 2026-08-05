@@ -1,0 +1,30 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/fetch",
+    "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+        "elevation",
+        "totally_not_a_field"
+      ]
+    }
+  },
+  "http_status": 400,
+  "credits_charged": 0,
+  "seconds": 0.02,
+  "response_headers": {
+    "fly-request-id": "01KZ8KPBXRKF3FT418BD0RGJ9P-sjc",
+    "x-request-id": "req_81dfd11e2024"
+  },
+  "response": {
+    "detail": {
+      "error": "fields_unknown",
+      "message": "Unknown field names: ['totally_not_a_field']",
+      "fields_unknown": [
+        "totally_not_a_field"
+      ]
+    }
+  }
+}

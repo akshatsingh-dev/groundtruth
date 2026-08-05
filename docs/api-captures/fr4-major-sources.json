@@ -1,0 +1,162 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/field-requests",
+    "body": {
+      "description": "Count of permitted major stationary air pollution sources within a radius of a coordinate (default 50 km), and their permitted or reported annual emissions in tons per year for NOx, SO2, PM2.5 and CO. Facility name, distance and pollutant totals. Not just facility locations, which I can already get, but the emission rates.",
+      "use_case": "PSD increment consumption. The Clean Air Act gives each area a finite budget for how much the air may degrade, shared across every source. If the sources already there consumed the increment, a new major source has nothing left to model into and is un-permittable at any timeline. I currently cannot compute this at all, and it is the single hardest number in my screen.",
+      "decision_threshold": "If nearby major sources have consumed roughly 80 percent or more of the Class II increment for a pollutant, the project needs controls beyond BACT or a different site. Above 95 percent it is effectively a hard stop.",
+      "area_of_interest": {
+        "level": "national",
+        "names": [
+          "United States"
+        ]
+      },
+      "expected_volume": {
+        "locations": 3140,
+        "geography": "every US county centroid plus ~3000 tracked project sites",
+        "cadence": "recurring"
+      },
+      "freshness": {
+        "max_staleness": "P2Y",
+        "changes_how_often": "EPA NEI publishes every three years; Title V permits update continuously"
+      },
+      "constraints": {
+        "already_have": [
+          "nearest_hazardous_facility_distance_m",
+          "nearest_hazardous_facility_name",
+          "nearest_rcra_tsd_distance_m",
+          "superfund_sites_within_radius_count"
+        ],
+        "must_not_be": [
+          "facility location only with no emission rate"
+        ]
+      },
+      "known_sources": {
+        "suggested": [
+          {
+            "name": "EPA National Emissions Inventory",
+            "url": "https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei",
+            "why": "reported annual emissions per facility per pollutant"
+          },
+          {
+            "name": "EPA ECHO / Title V permits",
+            "url": "https://echo.epa.gov/",
+            "why": "permitted allowable emissions and major-source status"
+          }
+        ]
+      },
+      "output_preference": {
+        "value_kind": "number",
+        "units": "tons per year",
+        "buckets_ok": false
+      },
+      "example_locations": [
+        {
+          "address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+          "note": "Loudoun County VA \u2014 ozone nonattainment (2015 8-hr, Moderate), the densest data center market in the world"
+        }
+      ],
+      "idempotency_key": "deliverable-fr4-major-sources-20260805"
+    }
+  },
+  "http_status": 201,
+  "credits_charged": 0,
+  "seconds": 4.42,
+  "response_headers": {
+    "fly-request-id": "01KZ8KTXYHE7BCN7JWQECX93WG-sjc",
+    "x-request-id": "req_c42cca2e514b"
+  },
+  "response": {
+    "request_id": "fr_20b6653a4a584fd0ae00d022be197a49",
+    "status": "queued",
+    "waiting_on": null,
+    "phase": null,
+    "queue_position": 3,
+    "estimated_ready_at": "2026-08-06T09:24:58.538416+00:00",
+    "resolved_locations": [
+      {
+        "index": 0,
+        "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+        "resolved_location": {
+          "lat": 39.022183,
+          "lng": -77.453578,
+          "source": "address"
+        }
+      }
+    ],
+    "disposition": [
+      {
+        "ask": "Count of permitted major stationary air pollution sources within a radius (default 50 km)",
+        "reason": "No candidate field enumerates major stationary sources or their count within a radius; existing hazards candidates cover air quality nonattainment status and lightning, not source inventory.",
+        "resume": {
+          "url": "https://api.mireye.com/v1/fetch",
+          "body": {
+            "lat": 39.022183,
+            "lng": -77.453578,
+            "fields": [
+              "count_of_permitted_major_stationary_air_pollution_sources_wi"
+            ]
+          },
+          "method": "POST"
+        },
+        "field_id": "count_of_permitted_major_stationary_air_pollution_sources_wi",
+        "disposition": "accepted_new",
+        "feasibility_class": "source_uncertain",
+        "estimated_ready_at": "2026-08-06T09:24:58.538416+00:00"
+      },
+      {
+        "ask": "Permitted or reported annual emissions in tons per year for NOx, SO2, PM2.5, and CO from those sources",
+        "reason": "No candidate field supplies pollutant-specific emission rates (tons/year) from major stationary sources; the candidate set includes utilities and climate layers but no EPA NEI or Title V permit emission data.",
+        "resume": {
+          "url": "https://api.mireye.com/v1/fetch",
+          "body": {
+            "lat": 39.022183,
+            "lng": -77.453578,
+            "fields": [
+              "permitted_or_reported_annual_emissions_in_tons_per_year_for_"
+            ]
+          },
+          "method": "POST"
+        },
+        "field_id": "permitted_or_reported_annual_emissions_in_tons_per_year_for_",
+        "disposition": "accepted_new",
+        "feasibility_class": "source_uncertain",
+        "estimated_ready_at": "2026-08-06T09:24:58.538416+00:00"
+      },
+      {
+        "ask": "Facility name, distance, and pollutant totals for each source",
+        "reason": "No candidate field provides facility-level attribution (name, distance) paired with emission totals; this requires source-specific detail beyond the current candidate catalog.",
+        "resume": {
+          "url": "https://api.mireye.com/v1/fetch",
+          "body": {
+            "lat": 39.022183,
+            "lng": -77.453578,
+            "fields": [
+              "facility_name_distance_and_pollutant_totals_for_each_source"
+            ]
+          },
+          "method": "POST"
+        },
+        "field_id": "facility_name_distance_and_pollutant_totals_for_each_source",
+        "disposition": "accepted_new",
+        "feasibility_class": "source_uncertain",
+        "estimated_ready_at": "2026-08-06T09:24:58.538416+00:00"
+      }
+    ],
+    "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+        "lat": 39.022183,
+        "lng": -77.453578,
+        "fields": [
+          "count_of_permitted_major_stationary_air_pollution_sources_wi"
+        ]
+      },
+      "method": "POST"
+    },
+    "context_blob": null,
+    "created_at": "2026-08-05T09:24:54.431142+00:00",
+    "updated_at": "2026-08-05T09:24:58.552860+00:00"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/fetch",
+    "body": {
+      "lat": 10.0,
+      "lng": -74.0,
+      "preset": "terrain"
+    }
+  },
+  "http_status": 400,
+  "credits_charged": 0,
+  "seconds": 0.02,
+  "response_headers": {
+    "fly-request-id": "01KZ8KPBZMT92R72G68BFAT0WV-sjc",
+    "x-request-id": "req_e847af0473ce"
+  },
+  "response": {
+    "detail": {
+      "error": "coord_out_of_bounds",
+      "message": "lat=10.0 outside US envelope [18.0, 72.0]"
+    }
+  }
+}

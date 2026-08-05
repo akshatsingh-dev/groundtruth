@@ -1,0 +1,53 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/proximity",
+    "body": {
+      "op": "nearest",
+      "origin": "39.022183,-77.453578",
+      "set": "@substations",
+      "n": 1,
+      "mode": "driving"
+    }
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "seconds": 2.55,
+  "response_headers": {
+    "fly-request-id": "01KZ8KRF0Z1E8RD9MP2V10W2GD-sjc",
+    "x-request-id": "req_2848265414b8"
+  },
+  "response": {
+    "op": "nearest",
+    "origin": {
+      "query": "39.022183,-77.453578",
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "formatted_address": null,
+      "accuracy_type": null,
+      "accuracy": null,
+      "error": null
+    },
+    "candidates": [
+      {
+        "name": "BEAUMEADE",
+        "lat": 39.0261584300001,
+        "lng": -77.456400897,
+        "attributes": {
+          "max_voltage_kv": 230.0
+        },
+        "distance_miles": 1.7,
+        "distance_km": 2.7,
+        "duration_seconds": 265,
+        "duration_minutes": 4.416666666666667
+      }
+    ],
+    "applied_filters": null,
+    "paid_driving_calcs": 5,
+    "notes": [
+      "coverage: US + Canada",
+      "durations reflect typical traffic, not real-time"
+    ],
+    "credits_charged": 60
+  }
+}

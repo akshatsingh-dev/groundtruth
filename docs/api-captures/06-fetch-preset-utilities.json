@@ -1,0 +1,372 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/fetch",
+    "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "preset": "utilities"
+    }
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "seconds": 0.07,
+  "response_headers": {
+    "fly-request-id": "01KZ8KPBK3T1QDQ4YBKS8BF3QB-sjc",
+    "x-request-id": "req_439faa77d4b1"
+  },
+  "response": {
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "fetched_at": "2026-08-05T09:22:24.535991+00:00",
+    "fields": {
+      "nearest_power_plant_name": {
+        "value": "Potomac Energy Center, LLC",
+        "unit": null,
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:20.071116+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_power_plant_distance_m": {
+        "value": 8860.5,
+        "unit": "meters",
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:20.071103+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_power_plant_primary_fuel": {
+        "value": "natural gas",
+        "unit": null,
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:20.071127+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_power_plant_capacity_mw": {
+        "value": 766.0,
+        "unit": "megawatts",
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:20.071136+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_transmission_line_distance_m": {
+        "value": 120.7,
+        "unit": "meters",
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:19.589456+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_transmission_line_voltage_basis": {
+        "value": "not_published",
+        "unit": null,
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:19.589532+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_transmission_line_status": {
+        "value": "IN SERVICE",
+        "unit": null,
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:19.589541+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_transmission_line_owner": {
+        "value": "VIRGINIA ELECTRIC & POWER CO",
+        "unit": null,
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:19.589549+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "max_transmission_line_voltage_kv_within_radius": {
+        "value": 230.0,
+        "unit": "kilovolts",
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:19.589557+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "max_transmission_line_voltage_class_within_radius": {
+        "value": "220-287",
+        "unit": null,
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:19.589565+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "transmission_lines_within_radius_count": {
+        "value": 12,
+        "unit": null,
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:19.589584+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_gas_pipeline_distance_m": {
+        "value": 3751.5,
+        "unit": "meters",
+        "source": "EIA_PIPELINES",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:19.456787+00:00",
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": null,
+        "status": "ok"
+      },
+      "within_sewer_service_area": {
+        "value": true,
+        "unit": null,
+        "source": "EPA_SEWERSHEDS",
+        "source_url": "https://www.epa.gov/cwns/sewersheds",
+        "confidence": "medium",
+        "fetched_at": "2026-08-05T09:21:21.364893+00:00",
+        "dataset_vintage": "EPA Sewersheds v1.1 (local GeoPackage mirror, simplified + make_valid'd)",
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      },
+      "sewer_service_area_provider": {
+        "value": "BROAD RUN REG. RECL. FAC.",
+        "unit": null,
+        "source": "EPA_SEWERSHEDS",
+        "source_url": "https://www.epa.gov/cwns/sewersheds",
+        "confidence": "medium",
+        "fetched_at": "2026-08-05T09:21:21.364983+00:00",
+        "dataset_vintage": "EPA Sewersheds v1.1 (local GeoPackage mirror, simplified + make_valid'd)",
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      },
+      "sewer_service_area_provenance": {
+        "value": "ml_modeled",
+        "unit": null,
+        "source": "EPA_SEWERSHEDS",
+        "source_url": "https://www.epa.gov/cwns/sewersheds",
+        "confidence": "medium",
+        "fetched_at": "2026-08-05T09:21:21.364997+00:00",
+        "dataset_vintage": "EPA Sewersheds v1.1 (local GeoPackage mirror, simplified + make_valid'd)",
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_sewer_service_area_distance_m": {
+        "value": 0.0,
+        "unit": "meters",
+        "source": "EPA_SEWERSHEDS",
+        "source_url": "https://www.epa.gov/cwns/sewersheds",
+        "confidence": "medium",
+        "fetched_at": "2026-08-05T09:21:21.365008+00:00",
+        "dataset_vintage": "EPA Sewersheds v1.1 (local GeoPackage mirror, simplified + make_valid'd)",
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      },
+      "within_water_service_area": {
+        "value": true,
+        "unit": null,
+        "source": "EPA_CWS_SERVICE_AREAS",
+        "source_url": "https://www.epa.gov/waterdata",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:21.913111+00:00",
+        "dataset_vintage": "EPA Public Water System Service Areas V3.0 (2026-03-17), CWS layer \u2014 local GeoPackage mirror, simplified + make_valid'd",
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      },
+      "water_system_name": {
+        "value": "LOUDOUN WATER - CENTRAL SYSTEM",
+        "unit": null,
+        "source": "EPA_CWS_SERVICE_AREAS",
+        "source_url": "https://www.epa.gov/waterdata",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:21.913223+00:00",
+        "dataset_vintage": "EPA Public Water System Service Areas V3.0 (2026-03-17), CWS layer \u2014 local GeoPackage mirror, simplified + make_valid'd",
+        "ttl_seconds": 2592000,
+        "notes": "community water system serving the point (PWSID VA6107350)",
+        "status": "ok"
+      },
+      "nearest_water_service_area_distance_m": {
+        "value": 0.0,
+        "unit": "meters",
+        "source": "EPA_CWS_SERVICE_AREAS",
+        "source_url": "https://www.epa.gov/waterdata",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:21.913194+00:00",
+        "dataset_vintage": "EPA Public Water System Service Areas V3.0 (2026-03-17), CWS layer \u2014 local GeoPackage mirror, simplified + make_valid'd",
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      },
+      "domestic_well_households_per_km2": {
+        "value": 0.0,
+        "unit": "households/km2",
+        "source": "USGS_SELF_SUPPLIED_HOUSEHOLDS",
+        "source_url": "https://doi.org/10.5066/P13BILQT",
+        "confidence": "medium",
+        "fetched_at": "2026-08-05T09:21:19.012807+00:00",
+        "dataset_vintage": "USGS modelled self-supplied households, 1 km, 2020 census blocks",
+        "ttl_seconds": 31536000,
+        "notes": "modelled self-supplied households per km\u00b2, averaged over the 3 km \u00d7 3 km neighbourhood containing the point; a covered area with none is a real 0.0, not an absence",
+        "status": "ok"
+      },
+      "domestic_well_household_density_class": {
+        "value": "none",
+        "unit": null,
+        "source": "USGS_SELF_SUPPLIED_HOUSEHOLDS",
+        "source_url": "https://doi.org/10.5066/P13BILQT",
+        "confidence": "medium",
+        "fetched_at": "2026-08-05T09:21:19.012863+00:00",
+        "dataset_vintage": "USGS modelled self-supplied households, 1 km, 2020 census blocks",
+        "ttl_seconds": 31536000,
+        "notes": "frozen physical bands over the same sampled density: none = 0.0, sparse <= 1, moderate <= 10, dense <= 50, very_dense above 50",
+        "status": "ok"
+      },
+      "water_service_area_provenance": {
+        "value": "utility_sourced",
+        "unit": null,
+        "source": "EPA_CWS_SERVICE_AREAS",
+        "source_url": "https://www.epa.gov/waterdata",
+        "confidence": "high",
+        "fetched_at": "2026-08-05T09:21:21.913234+00:00",
+        "dataset_vintage": "EPA Public Water System Service Areas V3.0 (2026-03-17), CWS layer \u2014 local GeoPackage mirror, simplified + make_valid'd",
+        "ttl_seconds": 2592000,
+        "notes": null,
+        "status": "ok"
+      },
+      "nearest_wastewater_plant_distance_m": {
+        "value": 1518.1446852468862,
+        "unit": "meters",
+        "source": "EPA_CWNS",
+        "source_url": "https://www.epa.gov/cwns/clean-watersheds-needs-survey-cwns-2022-report-and-data",
+        "confidence": "medium",
+        "fetched_at": "2026-08-05T09:21:19.151939+00:00",
+        "dataset_vintage": "EPA Clean Watersheds Needs Survey 2022 (survey edition, data as of January 2022, published April 2024; local point index, 17,687 treatment plants)",
+        "ttl_seconds": 2592000,
+        "notes": "geodesic distance to the nearest CWNS 2022 wastewater treatment plant \u2014 the nearest plant is not necessarily the plant that would serve this location (read with sewer_service_area_provider)",
+        "status": "ok"
+      },
+      "nearest_wastewater_plant_name": {
+        "value": "BROAD RUN REG. RECL. FAC.",
+        "unit": null,
+        "source": "EPA_CWNS",
+        "source_url": "https://www.epa.gov/cwns/clean-watersheds-needs-survey-cwns-2022-report-and-data",
+        "confidence": "medium",
+        "fetched_at": "2026-08-05T09:21:19.151991+00:00",
+        "dataset_vintage": "EPA Clean Watersheds Needs Survey 2022 (survey edition, data as of January 2022, published April 2024; local point index, 17,687 treatment plants)",
+        "ttl_seconds": 2592000,
+        "notes": "CWNS FACILITY_NAME of the nearest plant, passed through verbatim",
+        "status": "ok"
+      },
+      "nearest_wastewater_plant_population_served": {
+        "value": 310000,
+        "unit": null,
+        "source": "EPA_CWNS",
+        "source_url": "https://www.epa.gov/cwns/clean-watersheds-needs-survey-cwns-2022-report-and-data",
+        "confidence": "medium",
+        "fetched_at": "2026-08-05T09:21:19.152007+00:00",
+        "dataset_vintage": "EPA Clean Watersheds Needs Survey 2022 (survey edition, data as of January 2022, published April 2024; local point index, 17,687 treatment plants)",
+        "ttl_seconds": 2592000,
+        "notes": "residential population served by the nearest plant, including population from upstream collection systems that discharge into it (CWNS TOTAL_RES_POPULATION_2022)",
+        "status": "ok"
+      },
+      "nearest_transmission_line_voltage_kv": {
+        "value": null,
+        "unit": "kilovolts",
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "unknown",
+        "fetched_at": null,
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": "source returned null at this coordinate",
+        "status": "failed",
+        "error": "source returned null at this coordinate",
+        "retryable": false
+      },
+      "nearest_transmission_line_voltage_class": {
+        "value": null,
+        "unit": null,
+        "source": "EIA_POWER",
+        "source_url": "https://atlas.eia.gov/",
+        "confidence": "unknown",
+        "fetched_at": null,
+        "dataset_vintage": null,
+        "ttl_seconds": 86400,
+        "notes": "source returned null at this coordinate",
+        "status": "failed",
+        "error": "source returned null at this coordinate",
+        "retryable": false
+      }
+    },
+    "partial_failures": [
+      {
+        "field": "nearest_transmission_line_voltage_kv",
+        "source": "EIA_POWER",
+        "error": "source returned null at this coordinate",
+        "retryable": false
+      },
+      {
+        "field": "nearest_transmission_line_voltage_class",
+        "source": "EIA_POWER",
+        "error": "source returned null at this coordinate",
+        "retryable": false
+      }
+    ],
+    "resolved_location": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "source": "coordinate"
+    }
+  }
+}

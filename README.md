@@ -79,10 +79,14 @@ a county planning office on its own is a liability, not a feature.
 - **County moratorium data: 20-odd counties, entered by hand.** I did not write a
   scraper. Hand-entering from public trackers was faster and more accurate, and the
   records carry their source URLs so you can check them.
-- **Backtest: 2 cases.** Nebius NJ and the New Mexico Stargate site. It is a
-  demonstration that the engine flags known failures, not a rigorous out-of-sample
-  test. A real backtest needs a point-in-time panel across hundreds of projects.
-  See `docs/backtest-notes.md`, which is blunt about this.
+- **Backtest: 3 cases, and one of them is a miss.** Nebius/DataOne at Vineland NJ
+  and Project Jupiter in Doña Ana County NM both hit, on the mechanism that
+  actually bound. xAI Colossus 1 is a miss: the engine says major PSD and about
+  two years, and xAI energised in weeks by taking the position that the turbines
+  were nonroad engines. The engine prices the compliant path and has no variable
+  for a developer who runs it anyway and litigates. Three cases is a demonstration,
+  not a rigorous out-of-sample test. A real backtest needs a point-in-time panel
+  across hundreds of projects. See `docs/backtest-notes.md`, which is blunt about it.
 - **8 states modelled properly** (VA, TX, GA, OH, AZ, NJ, NM, IL). The other 42 fall
   back to federal defaults, and the output says so instead of hiding it.
 - **The county map is a screening layer.** It uses county-level facts only. It cannot

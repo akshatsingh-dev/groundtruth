@@ -391,11 +391,31 @@ Newest at the bottom.
 | 5 | Backtest cases + fact-checking every claim in the brief | `backtest/cases.py`, `docs/evidence.md` |
 | 6 | Explainer docs, demo script, objection prep | `docs/PLAIN-ENGLISH.md`, `HOW-IT-WORKS.md`, `GLOSSARY.md`, `DEMO-SCRIPT.md`, `OBJECTIONS.md` |
 
-**Blocked on you:**
+**Keys — resolved during the session:**
 
-1. **Mireye API key.** Sign up at https://www.mireye.com/account with code `BUILD`.
-   Put it in `.env` as `MIREYE_API_KEY`. Everything else is written to work the
-   moment it lands.
-2. **`ANTHROPIC_API_KEY`** in `.env` for the planner's reasoning loop.
-3. **Email founders@mireye.com** about credits — you send it, not the agent. The
-   draft will be in `outputs/drafts/`.
+- `MIREYE_API_KEY` — **in.** Agent 1 stopped working from assumed response shapes
+  and is now verifying every endpoint against the live API, capturing real JSON.
+- `CLAUDE_CODE_OAUTH_TOKEN` — **in.** We went with a long-lived OAuth token from
+  the existing Claude subscription rather than buying Anthropic API credits.
+
+That second choice has a technical consequence worth understanding, because it
+changed the design. The `anthropic` package's Messages API does **not** accept a
+Claude Code OAuth token. Only the **Claude Agent SDK** does. So the planner now
+resolves auth at startup down three paths:
+
+1. `CLAUDE_CODE_OAUTH_TOKEN` set → Claude Agent SDK. **This is the demo path.**
+2. `ANTHROPIC_API_KEY` set → `anthropic` Messages API with tool use.
+3. Neither → deterministic no-LLM fallback, so the repo stays runnable for a judge
+   with zero keys.
+
+The tool definitions in `agent/tools.py` are written once and shared across paths
+1 and 2. The trace states which path it took, and looks identical either way, so
+the demo reproduces regardless of how someone runs it.
+
+**Still blocked on you:**
+
+1. **`COURTLISTENER_TOKEN`** — free, two minutes, courtlistener.com. This is the
+   "court filings" half of the judging criterion, so it is not optional.
+2. **Email founders@mireye.com** about credits. Draft is written and sitting at
+   `outputs/drafts/founders-credits-email.md`. You send it. Not the agent.
+3. **Flip the repo public** before submitting the form.

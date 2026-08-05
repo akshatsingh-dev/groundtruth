@@ -1,0 +1,59 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/v1/lookup",
+    "body": {
+      "input": "21571 Beaumeade Cir, Ashburn, VA 20147",
+      "include_parcel": false
+    }
+  },
+  "http_status": 200,
+  "credits_charged": 0,
+  "seconds": 1.61,
+  "response_headers": {
+    "fly-request-id": "01KZ8KKFWR0KPH13G6YF70J59T-sjc",
+    "x-request-id": "req_759da5f07173"
+  },
+  "response": {
+    "disposition": "resolved",
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+    "resolved_location": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "source": "address"
+    },
+    "county_fips": "51107",
+    "county": "Loudoun County",
+    "tract_geoid": "51107611006",
+    "state_fips": "51",
+    "state": "Virginia",
+    "block_group_geoid": "511076110061",
+    "block_geoid": "511076110061014",
+    "congressional_district": "VA-10",
+    "cbsa_name": "Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area",
+    "cbsa_code": "47900",
+    "elevation_m": 75.96440124511719,
+    "fema_flood_zone": "X",
+    "within_floodplain": false,
+    "coastal_high_hazard": false,
+    "county_market": {
+      "population": 449749,
+      "population_growth_1yr_pct": 1.3521,
+      "net_domestic_migration": -142,
+      "building_permits_total_annual": 1561,
+      "building_permits_sf_annual": 641,
+      "building_permits_yoy_pct": -52.8968,
+      "hpi_yoy_pct": 6.87,
+      "employment_total": 204885,
+      "employment_yoy_pct": 3.4183,
+      "median_household_income_usd": 178707
+    },
+    "in_opportunity_zone": false,
+    "timezone": "America/New_York",
+    "parcel_unavailable": false,
+    "match_method": "geocode_rooftop",
+    "confidence": 0.95
+  }
+}
