@@ -1,0 +1,116 @@
+{
+ "note": "Filed 5 Aug 2026 by the satellite-verification build (ingest/satellite.py). Mireye already serves Sentinel-2 NDVI as ndvi_current and ndvi_change_5y; this asks for the three things those fields cannot do \u2014 caller-selected dates, footprint aggregation, and scene metadata (id, acquisition datetime, cloud fraction). /v1/ask was tried first at 35.065,-90.075 and refused; the refusal is quoted verbatim in the description.",
+ "request": {
+  "method": "POST",
+  "path": "/v1/field-requests"
+ },
+ "http_status": 201,
+ "credits_charged": 0,
+ "response": {
+  "request_id": "fr_39331af65eef4400986c0d4c8552dc5e",
+  "status": "queued",
+  "waiting_on": null,
+  "phase": null,
+  "queue_position": 6,
+  "estimated_ready_at": "2026-08-06T11:00:40.658396+00:00",
+  "resolved_locations": [
+   {
+    "index": 0,
+    "resolved_location": {
+     "lat": 35.065,
+     "lng": -90.075,
+     "source": "coordinate"
+    }
+   },
+   {
+    "index": 1,
+    "resolved_location": {
+     "lat": 31.87,
+     "lng": -106.69,
+     "source": "coordinate"
+    }
+   },
+   {
+    "index": 2,
+    "resolved_location": {
+     "lat": 39.447,
+     "lng": -75.01,
+     "source": "coordinate"
+    }
+   }
+  ],
+  "disposition": [
+   {
+    "ask": "NDVI averaged over a caller-supplied radius (default 500 m) on a caller-supplied date, with scene id, acquisition datetime, and cloud fraction",
+    "reason": "ndvi_current and ndvi_change_5y exist but neither supports caller-selectable dates, radius-averaging, or scene metadata (acquisition datetime, cloud fraction, scene id). This is a time-series imagery query that requires temporal selectivity and footprint aggregation not present in the catalog.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 35.065,
+      "lng": -90.075,
+      "fields": [
+       "ndvi_averaged_over_a_caller_supplied_radius_default_500_m_on"
+      ]
+     },
+     "method": "POST"
+    },
+    "field_id": "ndvi_averaged_over_a_caller_supplied_radius_default_500_m_on",
+    "disposition": "accepted_new",
+    "feasibility_class": "source_uncertain",
+    "estimated_ready_at": "2026-08-06T11:00:40.658396+00:00"
+   },
+   {
+    "ask": "Delta NDVI: mean NDVI on date B minus mean NDVI on date A, averaged over a caller-supplied radius",
+    "reason": "ndvi_change_5y is a fixed 5-year window; it does not answer a caller-selected pair of dates. This would require temporal selectivity to pairs of dates chosen by the requester.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 35.065,
+      "lng": -90.075,
+      "fields": [
+       "delta_ndvi_mean_ndvi_on_date_b_minus_mean_ndvi_on_date_a_ave"
+      ]
+     },
+     "method": "POST"
+    },
+    "field_id": "delta_ndvi_mean_ndvi_on_date_b_minus_mean_ndvi_on_date_a_ave",
+    "disposition": "accepted_new",
+    "feasibility_class": "source_uncertain",
+    "estimated_ready_at": "2026-08-06T11:00:40.658396+00:00"
+   },
+   {
+    "ask": "Fraction of the footprint that transitioned from vegetated (NDVI >= 0.30) to bare (NDVI < 0.20) between two dates",
+    "reason": "No candidate field measures vegetation-loss transition classes at a threshold-based level over a caller-specified radius and date pair. This would require binned NDVI classification and multi-date aggregation.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 35.065,
+      "lng": -90.075,
+      "fields": [
+       "fraction_of_the_footprint_that_transitioned_from_vegetated_n"
+      ]
+     },
+     "method": "POST"
+    },
+    "field_id": "fraction_of_the_footprint_that_transitioned_from_vegetated_n",
+    "disposition": "accepted_new",
+    "feasibility_class": "source_uncertain",
+    "estimated_ready_at": "2026-08-06T11:00:40.658396+00:00"
+   }
+  ],
+  "resume": {
+   "url": "https://api.mireye.com/v1/fetch",
+   "body": {
+    "lat": 35.065,
+    "lng": -90.075,
+    "fields": [
+     "ndvi_averaged_over_a_caller_supplied_radius_default_500_m_on"
+    ]
+   },
+   "method": "POST"
+  },
+  "context_blob": null,
+  "created_at": "2026-08-05T11:00:33.676258+00:00",
+  "updated_at": "2026-08-05T11:00:40.675638+00:00"
+ }
+}

@@ -207,3 +207,29 @@ credits and takes the same cadence to ~2M credits a month.
 ---
 
 Built on Mireye. Repo, evidence ledger and the 2-minute demo in the submission.
+
+---
+
+## Where this goes: India
+
+US first, because Mireye is US-only. India is the market this is built for. Axis Capital
+calls the announced **6 to 8 GW by 2030** inflated and puts the real figure at **3.4 to
+3.6 GW**. Operational stock is about **1.8 GW** of IT load today. **Over 10.5 GW sits in
+land banking**, which is the local phrasing for announced and not broken ground. Power
+connections run about 18 months and gensets from Caterpillar, Cummins and MTU are booked
+out two years.
+
+Same gap, different regulator, different fuel. The buyer is different too. In the US this
+sells to developers and funds. In India the first customer is more likely a district
+planning office or a state pollution control board, because the agencies are the
+bottleneck and they procure.
+
+`providers/base.py` is an interface and `providers/mireye.py` is the US implementation of
+it. The agent, the emissions estimator and the pathway engine never import Mireye. That
+cost about twenty lines and it makes going international a data problem rather than a
+rewrite. The permit logic is jurisdiction-specific and would need rebuilding for CPCB and
+the state boards, but the shape holds.
+
+The substrate is what's missing. There is no Mireye for India and no equivalent. Filed as
+a feature request: parcel resolution, administrative hierarchy at a coordinate, and
+DISCOM territory would be enough to port this.

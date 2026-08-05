@@ -588,6 +588,65 @@ TOOL_SCHEMAS: list[dict] = [
             "required": ["field_name", "description"],
         },
     },
+    {
+        "name": "verify_construction",
+        "description": (
+            "Is there a hole in the ground yet? Compares two cloud-free Sentinel-2 scenes over "
+            "the parcel — one near the announced groundbreaking date, one as recent as the "
+            "archive has — and reports how much of the footprint changed from vegetated to bare. "
+            "Free: public Copernicus imagery, no credential, no provider credits.\n"
+            "Call it when the project has an announced groundbreaking or energization date and "
+            "you want a physical check on the schedule. The permit pathway says what is legally "
+            "possible; this says what is actually on the dirt. A site 14 months past its "
+            "announced groundbreaking with an unbroken parcel does not hold its announced "
+            "energization date, whatever the permit says.\n"
+            "Read the result honestly:\n"
+            "- Sentinel-2 is 10 m per pixel. It sees clearing, grading, laydown yards and large "
+            "pads. It cannot see a turbine foundation, a transformer or anything under ~20 m. "
+            "Never report equipment from this tool.\n"
+            "- insufficient_imagery is a real answer, not a failure. It means the only scenes "
+            "available were cloudy, or the catalog was unreachable. Say so; do not substitute a "
+            "guess.\n"
+            "- The verdict corroborates, it does not prove. A cleared pad is not a permitted "
+            "plant and an empty parcel is not proof a project is dead.\n"
+            "- Quote the scene ids, acquisition dates and cloud fractions next to any claim you "
+            "make from this. They are in the result for that reason.\n"
+            "- The footprint is a circle around the coordinate, not a parcel boundary. If the "
+            "site was resolved from an approximate coordinate rather than a rooftop geocode, say "
+            "that the read may be looking at the wrong ground."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "announced_groundbreaking": {
+                    "type": "string",
+                    "description": "When ground was announced to break, in the form the source "
+                    "states it: '2025-09', 'Q4 2026', '2024-06-15'. Drives which scene is used "
+                    "as the baseline.",
+                },
+                "announced_energization": {
+                    "type": "string",
+                    "description": "The announced energization or in-service date, same forms. "
+                    "Used to report how much schedule is left against what is on the ground.",
+                },
+                "radius_m": {
+                    "type": "number",
+                    "description": "Footprint radius in metres. Default 500. Use the campus "
+                    "scale, not the building: 500 for a single plant, 800-1200 for a large "
+                    "campus. Too small misses the pad; too large dilutes it with neighbours.",
+                },
+                "lat": {
+                    "type": "number",
+                    "description": "Latitude. Defaults to the resolved site.",
+                },
+                "lon": {
+                    "type": "number",
+                    "description": "Longitude. Defaults to the resolved site.",
+                },
+            },
+            "required": [],
+        },
+    },
 ]
 
 TOOL_NAMES = tuple(t["name"] for t in TOOL_SCHEMAS)
@@ -1632,6 +1691,85 @@ def _exec_request_field(ctx: ToolContext, args: dict) -> dict:
     return record
 
 
+#: Mireye land-cover fields that bear on construction state. Read out of the
+#: fact set the run already paid for rather than fetched again — the point of
+#: putting them next to the imagery is that Mireye answers first, and the
+#: difference between a point sample and a footprint mean is then visible in
+#: one result instead of being argued about.
+_LAND_COVER_KEYS = (
+    "ndvi_current",
+    "ndvi_change_5y",
+    "lcms_class",
+    "land_use_class",
+    "tree_canopy_pct",
+    "primary_building_footprint_sqm",
+    "cdl_class",
+)
+
+
+def _exec_verify_construction(ctx: ToolContext, args: dict) -> dict:
+    # Imported here rather than at module scope so a missing or broken imagery
+    # module degrades to one unavailable tool instead of an unimportable
+    # planner. Same reason `get_regulatory_context` duck-types `ingest/`.
+    try:
+        from ingest.satellite import verify_construction
+    except Exception as exc:  # pragma: no cover - defensive
+        raise ToolError(
+            f"satellite verification is not available ({exc.__class__.__name__}: {exc}). "
+            "Report the construction state as unknown rather than assuming either answer."
+        )
+
+    lat, lon = args.get("lat"), args.get("lon")
+    if lat is None or lon is None:
+        if ctx.location is None:
+            raise ToolError(
+                "No coordinate. Call resolve_site first, or pass lat and lon explicitly."
+            )
+        lat, lon = ctx.location.latitude, ctx.location.longitude
+
+    announced_energization = args.get("announced_energization")
+    if not announced_energization and getattr(ctx.project, "target_energization", None):
+        announced_energization = ctx.project.target_energization.isoformat()
+
+    mireye_facts = {
+        key: {
+            "value": ctx.facts.fact(key).value,
+            "source": ctx.facts.fact(key).source,
+            "fetched": ctx.facts.fact(key).fetched,
+        }
+        for key in _LAND_COVER_KEYS
+        if ctx.facts.fact(key) is not None
+    }
+
+    # No ctx.spend(): this is public Copernicus imagery over HTTP range reads.
+    # It costs no provider credits, which is why it is worth calling on every
+    # project that has an announced date.
+    verdict = verify_construction(
+        float(lat),
+        float(lon),
+        announced_groundbreaking=args.get("announced_groundbreaking"),
+        announced_energization=announced_energization,
+        radius_m=float(args.get("radius_m") or 500.0),
+        label=(ctx.project.name or ctx.project.address or "site"),
+        mireye_facts=mireye_facts or None,
+    )
+
+    confidence_note = None
+    if ctx.location is not None and ctx.location.confidence is not None:
+        if ctx.location.confidence < 0.9:
+            confidence_note = (
+                f"The site geocoded at {ctx.location.confidence:.2f} confidence. The footprint "
+                f"is a circle around that point, so a coarse geocode reads the wrong ground and "
+                f"an empty result may only mean the circle is in the wrong place."
+            )
+    ctx.notes.append(f"satellite: {verdict.headline()}")
+
+    result = verdict.to_dict()
+    result["geocode_caveat"] = confidence_note
+    result["credits"] = 0
+    return result
+
+
 EXECUTORS: dict[str, Callable[[ToolContext, dict], dict]] = {
     "resolve_site": _exec_resolve_site,
     "get_physical_facts": _exec_get_physical_facts,
@@ -1644,6 +1782,7 @@ EXECUTORS: dict[str, Callable[[ToolContext, dict], dict]] = {
     "search_alternate_sites": _exec_search_alternate_sites,
     "ask_mireye": _exec_ask_mireye,
     "request_field": _exec_request_field,
+    "verify_construction": _exec_verify_construction,
 }
 
 

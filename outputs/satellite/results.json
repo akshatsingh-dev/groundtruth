@@ -1,0 +1,563 @@
+[
+ {
+  "verdict": "structures_present",
+  "label": "jupiter-construction",
+  "headline": "structures_present \u2014 2025-08-25 to 2026-07-31, 61.3% of the footprint disturbed above the control ring",
+  "footprint": {
+   "lat": 31.8175,
+   "lon": -106.6675,
+   "radius_m": 900.0,
+   "area_ha": 254.5
+  },
+  "method": "Two Sentinel-2 L2A scenes over a circular footprint, differenced against the annulus from radius_m to 3x radius_m on the same two scenes. A pixel is disturbed when NDVI = (NIR-RED)/(NIR+RED) falls by at least 0.15 AND BSI = ((SWIR16+RED)-(NIR+BLUE))/((SWIR16+RED)+(NIR+BLUE)) rises by at least 0.05; or, on ground that was already unvegetated, when mean visible reflectance rises by at least 0.030 while NDVI stays under 0.25 and does not increase. The reported number is the footprint's disturbed fraction minus the ring's, so regional greening, drought and harvest cancel. Cloud, shadow and snow are masked per pixel from the scene's own SCL band; above 10% of the footprint masked, the answer is insufficient_imagery.",
+  "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+  "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+  "resolution_m": 10,
+  "baseline_scene": {
+   "scene_id": "S2C_13SCR_20250825_0_L2A",
+   "acquired": "2025-08-25T17:55:32.265000Z",
+   "platform": "sentinel-2c",
+   "scene_cloud_pct": 0.07,
+   "aoi_cloud_pct": 0.0,
+   "aoi_valid_pct": 100.0,
+   "epsg": 32613,
+   "mgrs": "MGRS-13SCR",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "recent_scene": {
+   "scene_id": "S2C_13SCR_20260731_0_L2A",
+   "acquired": "2026-07-31T17:55:14.096000Z",
+   "platform": "sentinel-2c",
+   "scene_cloud_pct": 0.11,
+   "aoi_cloud_pct": 0.0,
+   "aoi_valid_pct": 100.0,
+   "epsg": 32613,
+   "mgrs": "MGRS-13SCR",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "footprint_change": {
+   "pixels": 25437,
+   "area_ha": 254.4,
+   "ndvi_before": 0.15,
+   "ndvi_after": 0.043,
+   "ndvi_delta": -0.108,
+   "bsi_before": 0.172,
+   "bsi_after": 0.172,
+   "bsi_delta": 0.0,
+   "brightness_before": 0.207,
+   "brightness_after": 0.265,
+   "brightness_delta": 0.059,
+   "disturbed_fraction": 0.684,
+   "built_fraction": 0.811
+  },
+  "control_ring_change": {
+   "pixels": 203594,
+   "area_ha": 2035.9,
+   "ndvi_before": 0.147,
+   "ndvi_after": 0.104,
+   "ndvi_delta": -0.042,
+   "bsi_before": 0.166,
+   "bsi_after": 0.194,
+   "bsi_delta": 0.028,
+   "brightness_before": 0.207,
+   "brightness_after": 0.214,
+   "brightness_delta": 0.008,
+   "disturbed_fraction": 0.071,
+   "built_fraction": 0.347
+  },
+  "excess_disturbed_fraction": 0.6127,
+  "reasons": [
+   "68.4% of the footprint changed from vegetated to bare or from bare to brighter-bare; the control ring moved 7.1% on the same two scenes, so the excess attributable to this parcel is 61.3%.",
+   "Mean NDVI over the footprint moved -0.108; the ring moved -0.042. Excess -0.065.",
+   "81.1% of the footprint now reads bright (visible reflectance >= 0.22) and unvegetated, which is the signature of roofs, concrete or new pavement. At 10 m this cannot separate a finished building from a slab or a gravel laydown yard.",
+   "Scenes: S2C_13SCR_20250825_0_L2A acquired 2025-08-25, cloud 0.0% over the footprint; S2C_13SCR_20260731_0_L2A acquired 2026-07-31, cloud 0.0% over the footprint. Sentinel-2 is 10 m per pixel \u2014 this sees clearing and earthworks, not equipment."
+  ],
+  "schedule": {
+   "as_of": "2026-08-05",
+   "announced_groundbreaking": "2025-09",
+   "announced_groundbreaking_read_as": "2025-09-01",
+   "groundbreaking_parse": "month '2025-09', read as the first of the month",
+   "announced_energization": "Q4 2026",
+   "announced_energization_read_as": "2026-10-01",
+   "energization_parse": "quarter 'Q4 2026', read as the first day of Q4 2026",
+   "months_since_announced_groundbreaking": 11.1,
+   "months_to_announced_energization": 1.9,
+   "implication": "11 months past the announced groundbreaking date, and the footprint reads structures present. 1.9 months remain to the announced energization date."
+  },
+  "chips": [
+   "outputs/satellite/jupiter-construction_2025-08-25_baseline.png",
+   "outputs/satellite/jupiter-construction_2026-07-31_recent.png",
+   "outputs/satellite/jupiter-construction_2026-07-31_change.png"
+  ],
+  "scene_selection_log": [
+   "S2C_13SCR_20250825_0_L2A (2025-08-25): accepted, 0.0% footprint cloud, 100.0% usable, 0.1% over the whole tile",
+   "S2C_13SCR_20260731_0_L2A (2026-07-31): accepted, 0.0% footprint cloud, 100.0% usable, 0.1% over the whole tile"
+  ],
+  "mireye_corroboration": {
+   "policy": "Mireye answers first. ndvi_current, ndvi_change_5y, lcms_class, land_use_class and tree_canopy_pct are read from Mireye and reported here as corroboration.",
+   "gap": "Mireye's NDVI is one ~10 m cell with no acquisition date, no cloud fraction and no selectable dates; ndvi_change_5y is a fixed 5-year window. Filed as /v1/field-requests fr_39331af65eef4400986c0d4c8552dc5e (queued, 3 accepted_new sub-asks, 0 credits).",
+   "fields": {},
+   "note": "No Mireye land-cover facts were in the run's fact set."
+  },
+  "limits": [
+   "Sentinel-2 is 10 m per pixel. Clearing, grading, laydown yards, haul roads and large pads are visible. A turbine foundation, a transformer, a switchyard bay or any object under about 20 m is not. Nothing here is evidence about equipment.",
+   "This corroborates a permit-pathway verdict. It does not prove one. A cleared pad is not a permitted plant, and an empty parcel is not proof a project is dead.",
+   "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
+   "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
+   "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+  ],
+  "citation": "S2C_13SCR_20250825_0_L2A acquired 2025-08-25, cloud 0.0% over the footprint; S2C_13SCR_20260731_0_L2A acquired 2026-07-31, cloud 0.0% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
+ },
+ {
+  "verdict": "no_visible_activity",
+  "label": "jupiter-published-coord",
+  "headline": "no_visible_activity \u2014 2025-08-25 to 2026-07-31, -0.9% of the footprint disturbed above the control ring",
+  "footprint": {
+   "lat": 31.87,
+   "lon": -106.69,
+   "radius_m": 1200.0,
+   "area_ha": 452.4
+  },
+  "method": "Two Sentinel-2 L2A scenes over a circular footprint, differenced against the annulus from radius_m to 3x radius_m on the same two scenes. A pixel is disturbed when NDVI = (NIR-RED)/(NIR+RED) falls by at least 0.15 AND BSI = ((SWIR16+RED)-(NIR+BLUE))/((SWIR16+RED)+(NIR+BLUE)) rises by at least 0.05; or, on ground that was already unvegetated, when mean visible reflectance rises by at least 0.030 while NDVI stays under 0.25 and does not increase. The reported number is the footprint's disturbed fraction minus the ring's, so regional greening, drought and harvest cancel. Cloud, shadow and snow are masked per pixel from the scene's own SCL band; above 10% of the footprint masked, the answer is insufficient_imagery.",
+  "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+  "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+  "resolution_m": 10,
+  "baseline_scene": {
+   "scene_id": "S2C_13SCR_20250825_0_L2A",
+   "acquired": "2025-08-25T17:55:32.265000Z",
+   "platform": "sentinel-2c",
+   "scene_cloud_pct": 0.07,
+   "aoi_cloud_pct": 0.0,
+   "aoi_valid_pct": 100.0,
+   "epsg": 32613,
+   "mgrs": "MGRS-13SCR",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "recent_scene": {
+   "scene_id": "S2C_13SCR_20260731_0_L2A",
+   "acquired": "2026-07-31T17:55:14.096000Z",
+   "platform": "sentinel-2c",
+   "scene_cloud_pct": 0.11,
+   "aoi_cloud_pct": 0.0,
+   "aoi_valid_pct": 100.0,
+   "epsg": 32613,
+   "mgrs": "MGRS-13SCR",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "footprint_change": {
+   "pixels": 45237,
+   "area_ha": 452.4,
+   "ndvi_before": 0.088,
+   "ndvi_after": 0.097,
+   "ndvi_delta": 0.009,
+   "bsi_before": 0.164,
+   "bsi_after": 0.157,
+   "bsi_delta": -0.007,
+   "brightness_before": 0.237,
+   "brightness_after": 0.242,
+   "brightness_delta": 0.005,
+   "disturbed_fraction": 0.027,
+   "built_fraction": 0.534
+  },
+  "control_ring_change": {
+   "pixels": 361753,
+   "area_ha": 3617.5,
+   "ndvi_before": 0.115,
+   "ndvi_after": 0.105,
+   "ndvi_delta": -0.01,
+   "bsi_before": 0.161,
+   "bsi_after": 0.166,
+   "bsi_delta": 0.005,
+   "brightness_before": 0.219,
+   "brightness_after": 0.226,
+   "brightness_delta": 0.006,
+   "disturbed_fraction": 0.036,
+   "built_fraction": 0.47
+  },
+  "excess_disturbed_fraction": -0.0093,
+  "reasons": [
+   "2.7% of the footprint changed from vegetated to bare or from bare to brighter-bare; the control ring moved 3.6% on the same two scenes, so the excess attributable to this parcel is -0.9%.",
+   "Mean NDVI over the footprint moved +0.009; the ring moved -0.010. Excess +0.019.",
+   "Scenes: S2C_13SCR_20250825_0_L2A acquired 2025-08-25, cloud 0.0% over the footprint; S2C_13SCR_20260731_0_L2A acquired 2026-07-31, cloud 0.0% over the footprint. Sentinel-2 is 10 m per pixel \u2014 this sees clearing and earthworks, not equipment."
+  ],
+  "schedule": {
+   "as_of": "2026-08-05",
+   "announced_groundbreaking": "2025-09",
+   "announced_groundbreaking_read_as": "2025-09-01",
+   "groundbreaking_parse": "month '2025-09', read as the first of the month",
+   "announced_energization": "Q4 2026",
+   "announced_energization_read_as": "2026-10-01",
+   "energization_parse": "quarter 'Q4 2026', read as the first day of Q4 2026",
+   "months_since_announced_groundbreaking": 11.1,
+   "months_to_announced_energization": 1.9,
+   "schedule_below_fastest_observed": true,
+   "implication": "11 months past the announced groundbreaking date and the footprint shows no surface change above the control ring. 1.9 months remain to the announced energization date. An unbroken parcel 1.9 months out requires a full buildout in less time than any case in this repo's backtest except xAI Colossus 1, which was 4 months and was a retrofit of an existing factory building using trailer-mounted turbines. This is a schedule sanity check, not a construction-duration model."
+  },
+  "chips": [
+   "outputs/satellite/jupiter-published-coord_2025-08-25_baseline.png",
+   "outputs/satellite/jupiter-published-coord_2026-07-31_recent.png",
+   "outputs/satellite/jupiter-published-coord_2026-07-31_change.png"
+  ],
+  "scene_selection_log": [
+   "S2C_13SCR_20250825_0_L2A (2025-08-25): accepted, 0.0% footprint cloud, 100.0% usable, 0.1% over the whole tile",
+   "S2C_13SCR_20260731_0_L2A (2026-07-31): accepted, 0.0% footprint cloud, 100.0% usable, 0.1% over the whole tile"
+  ],
+  "mireye_corroboration": {
+   "policy": "Mireye answers first. ndvi_current, ndvi_change_5y, lcms_class, land_use_class and tree_canopy_pct are read from Mireye and reported here as corroboration.",
+   "gap": "Mireye's NDVI is one ~10 m cell with no acquisition date, no cloud fraction and no selectable dates; ndvi_change_5y is a fixed 5-year window. Filed as /v1/field-requests fr_39331af65eef4400986c0d4c8552dc5e (queued, 3 accepted_new sub-asks, 0 credits).",
+   "fields": {},
+   "note": "No Mireye land-cover facts were in the run's fact set."
+  },
+  "limits": [
+   "Sentinel-2 is 10 m per pixel. Clearing, grading, laydown yards, haul roads and large pads are visible. A turbine foundation, a transformer, a switchyard bay or any object under about 20 m is not. Nothing here is evidence about equipment.",
+   "This corroborates a permit-pathway verdict. It does not prove one. A cleared pad is not a permitted plant, and an empty parcel is not proof a project is dead.",
+   "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
+   "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
+   "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+  ],
+  "citation": "S2C_13SCR_20250825_0_L2A acquired 2025-08-25, cloud 0.0% over the footprint; S2C_13SCR_20260731_0_L2A acquired 2026-07-31, cloud 0.0% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
+ },
+ {
+  "verdict": "no_visible_activity",
+  "label": "vineland",
+  "headline": "no_visible_activity \u2014 2024-06-15 to 2026-08-04, -2.1% of the footprint disturbed above the control ring",
+  "footprint": {
+   "lat": 39.447,
+   "lon": -75.01,
+   "radius_m": 500.0,
+   "area_ha": 78.5
+  },
+  "method": "Two Sentinel-2 L2A scenes over a circular footprint, differenced against the annulus from radius_m to 3x radius_m on the same two scenes. A pixel is disturbed when NDVI = (NIR-RED)/(NIR+RED) falls by at least 0.15 AND BSI = ((SWIR16+RED)-(NIR+BLUE))/((SWIR16+RED)+(NIR+BLUE)) rises by at least 0.05; or, on ground that was already unvegetated, when mean visible reflectance rises by at least 0.030 while NDVI stays under 0.25 and does not increase. The reported number is the footprint's disturbed fraction minus the ring's, so regional greening, drought and harvest cancel. Cloud, shadow and snow are masked per pixel from the scene's own SCL band; above 10% of the footprint masked, the answer is insufficient_imagery.",
+  "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+  "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+  "resolution_m": 10,
+  "baseline_scene": {
+   "scene_id": "S2A_18SVJ_20240615_0_L2A",
+   "acquired": "2024-06-15T15:52:29.323000Z",
+   "platform": "sentinel-2a",
+   "scene_cloud_pct": 1.1,
+   "aoi_cloud_pct": 0.43,
+   "aoi_valid_pct": 99.57,
+   "epsg": 32618,
+   "mgrs": "MGRS-18SVJ",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "recent_scene": {
+   "scene_id": "S2C_18SVJ_20260804_0_L2A",
+   "acquired": "2026-08-04T15:52:24.126000Z",
+   "platform": "sentinel-2c",
+   "scene_cloud_pct": 37.02,
+   "aoi_cloud_pct": 0.0,
+   "aoi_valid_pct": 100.0,
+   "epsg": 32618,
+   "mgrs": "MGRS-18SVJ",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "footprint_change": {
+   "pixels": 7821,
+   "area_ha": 78.2,
+   "ndvi_before": 0.624,
+   "ndvi_after": 0.672,
+   "ndvi_delta": 0.048,
+   "bsi_before": -0.113,
+   "bsi_after": -0.18,
+   "bsi_delta": -0.067,
+   "brightness_before": 0.082,
+   "brightness_after": 0.078,
+   "brightness_delta": -0.004,
+   "disturbed_fraction": 0.033,
+   "built_fraction": 0.05
+  },
+  "control_ring_change": {
+   "pixels": 55092,
+   "area_ha": 550.9,
+   "ndvi_before": 0.569,
+   "ndvi_after": 0.639,
+   "ndvi_delta": 0.07,
+   "bsi_before": -0.079,
+   "bsi_after": -0.161,
+   "bsi_delta": -0.082,
+   "brightness_before": 0.093,
+   "brightness_after": 0.084,
+   "brightness_delta": -0.009,
+   "disturbed_fraction": 0.053,
+   "built_fraction": 0.027
+  },
+  "excess_disturbed_fraction": -0.0206,
+  "reasons": [
+   "3.3% of the footprint changed from vegetated to bare or from bare to brighter-bare; the control ring moved 5.3% on the same two scenes, so the excess attributable to this parcel is -2.1%.",
+   "Mean NDVI over the footprint moved +0.048; the ring moved +0.070. Excess -0.022.",
+   "Scenes: S2A_18SVJ_20240615_0_L2A acquired 2024-06-15, cloud 0.4% over the footprint; S2C_18SVJ_20260804_0_L2A acquired 2026-08-04, cloud 0.0% over the footprint. Sentinel-2 is 10 m per pixel \u2014 this sees clearing and earthworks, not equipment."
+  ],
+  "schedule": {
+   "as_of": "2026-08-05",
+   "announced_groundbreaking": "2024-06",
+   "announced_groundbreaking_read_as": "2024-06-01",
+   "groundbreaking_parse": "month '2024-06', read as the first of the month",
+   "announced_energization": "2026-12",
+   "announced_energization_read_as": "2026-12-01",
+   "energization_parse": "month '2026-12', read as the first of the month",
+   "months_since_announced_groundbreaking": 26.1,
+   "months_to_announced_energization": 3.9,
+   "schedule_below_fastest_observed": true,
+   "implication": "26 months past the announced groundbreaking date and the footprint shows no surface change above the control ring. 3.9 months remain to the announced energization date. An unbroken parcel 3.9 months out requires a full buildout in less time than any case in this repo's backtest except xAI Colossus 1, which was 4 months and was a retrofit of an existing factory building using trailer-mounted turbines. This is a schedule sanity check, not a construction-duration model."
+  },
+  "chips": [
+   "outputs/satellite/vineland_2024-06-15_baseline.png",
+   "outputs/satellite/vineland_2026-08-04_recent.png",
+   "outputs/satellite/vineland_2026-08-04_change.png"
+  ],
+  "scene_selection_log": [
+   "S2A_18SVJ_20240615_0_L2A (2024-06-15): accepted, 0.4% footprint cloud, 99.6% usable, 1.1% over the whole tile",
+   "S2C_18SVJ_20260804_0_L2A (2026-08-04): accepted, 0.0% footprint cloud, 100.0% usable, 37.0% over the whole tile"
+  ],
+  "mireye_corroboration": {
+   "policy": "Mireye answers first. ndvi_current, ndvi_change_5y, lcms_class, land_use_class and tree_canopy_pct are read from Mireye and reported here as corroboration.",
+   "gap": "Mireye's NDVI is one ~10 m cell with no acquisition date, no cloud fraction and no selectable dates; ndvi_change_5y is a fixed 5-year window. Filed as /v1/field-requests fr_39331af65eef4400986c0d4c8552dc5e (queued, 3 accepted_new sub-asks, 0 credits).",
+   "fields": {},
+   "note": "No Mireye land-cover facts were in the run's fact set."
+  },
+  "limits": [
+   "Sentinel-2 is 10 m per pixel. Clearing, grading, laydown yards, haul roads and large pads are visible. A turbine foundation, a transformer, a switchyard bay or any object under about 20 m is not. Nothing here is evidence about equipment.",
+   "This corroborates a permit-pathway verdict. It does not prove one. A cleared pad is not a permitted plant, and an empty parcel is not proof a project is dead.",
+   "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
+   "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
+   "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+  ],
+  "citation": "S2A_18SVJ_20240615_0_L2A acquired 2024-06-15, cloud 0.4% over the footprint; S2C_18SVJ_20260804_0_L2A acquired 2026-08-04, cloud 0.0% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
+ },
+ {
+  "verdict": "earthworks_or_foundations",
+  "label": "memphis-colossus1",
+  "headline": "earthworks_or_foundations \u2014 2024-06-13 to 2026-07-28, 23.8% of the footprint disturbed above the control ring",
+  "footprint": {
+   "lat": 35.060553,
+   "lon": -90.155133,
+   "radius_m": 800.0,
+   "area_ha": 201.1
+  },
+  "method": "Two Sentinel-2 L2A scenes over a circular footprint, differenced against the annulus from radius_m to 3x radius_m on the same two scenes. A pixel is disturbed when NDVI = (NIR-RED)/(NIR+RED) falls by at least 0.15 AND BSI = ((SWIR16+RED)-(NIR+BLUE))/((SWIR16+RED)+(NIR+BLUE)) rises by at least 0.05; or, on ground that was already unvegetated, when mean visible reflectance rises by at least 0.030 while NDVI stays under 0.25 and does not increase. The reported number is the footprint's disturbed fraction minus the ring's, so regional greening, drought and harvest cancel. Cloud, shadow and snow are masked per pixel from the scene's own SCL band; above 10% of the footprint masked, the answer is insufficient_imagery.",
+  "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+  "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+  "resolution_m": 10,
+  "baseline_scene": {
+   "scene_id": "S2A_15SYU_20240613_0_L2A",
+   "acquired": "2024-06-13T16:54:06.665000Z",
+   "platform": "sentinel-2a",
+   "scene_cloud_pct": 0.11,
+   "aoi_cloud_pct": 0.0,
+   "aoi_valid_pct": 100.0,
+   "epsg": 32615,
+   "mgrs": "MGRS-15SYU",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "recent_scene": {
+   "scene_id": "S2B_15SYU_20260728_0_L2A",
+   "acquired": "2026-07-28T16:54:01.147000Z",
+   "platform": "sentinel-2b",
+   "scene_cloud_pct": 45.81,
+   "aoi_cloud_pct": 0.0,
+   "aoi_valid_pct": 100.0,
+   "epsg": 32615,
+   "mgrs": "MGRS-15SYU",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "footprint_change": {
+   "pixels": 20105,
+   "area_ha": 201.1,
+   "ndvi_before": 0.623,
+   "ndvi_after": 0.469,
+   "ndvi_delta": -0.153,
+   "bsi_before": -0.112,
+   "bsi_after": -0.002,
+   "bsi_delta": 0.109,
+   "brightness_before": 0.086,
+   "brightness_after": 0.111,
+   "brightness_delta": 0.025,
+   "disturbed_fraction": 0.352,
+   "built_fraction": 0.087
+  },
+  "control_ring_change": {
+   "pixels": 159761,
+   "area_ha": 1597.6,
+   "ndvi_before": 0.48,
+   "ndvi_after": 0.493,
+   "ndvi_delta": 0.013,
+   "bsi_before": -0.093,
+   "bsi_after": -0.103,
+   "bsi_delta": -0.01,
+   "brightness_before": 0.077,
+   "brightness_after": 0.086,
+   "brightness_delta": 0.008,
+   "disturbed_fraction": 0.115,
+   "built_fraction": 0.024
+  },
+  "excess_disturbed_fraction": 0.2376,
+  "reasons": [
+   "35.2% of the footprint changed from vegetated to bare or from bare to brighter-bare; the control ring moved 11.5% on the same two scenes, so the excess attributable to this parcel is 23.8%.",
+   "Mean NDVI over the footprint moved -0.153; the ring moved +0.013. Excess -0.167.",
+   "Scenes: S2A_15SYU_20240613_0_L2A acquired 2024-06-13, cloud 0.0% over the footprint; S2B_15SYU_20260728_0_L2A acquired 2026-07-28, cloud 0.0% over the footprint. Sentinel-2 is 10 m per pixel \u2014 this sees clearing and earthworks, not equipment."
+  ],
+  "schedule": {
+   "as_of": "2026-08-05",
+   "announced_groundbreaking": "2024-06",
+   "announced_groundbreaking_read_as": "2024-06-01",
+   "groundbreaking_parse": "month '2024-06', read as the first of the month",
+   "announced_energization": "2024-09",
+   "announced_energization_read_as": "2024-09-01",
+   "energization_parse": "month '2024-09', read as the first of the month",
+   "months_since_announced_groundbreaking": 26.1,
+   "months_to_announced_energization": -23.1,
+   "announced_date_already_passed": true,
+   "implication": "26 months past the announced groundbreaking date, and the footprint reads earthworks or foundations. The announced energization date passed 23 months ago."
+  },
+  "chips": [
+   "outputs/satellite/memphis-colossus1_2024-06-13_baseline.png",
+   "outputs/satellite/memphis-colossus1_2026-07-28_recent.png",
+   "outputs/satellite/memphis-colossus1_2026-07-28_change.png"
+  ],
+  "scene_selection_log": [
+   "S2A_15SYU_20240613_0_L2A (2024-06-13): accepted, 0.0% footprint cloud, 100.0% usable, 0.1% over the whole tile",
+   "S2B_15SYU_20260728_0_L2A (2026-07-28): accepted, 0.0% footprint cloud, 100.0% usable, 45.8% over the whole tile"
+  ],
+  "mireye_corroboration": {
+   "policy": "Mireye answers first. ndvi_current, ndvi_change_5y, lcms_class, land_use_class and tree_canopy_pct are read from Mireye and reported here as corroboration.",
+   "gap": "Mireye's NDVI is one ~10 m cell with no acquisition date, no cloud fraction and no selectable dates; ndvi_change_5y is a fixed 5-year window. Filed as /v1/field-requests fr_39331af65eef4400986c0d4c8552dc5e (queued, 3 accepted_new sub-asks, 0 credits).",
+   "fields": {},
+   "note": "No Mireye land-cover facts were in the run's fact set."
+  },
+  "limits": [
+   "Sentinel-2 is 10 m per pixel. Clearing, grading, laydown yards, haul roads and large pads are visible. A turbine foundation, a transformer, a switchyard bay or any object under about 20 m is not. Nothing here is evidence about equipment.",
+   "This corroborates a permit-pathway verdict. It does not prove one. A cleared pad is not a permitted plant, and an empty parcel is not proof a project is dead.",
+   "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
+   "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
+   "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+  ],
+  "citation": "S2A_15SYU_20240613_0_L2A acquired 2024-06-13, cloud 0.0% over the footprint; S2B_15SYU_20260728_0_L2A acquired 2026-07-28, cloud 0.0% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
+ },
+ {
+  "verdict": "no_visible_activity",
+  "label": "memphis-published-coord",
+  "headline": "no_visible_activity \u2014 2024-06-13 to 2026-07-18, -2.6% of the footprint disturbed above the control ring",
+  "footprint": {
+   "lat": 35.065,
+   "lon": -90.075,
+   "radius_m": 800.0,
+   "area_ha": 201.1
+  },
+  "method": "Two Sentinel-2 L2A scenes over a circular footprint, differenced against the annulus from radius_m to 3x radius_m on the same two scenes. A pixel is disturbed when NDVI = (NIR-RED)/(NIR+RED) falls by at least 0.15 AND BSI = ((SWIR16+RED)-(NIR+BLUE))/((SWIR16+RED)+(NIR+BLUE)) rises by at least 0.05; or, on ground that was already unvegetated, when mean visible reflectance rises by at least 0.030 while NDVI stays under 0.25 and does not increase. The reported number is the footprint's disturbed fraction minus the ring's, so regional greening, drought and harvest cancel. Cloud, shadow and snow are masked per pixel from the scene's own SCL band; above 10% of the footprint masked, the answer is insufficient_imagery.",
+  "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+  "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/",
+  "resolution_m": 10,
+  "baseline_scene": {
+   "scene_id": "S2A_15SYU_20240613_0_L2A",
+   "acquired": "2024-06-13T16:54:06.665000Z",
+   "platform": "sentinel-2a",
+   "scene_cloud_pct": 0.11,
+   "aoi_cloud_pct": 0.0,
+   "aoi_valid_pct": 100.0,
+   "epsg": 32615,
+   "mgrs": "MGRS-15SYU",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "recent_scene": {
+   "scene_id": "S2B_15SYU_20260718_0_L2A",
+   "acquired": "2026-07-18T16:54:00.775000Z",
+   "platform": "sentinel-2b",
+   "scene_cloud_pct": 10.47,
+   "aoi_cloud_pct": 0.06,
+   "aoi_valid_pct": 99.94,
+   "epsg": 32615,
+   "mgrs": "MGRS-15SYU",
+   "source": "Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential.",
+   "source_url": "https://registry.opendata.aws/sentinel-2-l2a-cogs/"
+  },
+  "footprint_change": {
+   "pixels": 20094,
+   "area_ha": 200.9,
+   "ndvi_before": 0.536,
+   "ndvi_after": 0.514,
+   "ndvi_delta": -0.022,
+   "bsi_before": -0.091,
+   "bsi_after": -0.084,
+   "bsi_delta": 0.007,
+   "brightness_before": 0.086,
+   "brightness_after": 0.092,
+   "brightness_delta": 0.006,
+   "disturbed_fraction": 0.065,
+   "built_fraction": 0.016
+  },
+  "control_ring_change": {
+   "pixels": 140675,
+   "area_ha": 1406.8,
+   "ndvi_before": 0.613,
+   "ndvi_after": 0.581,
+   "ndvi_delta": -0.032,
+   "bsi_before": -0.157,
+   "bsi_after": -0.14,
+   "bsi_delta": 0.017,
+   "brightness_before": 0.078,
+   "brightness_after": 0.089,
+   "brightness_delta": 0.011,
+   "disturbed_fraction": 0.091,
+   "built_fraction": 0.043
+  },
+  "excess_disturbed_fraction": -0.0262,
+  "reasons": [
+   "6.5% of the footprint changed from vegetated to bare or from bare to brighter-bare; the control ring moved 9.1% on the same two scenes, so the excess attributable to this parcel is -2.6%.",
+   "Mean NDVI over the footprint moved -0.022; the ring moved -0.032. Excess +0.010.",
+   "Scenes: S2A_15SYU_20240613_0_L2A acquired 2024-06-13, cloud 0.0% over the footprint; S2B_15SYU_20260718_0_L2A acquired 2026-07-18, cloud 0.1% over the footprint. Sentinel-2 is 10 m per pixel \u2014 this sees clearing and earthworks, not equipment."
+  ],
+  "schedule": {
+   "as_of": "2026-08-05",
+   "announced_groundbreaking": "2024-06",
+   "announced_groundbreaking_read_as": "2024-06-01",
+   "groundbreaking_parse": "month '2024-06', read as the first of the month",
+   "announced_energization": "2024-09",
+   "announced_energization_read_as": "2024-09-01",
+   "energization_parse": "month '2024-09', read as the first of the month",
+   "months_since_announced_groundbreaking": 26.1,
+   "months_to_announced_energization": -23.1,
+   "announced_date_already_passed": true,
+   "implication": "26 months past the announced groundbreaking date and the footprint shows no surface change above the control ring. The announced energization date passed 23 months ago."
+  },
+  "chips": [
+   "outputs/satellite/memphis-published-coord_2024-06-13_baseline.png",
+   "outputs/satellite/memphis-published-coord_2026-07-18_recent.png",
+   "outputs/satellite/memphis-published-coord_2026-07-18_change.png"
+  ],
+  "scene_selection_log": [
+   "S2A_15SYU_20240613_0_L2A (2024-06-13): accepted, 0.0% footprint cloud, 100.0% usable, 0.1% over the whole tile",
+   "S2B_15SYU_20260728_0_L2A (2026-07-28): rejected, 89.9% of the footprint is cloud/shadow/snow, 10.1% usable (cloud_medium_prob 89.89%, unclassified 9.53%, vegetation 0.57%)",
+   "S2B_15SYU_20260718_0_L2A (2026-07-18): accepted, 0.1% footprint cloud, 99.9% usable, 10.5% over the whole tile"
+  ],
+  "mireye_corroboration": {
+   "policy": "Mireye answers first. ndvi_current, ndvi_change_5y, lcms_class, land_use_class and tree_canopy_pct are read from Mireye and reported here as corroboration.",
+   "gap": "Mireye's NDVI is one ~10 m cell with no acquisition date, no cloud fraction and no selectable dates; ndvi_change_5y is a fixed 5-year window. Filed as /v1/field-requests fr_39331af65eef4400986c0d4c8552dc5e (queued, 3 accepted_new sub-asks, 0 credits).",
+   "fields": {},
+   "note": "No Mireye land-cover facts were in the run's fact set."
+  },
+  "limits": [
+   "Sentinel-2 is 10 m per pixel. Clearing, grading, laydown yards, haul roads and large pads are visible. A turbine foundation, a transformer, a switchyard bay or any object under about 20 m is not. Nothing here is evidence about equipment.",
+   "This corroborates a permit-pathway verdict. It does not prove one. A cleared pad is not a permitted plant, and an empty parcel is not proof a project is dead.",
+   "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
+   "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
+   "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+  ],
+  "citation": "S2A_15SYU_20240613_0_L2A acquired 2024-06-13, cloud 0.0% over the footprint; S2B_15SYU_20260718_0_L2A acquired 2026-07-18, cloud 0.1% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
+ }
+]

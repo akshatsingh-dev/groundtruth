@@ -5,7 +5,9 @@ When the answer is bad, it goes and finds a parcel or a plant design where it is
 
 Announced ≠ deliverable.
 
-Built on [Mireye](https://www.mireye.com) for the physical layer.
+Built on [Mireye](https://www.mireye.com) for the physical layer. US first because
+Mireye is US-only. [India is where this is headed](#where-this-goes-india), where the
+announced 6-8 GW by 2030 is realistically 3.4-3.6.
 
 ---
 
@@ -332,19 +334,12 @@ implies $13.2M per MW-year, 1.14x. Right direction, right magnitude. The high ca
 
 ---
 
-## Where this goes next: the other side of the table
+## Where this goes: India
 
-The same engine runs backwards. A county planning office and a state air agency answer
-the identical question, understaffed and from the opposite chair. Virginia DEQ has
-approved exactly one air permit for a data center campus with onsite gas, which is a
-capacity problem rather than an obstruction one. An agency that could pre-screen an
-application in a day instead of a quarter is the version of this that municipalities buy,
-and unlike developers they already have a procurement line for it.
+US first because Mireye is US-only. **India is the market this is actually built for.**
 
-## Where this goes next: India
-
-The thesis is not American. It's what happens anywhere capital arrives faster than
-permitting capacity, and India is the clearest second case.
+The thesis isn't American. It's what happens anywhere capital arrives faster than
+permitting capacity, and India has that gap wider than anywhere.
 
 Axis Capital says India's announced targets of **6 to 8 GW by 2030 look inflated**, and
 puts the realistic figure at **3.4 to 3.6 GW** operational by mid-2030, with a downside
@@ -369,8 +364,17 @@ The permit logic itself is jurisdiction-specific and would need rebuilding for C
 the state pollution control boards, but the shape holds: resolve a parcel, read the
 ground, estimate emissions, work out which consent you need, search for better ground.
 
-**What's missing is the substrate.** There's no Mireye for India, and no equivalent. The
-request for one is drafted at `outputs/drafts/mireye-region-request.md`.
+**And the buyer is different there.** In the US this sells to developers and funds. In
+India the first customer is more likely a district planning office or a state pollution
+control board, because the agencies are the bottleneck and they procure. The same engine
+runs backwards for them: they answer the identical question, understaffed, from the
+opposite chair. Virginia DEQ having approved exactly one of these permits is a capacity
+problem rather than an obstruction one, and that problem is worse in India, not better.
+
+**What's missing is the substrate.** There's no Mireye for India and no equivalent. The
+request for one is drafted at `outputs/drafts/mireye-region-request.md`, and it asks for
+the three fields that would be enough to port this: parcel resolution, administrative
+hierarchy at a coordinate, and DISCOM territory.
 
 ## Setup
 

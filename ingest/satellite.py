@@ -240,6 +240,11 @@ FASTEST_OBSERVED_MONTHS = 4.0
 _DAYS_PER_MONTH = 30.4375
 
 
+#: Log prefix that means the catalog was unreachable, as opposed to reachable
+#: and cloudy. The two are different answers and the output says which.
+_SEARCH_FAILED = "scene search failed"
+
+
 class SatelliteError(RuntimeError):
     """Imagery could not be obtained or read. Never raised out of
     `verify_construction` — it becomes `insufficient_imagery`."""
@@ -856,7 +861,7 @@ def _pick_scene(
     try:
         scenes = search_scenes(client, lat, lon, start, end, cache=cache)
     except (httpx.HTTPError, SatelliteError) as exc:
-        log.append(f"scene search failed for {start}..{end}: {exc}")
+        log.append(f"{_SEARCH_FAILED} for {start}..{end}: {exc}")
         return None, None, log
 
     if require_epsg is not None:
@@ -1410,6 +1415,11 @@ LIMITS = [
     "will read low here even when the buildout is real.",
     "The thresholds are screening thresholds, not a calibrated classifier. They are in one "
     "block at the top of ingest/satellite.py and are meant to be moved and re-run.",
+    "The `structures_present` gate uses an absolute visible-reflectance threshold (0.22) and "
+    "that number does not travel. Desert ground is above it before anyone builds anything; the "
+    "dark metal roofs at xAI Colossus 1 measure 0.11 and never reach it. Treat the top rung as "
+    "'bright and paved', reachable mainly on arid sites, and read the disturbed fraction rather "
+    "than the label where the two disagree.",
 ]
 
 
@@ -1541,12 +1551,19 @@ def verify_construction(
         verdict.scene_log.extend(log)
 
         if base_scene is None or base_grid is None:
-            verdict.reasons.append(
-                f"No Sentinel-2 scene with the footprint under {MAX_AOI_CLOUD * 100:.0f}% cloud "
-                f"within {BASELINE_WINDOW_DAYS} days of the announced groundbreaking date "
-                f"({baseline_target}). Sentinel-2 revisits every ~5 days, so a gap this long "
-                f"means persistent cloud, and a cloudy scene is not evidence."
-            )
+            if any(line.startswith(_SEARCH_FAILED) for line in log):
+                verdict.reasons.append(
+                    "The Sentinel-2 catalog could not be reached, so no imagery was read and "
+                    "no construction claim is made either way. This needs no credential; if it "
+                    "is failing, it is the network. See scene_selection_log."
+                )
+            else:
+                verdict.reasons.append(
+                    f"No Sentinel-2 scene with the footprint under {MAX_AOI_CLOUD * 100:.0f}% "
+                    f"cloud within {BASELINE_WINDOW_DAYS} days of the announced groundbreaking "
+                    f"date ({baseline_target}). Sentinel-2 revisits every ~5 days, so a gap this "
+                    f"long means persistent cloud, and a cloudy scene is not evidence."
+                )
             return verdict
 
         offset_days = abs((base_scene_date(base_scene) - baseline_target).days)
@@ -1609,7 +1626,10 @@ def verify_construction(
         if write_chips:
             stem = _slug(label or f"{lat:.4f}_{lon:.4f}")
             radius_px = radius_m / RESOLUTION_M
-            scale = 2 if base_grid.width >= 250 else 4
+            # Target roughly 600-1000 px on the long edge: big enough for a
+            # video frame, small enough to commit. Nearest-neighbour upscaling
+            # adds no information and is not pretending to.
+            scale = 1 if base_grid.width >= 600 else (2 if base_grid.width >= 250 else 4)
             try:
                 verdict.chips = [
                     str(_render_chip(
@@ -1762,13 +1782,22 @@ BACKTEST_SITES = [
 ]
 
 
-def run_backtest(as_of: str | None = None, radius_m: float | None = None) -> list[ConstructionVerdict]:
+def run_backtest(
+    as_of: str | None = None,
+    radius_m: float | None = None,
+    verbose: bool = True,
+) -> list[ConstructionVerdict]:
     cache = ResponseCache()
     out: list[ConstructionVerdict] = []
+
+    def say(text: str = "") -> None:
+        if verbose:
+            print(text)
+
     try:
         for site in BACKTEST_SITES:
-            print(f"\n=== {site['label']}")
-            print(f"    {site['lat']}, {site['lon']}  ({site['expect']})")
+            say(f"\n=== {site['label']}")
+            say(f"    {site['lat']}, {site['lon']}  ({site['expect']})")
             v = verify_construction(
                 site["lat"], site["lon"],
                 announced_groundbreaking=site["groundbreaking"],
@@ -1779,13 +1808,13 @@ def run_backtest(as_of: str | None = None, radius_m: float | None = None) -> lis
                 cache=cache,
             )
             out.append(v)
-            print(f"    -> {v.headline()}")
+            say(f"    -> {v.headline()}")
             for line in v.reasons:
-                print(f"       {line}")
+                say(f"       {line}")
             if v.schedule.get("implication"):
-                print(f"       {v.schedule['implication']}")
+                say(f"       {v.schedule['implication']}")
             for chip in v.chips:
-                print(f"       chip {chip}")
+                say(f"       chip {chip}")
     finally:
         cache.close()
     return out
@@ -1807,7 +1836,7 @@ def main() -> None:  # pragma: no cover
     args = parser.parse_args()
 
     if not args.coord:
-        results = run_backtest(as_of=args.as_of)
+        results = run_backtest(as_of=args.as_of, verbose=not args.json)
         if args.json:
             print(json.dumps([r.to_dict() for r in results], indent=1))
         return

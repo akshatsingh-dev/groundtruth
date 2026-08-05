@@ -1,9 +1,7 @@
-# Draft — Mireye feature request: India coverage
+# Draft — Mireye feature request
 
 **Status: UNSENT.** Paste into the feature request form at mireye.com yourself.
-
-Short on purpose. A feature request that names three fields and one market gets read.
-One that explains your whole product does not.
+Email field is already prefilled with yours.
 
 ---
 
@@ -22,9 +20,9 @@ I built an agent on Mireye for the Build Challenge. It works out which air permi
 centre power project needs at a specific parcel, then searches nearby parcels for one
 where the answer is better. Mireye is the entire physical layer.
 
-India is the obvious second market and there is no supplier for it. Axis Capital calls
-the announced 6-8 GW by 2030 inflated and puts the real figure at 3.4-3.6 GW. Over
-10.5 GW sits in land banking. Power connections run about 18 months. Same
+India is where I want to take this next, and there is no supplier for it. Axis Capital
+calls India's announced 6-8 GW by 2030 inflated and puts the real figure at 3.4-3.6 GW.
+Over 10.5 GW sits in land banking. Power connections run about 18 months. Same
 announced-versus-deliverable gap you already let me measure in the US, in a market where
 nobody can query the ground at all.
 
@@ -44,8 +42,14 @@ build:
    Connection timelines vary enormously between them and nobody screens for it before
    buying land.
 
-CPCB non-attainment status under NCAP would be the next one, since it is the direct
-analogue of the EPA Green Book designation my US pathway engine turns on.
+CPCB non-attainment status under NCAP would be next, since it is the direct analogue of
+the EPA Green Book designation my US pathway engine turns on.
+
+The other direction I want to take this is municipal. The same engine runs backwards for
+a district planning office or a state pollution control board, who answer the identical
+question understaffed and from the opposite chair. In India that is the more likely first
+customer, because the agencies are the bottleneck and they procure. Coverage of the
+administrative hierarchy in point 2 is what makes that version possible at all.
 
 I built behind a provider interface so Mireye is the US implementation rather than the
 architecture. If the substrate exists, the port is a data problem. I would be a customer
@@ -56,10 +60,13 @@ the day you go international.
 
 ## Notes
 
-- ~280 words. If it still reads long, cut the CPCB paragraph. The three numbered items
-  and the DISCOM sentence are what make it a brief instead of a wish.
+- ~340 words. If the form complains, cut the CPCB line first, then the municipal
+  paragraph. The three numbered items and the DISCOM sentence are what make it a brief
+  instead of a wish.
 - The DISCOM ask is the strongest thing in here. Specific, genuinely hard to source, and
   the kind of field that makes an API indispensable rather than convenient.
+- The municipal paragraph does double duty: it signals a second market for *them*, not
+  just for you, which is a better reason for them to build it.
 - Don't overclaim. You have a provider interface and a thesis, not an Indian product.
   "I'd be a customer" is the right register.
 - Cross-check the India figures against `docs/evidence.md` E19 and E20 before pasting.

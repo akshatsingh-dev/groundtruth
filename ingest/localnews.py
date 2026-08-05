@@ -403,6 +403,7 @@ class LocalSignal:
     story_count: int = 0
     local_story_count: int = 0
     headline_named: int = 0
+    dropped_other_county: int = 0
     article_count: int = 0
     baseline_articles: int = 0
     coverage_share: float | None = None
@@ -902,6 +903,32 @@ def _is_local(item: NewsItem) -> bool:
     return host not in _NATIONAL_DOMAINS
 
 
+_COUNTY_IN_HEADLINE = re.compile(
+    r"\b([A-Z][A-Za-z.'’-]+(?:\s+[A-Z][A-Za-z.'’-]+)?)\s+(County|Parish|Borough)\b"
+)
+
+
+def _names_another_county(item: NewsItem, county: str) -> bool:
+    """True if the headline names a county and it is not ours.
+
+    GDELT matches the article body, so a regional paper's story about the county
+    next door is a hit here whenever it mentions ours in passing. On Linn County
+    IA that pulled in "Johnson County proposes stricter data center ordinance"
+    and "Clayton County Supervisors hold information session on Bitcoin data
+    center", both of which would otherwise have counted as board-action evidence
+    for Linn.
+
+    Headline only. The body is where the passing mention lives and we do not
+    fetch it, so this cannot misfire on one.
+    """
+    ours = county.strip().lower().rstrip("s").removesuffix("'")
+    for name, _ in _COUNTY_IN_HEADLINE.findall(item.headline):
+        cleaned = name.strip().lower().replace("’", "'")
+        if cleaned.rstrip("s").removesuffix("'") == ours or ours in cleaned:
+            return False
+    return bool(_COUNTY_IN_HEADLINE.search(item.headline))
+
+
 def _classify(stories: list[NewsItem]) -> tuple[Posture, list[str]]:
     """Apply POSTURE_RULES and say which stories drove the call.
 
@@ -1114,6 +1141,9 @@ def signals_for_county(
                 )
 
     stories = deduplicate(items)
+    elsewhere = [s for s in stories if _names_another_county(s, county)]
+    stories = [s for s in stories if s not in elsewhere]
+    signal.dropped_other_county = len(elsewhere)
     signal.items = stories[:max_items]
     signal.story_count = len(stories)
     signal.local_story_count = sum(1 for s in stories if _is_local(s))
@@ -1152,6 +1182,12 @@ def signals_for_county(
         signal.evidence.append(
             "no story names this county in its headline. GDELT matches the article "
             "body, so these may be statewide coverage that mentions the county once."
+        )
+    if signal.dropped_other_county:
+        signal.evidence.append(
+            f"{signal.dropped_other_county} stories were dropped because their "
+            f"headline names a different county. They matched on a body mention of "
+            f"{county} County and would have counted as evidence about it."
         )
     return signal
 
