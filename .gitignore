@@ -9,5 +9,16 @@ data/raw/
 outputs/*.json
 outputs/*.html
 !outputs/drafts/
+
+# The national map is a deliverable — the demo video ends on it, so a judge
+# cloning the repo must get it without running the sweep first.
+!outputs/county_map.html
+
+# The full sweep output carries the trigger detail text for every county and is
+# ~7 MB. data/county_scores.slim.json is committed instead; regenerate the full
+# file with `python3 -m sweep.counties`.
+data/county_scores.json
+data/county_index.json
 .DS_Store
 .pytest_cache/
+data/county_scores.progress.jsonl

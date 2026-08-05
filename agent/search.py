@@ -283,12 +283,13 @@ def _site_from_candidate(
     proximity: dict[str, ProximityResult],
     regulatory_lookup: Callable | None,
 ) -> SiteContext:
-    county = location.county or facts.get("county") or "unknown"
-    state = str(location.state or facts.get("state") or "??").upper()[:2]
+    from .tools import normalize_county, normalize_state
+
+    fips = location.county_fips or facts.get("county_fips")
     site = SiteContext(
-        state=state,
-        county=str(county),
-        county_fips=location.county_fips or facts.get("county_fips"),
+        state=normalize_state(location.state or facts.get("state"), fips),
+        county=normalize_county(location.county or facts.get("county")),
+        county_fips=fips,
         latitude=location.latitude,
         longitude=location.longitude,
     )
@@ -433,6 +434,28 @@ def search_alternate_sites(
                 )
                 continue
             candidate_site = _site_from_candidate(location, facts, proximity, regulatory_lookup)
+
+            # A candidate with no county and no state is not a clean site, it
+            # is an unread one — and an unread one scores beautifully, because
+            # every trigger that needs a jurisdiction stays silent. Points in
+            # open water resolve exactly this way. Reject them here or the
+            # ranking will happily recommend moving the plant into the
+            # Atlantic.
+            if candidate_site.state == "??" or not candidate_site.county_fips:
+                record = {
+                    "latitude": round(lat, 5),
+                    "longitude": round(lon, 5),
+                    "ring_km": ring,
+                    "unresolved": True,
+                    "reason": "No county or state returned for this point (open water, or "
+                    "outside the provider's coverage). An unscreened parcel is not an "
+                    "attainment parcel, so it is dropped rather than ranked.",
+                }
+                cache[key] = record
+                result.unresolved.append(record)
+                result.credits_spent += spent
+                continue
+
             candidate_site.provenance.setdefault(
                 "geocode",
                 {
@@ -504,6 +527,25 @@ def search_alternate_sites(
         result.crossed_county_line = best.county.lower() != site.county.lower()
         result.crossed_state_line = best.state.upper() != site.state.upper()
         result.delta_statement = _delta_statement(best, origin_result)
+
+        # An unmodelled state gets the federal default timeline and none of the
+        # state-specific triggers, so a move into one can look better than it
+        # is. Say so rather than letting the delta stand unqualified.
+        from .pathway import STATE_OVERLAYS
+
+        if best.state not in STATE_OVERLAYS:
+            result.notes.append(
+                f"{best.state} is not one of the states modelled in detail, so its timeline is "
+                f"the federal default and its state-specific triggers (toxics programs, transport "
+                f"region, EJ statutes) are not evaluated. Some of the apparent gain may be that "
+                f"gap rather than a real difference. Confirm with the state agency before "
+                f"optioning land on it."
+            )
+        if origin_result.pathway.rank == best.pathway.rank:
+            result.notes.append(
+                "Same pathway category, faster timeline. That is a scheduling improvement, not a "
+                "regulatory one — the same review still has to happen."
+            )
     elif result.candidates_resolved == 0:
         result.notes.append(
             "No candidate parcel resolved. With NullProvider that is expected — the search "

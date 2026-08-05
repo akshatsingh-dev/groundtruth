@@ -423,14 +423,40 @@ _TRIGGER_PRIORITY = {
 }
 
 
-def top_triggers(record: dict, n: int = 2) -> list[str]:
+#: The trigger that names the pathway is not a "why" — it is the answer, and it
+#: is already displayed beside these labels. Showing it here would spend both
+#: tooltip lines restating the pathway column.
+_PATHWAY_TRIGGERS = frozenset(
+    {"major_psd", "major_nonattainment_nsr", "minor_nsr", "synthetic_minor", "permit_by_rule"}
+)
+
+
+def top_triggers(record: dict, n: int = 2, skip_nonattainment: bool = False) -> list[str]:
+    """The two triggers that most explain why this county differs from the median.
+
+    Ranked by the curated priority, then by months added. Triggers that fire in
+    every county in the country (Title V, NSPS KKKK) sit at the bottom and only
+    surface when nothing else did — which is itself information: it means the
+    county is unremarkable and the timeline is the base case.
+    """
+    skip = set(_PATHWAY_TRIGGERS)
+    if skip_nonattainment:
+        # The tooltip prints the designation on its own line. Repeating it here
+        # would spend one of only two lines saying the same thing twice.
+        skip.add("nonattainment_designation")
+    candidates = [t for t in record["triggers"] if t["name"] not in skip]
     ordered = sorted(
-        record["triggers"],
+        candidates,
         key=lambda t: (_TRIGGER_PRIORITY.get(t["name"], 50), -t.get("months_added", 0.0)),
     )
     out = []
     for trigger in ordered[:n]:
-        label = _TRIGGER_LABELS.get(trigger["name"], trigger["name"].replace("_", " "))
+        if trigger["name"] == "nonattainment_designation" and record["nonattainment"]:
+            label = "Nonattainment: " + ", ".join(
+                f"{s['pollutant'].upper()} {s['classification']}" for s in record["nonattainment"]
+            )
+        else:
+            label = _TRIGGER_LABELS.get(trigger["name"], trigger["name"].replace("_", " "))
         months = trigger.get("months_added") or 0.0
         out.append(f"{label} (+{months:.0f} mo)" if months else label)
     return out
@@ -445,7 +471,7 @@ def profile_key(record: dict) -> tuple:
         record["days_high"],
         record["agency"],
         na,
-        tuple(top_triggers(record)),
+        tuple(top_triggers(record, skip_nonattainment=True)),
         bool(record["hard_stops"]),
         record["data_quality"],
     )
@@ -479,7 +505,7 @@ def build_profiles(records: list[dict]) -> tuple[list[dict], dict[str, int]]:  #
                         f"{s['pollutant'].upper()} {s['classification']}"
                         for s in record["nonattainment"]
                     ],
-                    "t": top_triggers(record),
+                    "t": top_triggers(record, skip_nonattainment=True),
                     "s": bool(record["hard_stops"]),
                     "q": record["data_quality"],
                     "b": bin_for(record["days_likely"]),
@@ -523,8 +549,10 @@ def build_svg(
     states = load_shapefile(CB_STATE_URL, "cb_state_5m.zip")
 
     paths: list[str] = []
+    stop_paths: list[str] = []
     rows: list[list] = []
     drawn = 0
+    stops = 0
     missing_geometry = set(records)
     undrawn_territory = 0
 
@@ -551,6 +579,13 @@ def build_svg(
         )
         rows.append([record["county"], record["state"], profile])
         drawn += 1
+        # A moratorium county can score 730 days and still be un-permittable.
+        # The ramp encodes time; this second channel encodes "time may not be
+        # the binding constraint here". It ships with a legend label, never as
+        # colour alone.
+        if record["hard_stops"]:
+            stop_paths.append(data)
+            stops += 1
 
     borders: list[str] = []
     for attributes, rings in states:
@@ -569,12 +604,13 @@ def build_svg(
         "undrawn_territory": undrawn_territory,
         "missing_geometry": sorted(missing_geometry),
         "profiles": len(profiles),
+        "hard_stops": stops,
     }
-    return "".join(paths), "".join(borders), profiles, rows, stats
+    return "".join(paths), "".join(borders), profiles, rows, stats, "".join(stop_paths)
 
 
 def render_html(payload: dict, svg_parts: tuple, generated: str) -> str:
-    county_paths, borders, profiles, rows, stats = svg_parts
+    county_paths, borders, profiles, rows, stats, stop_paths = svg_parts
     counts = payload["counts"]
     config = payload["reference_config"]
     sources = payload["sources"]
@@ -603,6 +639,13 @@ def render_html(payload: dict, svg_parts: tuple, generated: str) -> str:
             '<li><span class="sw q"></span><span class="lg-t">no attainment data</span>'
             '<span class="lg-s">score below is a floor</span>'
             f'<span class="lg-n">{insufficient:,}</span></li>'
+        )
+    if stats["hard_stops"]:
+        legend_items += (
+            '<li><span class="sw stopsw"></span><span class="lg-t">hard stop</span>'
+            '<span class="lg-s">moratorium, offsets unavailable, or fuel supply — '
+            "the timeline may not be the binding constraint</span>"
+            f'<span class="lg-n">{stats["hard_stops"]:,}</span></li>'
         )
 
     def table_rows(items: list[dict]) -> str:
@@ -663,21 +706,21 @@ def render_html(payload: dict, svg_parts: tuple, generated: str) -> str:
   --plane:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
   --rule:#e1e0d9; --border:rgba(11,11,11,0.10); --stroke:#fcfcfb; --state:#52514e;
   --b0:{RAMP_LIGHT[0]}; --b1:{RAMP_LIGHT[1]}; --b2:{RAMP_LIGHT[2]}; --b3:{RAMP_LIGHT[3]}; --b4:{RAMP_LIGHT[4]};
-  --nodata:#d6d5cd; --nodata-ink:#898781; --focus:#eb6834;
+  --nodata:#d6d5cd; --nodata-ink:#898781; --focus:#eb6834; --critical:#d03b3b;
 }}
 @media (prefers-color-scheme: dark) {{
   :root:where(:not([data-theme="light"])) {{
     --plane:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
     --rule:#2c2c2a; --border:rgba(255,255,255,0.10); --stroke:#1a1a19; --state:#c3c2b7;
     --b0:{RAMP_DARK[0]}; --b1:{RAMP_DARK[1]}; --b2:{RAMP_DARK[2]}; --b3:{RAMP_DARK[3]}; --b4:{RAMP_DARK[4]};
-    --nodata:#2c2c2a; --nodata-ink:#898781; --focus:#eb6834;
+    --nodata:#2c2c2a; --nodata-ink:#898781; --focus:#eb6834; --critical:#d03b3b;
   }}
 }}
 :root[data-theme="dark"] {{
   --plane:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
   --rule:#2c2c2a; --border:rgba(255,255,255,0.10); --stroke:#1a1a19; --state:#c3c2b7;
   --b0:{RAMP_DARK[0]}; --b1:{RAMP_DARK[1]}; --b2:{RAMP_DARK[2]}; --b3:{RAMP_DARK[3]}; --b4:{RAMP_DARK[4]};
-  --nodata:#2c2c2a; --nodata-ink:#898781; --focus:#eb6834;
+  --nodata:#2c2c2a; --nodata-ink:#898781; --focus:#eb6834; --critical:#d03b3b;
 }}
 * {{ box-sizing:border-box; }}
 body {{
@@ -705,7 +748,9 @@ path.c:focus {{ outline:none; }}
 .q {{ fill:url(#hatch); }}
 path.borders {{ fill:none; stroke:var(--state); stroke-width:0.9; stroke-linejoin:round;
   vector-effect:non-scaling-stroke; opacity:.5; pointer-events:none; }}
-path.hi {{ fill:none; stroke:var(--focus); stroke-width:2.4; stroke-linejoin:round;
+path.stops {{ fill:none; stroke:var(--critical); stroke-width:1.4; stroke-linejoin:round;
+  vector-effect:non-scaling-stroke; pointer-events:none; }}
+path.hi {{ fill:none; stroke:var(--ink); stroke-width:2.4; stroke-linejoin:round;
   vector-effect:non-scaling-stroke; pointer-events:none; }}
 .legend {{ list-style:none; margin:14px 0 0; padding:0 4px 8px;
   display:flex; flex-wrap:wrap; gap:6px 26px; font-size:12.5px; color:var(--ink-2); }}
@@ -714,6 +759,7 @@ path.hi {{ fill:none; stroke:var(--focus); stroke-width:2.4; stroke-linejoin:rou
   align-self:center; }}
 .sw.b0{{background:var(--b0)}} .sw.b1{{background:var(--b1)}} .sw.b2{{background:var(--b2)}}
 .sw.b3{{background:var(--b3)}} .sw.b4{{background:var(--b4)}}
+.sw.stopsw {{ background:transparent; border:2px solid var(--critical); }}
 .sw.q {{ background:var(--nodata);
   background-image:repeating-linear-gradient(45deg,transparent 0 3px,var(--nodata-ink) 3px 4px); }}
 .lg-t {{ color:var(--ink); }}
@@ -803,6 +849,7 @@ to look, then run the parcel.</div>
     </defs>
     <g id="counties">{county_paths}</g>
     <path class="borders" d="{borders}"/>
+    <path class="stops" d="{stop_paths}"/>
     <path class="hi" id="hi" d=""/>
   </svg>
   <ul class="legend">{legend_items}</ul>
@@ -952,7 +999,7 @@ def render_static_svg(payload: dict, svg_parts: tuple) -> str:
     title, legend and caveat so the image is safe to post on its own — an
     unlabelled choropleth is a rumour.
     """
-    county_paths, borders, _profiles, _rows, _stats = svg_parts
+    county_paths, borders, _profiles, _rows, stats, stop_paths = svg_parts
     counts = payload["counts"]
     bin_counts = [0] * (len(BINS) + 1)
     insufficient = 0
@@ -978,6 +1025,8 @@ def render_static_svg(payload: dict, svg_parts: tuple) -> str:
     items = [(f"b{i}", f"{label} days", bin_counts[i]) for i, (label, _sub) in enumerate(BIN_LABELS)]
     if insufficient:
         items.append(("q", "no attainment data", insufficient))
+    if stats["hard_stops"]:
+        items.append(("stopsw", "hard stop \u2014 timeline may not bind", stats["hard_stops"]))
     for css, label, count in items:
         text = f"{label}  ({count:,})"
         advance = 152 + len(text) * char_w + 150
@@ -1000,6 +1049,8 @@ path.c{{stroke:#fcfcfb;stroke-width:4;stroke-linejoin:round}}
 .q{{fill:url(#hatch)}}
 rect.q{{fill:url(#hatch)}}
 path.borders{{fill:none;stroke:#52514e;stroke-width:9;stroke-linejoin:round;opacity:.5}}
+path.stops{{fill:none;stroke:#d03b3b;stroke-width:14;stroke-linejoin:round}}
+rect.stopsw{{fill:none}}
 text{{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}}
 .h1{{font-size:290px;font-weight:680;fill:#0b0b0b;letter-spacing:-3}}
 .h2{{font-size:150px;fill:#52514e}}
@@ -1019,6 +1070,7 @@ text{{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}}
 <g transform="translate(0,{top})">
   <g>{body}</g>
   <path class="borders" d="{borders}"/>
+  <path class="stops" d="{stop_paths}"/>
 </g>
 {''.join(swatches)}
 <text class="cap" x="120" y="{caption_y}">Screening layer, county resolution. It cannot see parcel-level PSD increment, terrain, or pipeline distance &#8212; the parcel run is the real answer.</text>
@@ -1043,10 +1095,9 @@ def render_extremes_md(payload: dict) -> str:
 
     return f"""# County sweep — fastest and slowest
 
-Reference plant: {config['description']}.
-Potential to emit {config['pte_tpy']['NOx']:,.0f} tpy NOx at
-{config['heat_input_mmbtu_hr']:,.0f} MMBtu/hr heat input.
-{payload['counts']['counties']:,} counties scored.
+Reference plant: {config['description']}. Potential to emit \
+{config['pte_tpy']['NOx']:,.0f} tpy NOx at {config['heat_input_mmbtu_hr']:,.0f} MMBtu/hr \
+heat input. {payload['counts']['counties']:,} counties scored.
 
 County-level screening layer. It cannot see parcel-level increment consumption,
 terrain, or pipeline distance. The parcel run is the real answer.

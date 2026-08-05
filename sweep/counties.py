@@ -37,7 +37,8 @@ Usage
     python -m sweep.counties                 # no keys, federal data only
     python -m sweep.counties --workers 16
     python -m sweep.counties --with-mireye   # burns Mireye credits
-    python -m sweep.counties --resume        # continue an interrupted run
+    python -m sweep.counties --with-mireye --max-credits 20000
+    python -m sweep.counties --with-mireye --limit 250   # bounded sample
 
 Writes ``data/county_scores.json``. Progress is appended to
 ``data/county_scores.progress.jsonl`` after every county, so a run that dies at
@@ -57,14 +58,13 @@ import time
 import urllib.request
 import zipfile
 from dataclasses import asdict, dataclass, field
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
 from agent.emissions import Control, Fuel, GenerationConfig, PrimeMover, estimate
 from agent.pathway import (
     NonattainmentStatus,
-    Pathway,
     SiteContext,
     determine_pathway,
     overlay_for,
@@ -689,24 +689,92 @@ def build_provider() -> tuple[Any | None, str]:
     return None, "providers.mireye exposed no constructible provider"
 
 
-#: Presets asked for at a county interior point. Chosen for what the *pathway*
-#: needs, not for completeness: pipeline reachability, terrain for dispersion,
-#: and receptors for the EJ and opposition triggers.
-MIREYE_PRESETS = ("terrain", "utilities", "points_of_interest")
-MIREYE_TARGETS = ("gas_pipeline", "transmission", "airport", "urban_area")
+#: What to ask for at a county interior point. Chosen for what the *pathway*
+#: needs, not for completeness. Terrain drives the dispersion model, the
+#: utilities preset carries pipeline reachability, and demographics gives the
+#: receptor count that the EJ trigger reads.
+MIREYE_PRESETS = ("terrain", "utilities", "demographics")
+
+#: Proximity targets. Gas pipeline is the one that matters — it is the New
+#: Mexico failure mode and it is invisible at county level.
+MIREYE_TARGETS = ("gas_pipeline", "transmission", "airport")
+
+#: Fact keys the pathway engine can use, with the aliases a provider might use
+#: for each. First hit wins.
+_FACT_ALIASES: dict[str, tuple[str, ...]] = {
+    "terrain_relief_m": ("terrain_relief_m", "relief_m", "elevation_range_m", "terrain_relief"),
+    "residential_within_1km": (
+        "housing_units_within_1km",
+        "residential_within_1km",
+        "population_within_1km",
+    ),
+}
+
+_CLASS_I_KEYS = ("nearest_class_i_area_distance_m", "nearest_class_i_area_distance_km")
+_CLASS_I_NAME_KEYS = ("nearest_class_i_area_name", "nearest_class_i_area")
 
 
-def enrich_site(provider: Any, county: County, site: SiteContext) -> tuple[int, float]:
+def estimate_burn(provider: Any, counties: int) -> dict:
+    """What a `--with-mireye` sweep will cost before it starts.
+
+    Two calls per county: one `/v1/fetch` with an explicit field list (the union
+    of the air-permit fields and three preset expansions, which fits under the
+    50-field cap so it bills as one call), and one `/v1/proximity` for three
+    targets in geodesic mode. Driving mode would be 12 credits per target and
+    would put the same sweep past half a million credits, which is why it is not
+    used here.
+    """
+    fields: set[str] = set()
+    try:
+        from providers.mireye import AIR_PERMIT_FIELDS, CREDIT_COSTS  # type: ignore
+
+        fields |= set(AIR_PERMIT_FIELDS)
+        per_field = float(CREDIT_COSTS.get("fetch_per_field", 1.0))
+        per_target = float(CREDIT_COSTS.get("proximity_nearest_min", 2.0))
+    except Exception:
+        per_field, per_target = 1.0, 2.0
+    for preset in MIREYE_PRESETS:
+        try:
+            expansion = provider.preset_expansion(preset)
+        except Exception:
+            expansion = None
+        if expansion:
+            fields |= set(expansion)
+    per_county = len(fields) * per_field + len(MIREYE_TARGETS) * per_target
+    return {
+        "fields_per_county": len(fields),
+        "calls_per_county": 2,
+        "credits_per_county": per_county,
+        "calls_total": 2 * counties,
+        "credits_total": per_county * counties,
+        "usd_total": per_county * counties / 1000.0,
+    }
+
+
+def _usage_snapshot(provider: Any) -> tuple[int, float]:
+    """(calls, credits) from the provider's own meter, if it keeps one.
+
+    Preferred over counting requests here: the provider knows what it actually
+    sent, what the cache served for free, and what the price table says each
+    call cost. A number we invent would be a worse number.
+    """
+    try:
+        usage = provider.usage()
+        return int(usage.get("calls", 0)), float(usage.get("credits_spent", 0.0))
+    except Exception:
+        return 0, 0.0
+
+
+def enrich_site(provider: Any, county: County, site: SiteContext) -> tuple[int, float, int]:
     """Fill the parcel-shaped fields on a SiteContext from one interior point.
 
-    Returns (calls made, credits spent). Anything the provider does not return
-    stays None — the pathway engine skips triggers it has no input for, which is
-    the correct behaviour. A zero would read as "pipeline is right here".
+    Returns (calls, credits, facts applied). Anything the provider does not
+    return stays None. The pathway engine skips triggers it has no input for,
+    which is correct — a zero would read as "the pipeline is right here", which
+    is the opposite of not knowing.
     """
     from providers.base import Location  # imported late; base.py has no deps
 
-    calls = 0
-    credits = 0.0
     location = Location(
         latitude=county.latitude,
         longitude=county.longitude,
@@ -714,55 +782,75 @@ def enrich_site(provider: Any, county: County, site: SiteContext) -> tuple[int, 
         county_fips=county.fips,
         state=county.state,
         source="Census gazetteer interior point",
+        confidence=1.0,
     )
+    before_calls, before_credits = _usage_snapshot(provider)
+    applied = 0
 
-    def _cost(result: Any) -> float:
-        for attr in ("credits", "credits_used", "cost"):
-            value = getattr(result, attr, None)
-            if isinstance(value, (int, float)):
-                return float(value)
-        return 1.0
-
+    # The provider ships a field list built for exactly this question. Ask for it
+    # by name when it exists; it includes nearest Class I area distance, which is
+    # otherwise the biggest hole in a county-level screen.
+    wanted: list[str] = list(MIREYE_PRESETS)
     try:
-        facts = provider.fetch(location, MIREYE_PRESETS)
-        calls += len(MIREYE_PRESETS)
-        credits += _cost(facts) * len(MIREYE_PRESETS)
-        for key, attr in (
-            ("terrain_relief_m", "terrain_relief_m"),
-            ("relief_m", "terrain_relief_m"),
-            ("residential_within_1km", "residential_within_1km"),
-        ):
-            value = facts.get(key) if hasattr(facts, "get") else None
-            if isinstance(value, (int, float)):
-                setattr(site, attr, value)
-        if hasattr(facts, "provenance"):
-            site.provenance.update(facts.provenance())
+        from providers.mireye import AIR_PERMIT_FIELDS  # type: ignore
+
+        wanted = list(AIR_PERMIT_FIELDS) + wanted
     except Exception:
         pass
 
     try:
+        facts = provider.fetch(location, wanted)
+    except Exception:
+        facts = None
+
+    if facts is not None and hasattr(facts, "get"):
+        for attr, aliases in _FACT_ALIASES.items():
+            for alias in aliases:
+                value = facts.get(alias)
+                if isinstance(value, (int, float)):
+                    setattr(site, attr, float(value))
+                    applied += 1
+                    break
+        for key in _CLASS_I_KEYS:
+            value = facts.get(key)
+            if isinstance(value, (int, float)):
+                km = value / 1000.0 if key.endswith("_m") else float(value)
+                name = next(
+                    (facts.get(k) for k in _CLASS_I_NAME_KEYS if facts.get(k)), "Class I area"
+                )
+                site.class_i_areas.append((str(name), km))
+                applied += 1
+                break
+        if hasattr(facts, "provenance"):
+            try:
+                site.provenance.update(facts.provenance())
+            except Exception:
+                pass
+
+    try:
         near = provider.proximity(location, MIREYE_TARGETS)
-        calls += 1
-        credits += 1.0
+    except Exception:
+        near = None
+
+    if isinstance(near, dict):
         for target, attr in (
             ("gas_pipeline", "gas_pipeline_km"),
             ("transmission", "transmission_km"),
             ("airport", "nearest_airport_km"),
         ):
-            result = near.get(target) if isinstance(near, dict) else None
+            result = near.get(target)
             distance = getattr(result, "distance_km", None)
             if isinstance(distance, (int, float)):
                 setattr(site, attr, float(distance))
-            if result is not None:
+                applied += 1
                 site.provenance[target] = {
                     "source": getattr(result, "source", None),
                     "fetched": getattr(result, "fetched", None),
                     "confidence": None,
                 }
-    except Exception:
-        pass
 
-    return calls, credits
+    after_calls, after_credits = _usage_snapshot(provider)
+    return after_calls - before_calls, after_credits - before_credits, applied
 
 
 # --------------------------------------------------------------------------
@@ -803,15 +891,18 @@ def score_county(
     resolution = "county"
     mireye_calls = 0
     mireye_credits = 0.0
+    mireye_facts = 0
     if provider is not None:
         try:
-            mireye_calls, mireye_credits = enrich_site(provider, county, site)
-            resolution = "county_interior_point"
-            if meter:
-                meter.record(mireye_calls, mireye_credits, ok=True)
+            mireye_calls, mireye_credits, mireye_facts = enrich_site(provider, county, site)
         except Exception:
-            if meter:
-                meter.record(mireye_calls, mireye_credits, ok=False)
+            mireye_calls, mireye_credits, mireye_facts = 0, 0.0, 0
+        # Only claim the better resolution when facts actually arrived. A run
+        # where every call failed is a county-resolution run, and it should say so.
+        if mireye_facts:
+            resolution = "county_interior_point"
+        if meter:
+            meter.record(mireye_calls, mireye_credits, ok=bool(mireye_facts))
 
     result = determine_pathway(REFERENCE_ESTIMATE, site)
     overlay = overlay_for(county.state)
@@ -881,8 +972,13 @@ def score_county(
             if posture
             else None
         ),
+        # Per-county call and credit numbers are a delta on the provider's own
+        # meter. Under concurrency that delta can pick up a sibling thread's
+        # calls, so treat these as attribution, not accounting. The run-level
+        # totals in `run.mireye_*` come straight off the provider and are exact.
         "mireye_calls": mireye_calls,
         "mireye_credits": round(mireye_credits, 3),
+        "mireye_facts_applied": mireye_facts,
         "scored_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
 
@@ -951,6 +1047,7 @@ def run(
     resume: bool = True,
     refresh_index: bool = False,
     progress_every: int = 200,
+    max_credits: float | None = None,
 ) -> dict:
     started = time.time()
     counties = load_counties(refresh=refresh_index)
@@ -982,7 +1079,13 @@ def run(
     )
     print(f"[sweep] reference plant: {REFERENCE_CONFIG.describe()}", file=sys.stderr)
     print(f"[sweep] nonattainment: {na_index.source}", file=sys.stderr)
-    print(f"[sweep] county posture: {county_file_label} ({len(county_file) // 2 or len(county_file)} records)", file=sys.stderr)
+    # The posture index holds each record twice, under FIPS and under
+    # state|name, so count identities rather than keys.
+    posture_count = len({id(v) for v in county_file.values()})
+    print(
+        f"[sweep] county posture: {county_file_label} ({posture_count} records)",
+        file=sys.stderr,
+    )
     print(f"[sweep] mireye: {provider_label}", file=sys.stderr)
     if not na_index.available:
         print(
@@ -991,11 +1094,36 @@ def run(
             file=sys.stderr,
         )
 
+    if provider is not None:
+        burn = estimate_burn(provider, len(todo))
+        print(
+            f"[sweep] mireye estimate: {burn['calls_total']:,} calls, "
+            f"{burn['credits_total']:,.0f} credits (~${burn['usd_total']:,.2f}) — "
+            f"{burn['fields_per_county']} fields + {len(MIREYE_TARGETS)} proximity targets "
+            f"per county",
+            file=sys.stderr,
+        )
+        if max_credits is not None:
+            print(f"[sweep] spend cap: {max_credits:,.0f} credits", file=sys.stderr)
+
     write_lock = threading.Lock()
     counter = {"n": 0}
+    capped = {"hit": False}
 
     def work(county: County) -> dict:
-        record = score_county(county, na_index, county_file, provider, meter)
+        active = provider
+        if max_credits is not None and provider is not None:
+            _, spent = _usage_snapshot(provider)
+            if spent >= max_credits:
+                active = None
+                if not capped["hit"]:
+                    capped["hit"] = True
+                    print(
+                        f"[sweep] spend cap reached at {spent:,.0f} credits. Remaining counties "
+                        f"score at county resolution. Raise --max-credits to continue.",
+                        file=sys.stderr,
+                    )
+        record = score_county(county, na_index, county_file, active, meter)
         with write_lock:
             with PROGRESS_PATH.open("a", encoding="utf-8") as handle:
                 handle.write(json.dumps(record, separators=(",", ":")) + "\n")
@@ -1075,6 +1203,7 @@ def run(
             "workers": workers,
             "newly_scored": len(todo),
             **meter.as_dict(),
+            **_provider_usage(provider),
         },
         "counties": rows,
     }
@@ -1087,8 +1216,30 @@ def run(
         file=sys.stderr,
     )
     if with_mireye:
-        print(f"[sweep] mireye {meter.as_dict()}", file=sys.stderr)
+        try:
+            print(f"[sweep] mireye {provider.usage_summary()}", file=sys.stderr)
+        except Exception:
+            print(f"[sweep] mireye {meter.as_dict()}", file=sys.stderr)
     return payload
+
+
+def _provider_usage(provider: Any | None) -> dict:
+    """The provider's own meter, verbatim. This is the number for the founders
+    email, because it is the number Mireye will also have."""
+    if provider is None:
+        return {}
+    try:
+        usage = provider.usage()
+    except Exception:
+        return {}
+    return {
+        "mireye_calls": int(usage.get("calls", 0)),
+        "mireye_cache_hits": int(usage.get("cache_hits", 0)),
+        "mireye_errors": int(usage.get("errors", 0)),
+        "mireye_credits": round(float(usage.get("credits_spent", 0.0)), 1),
+        "mireye_usd": round(float(usage.get("credits_usd", 0.0)), 2),
+        "mireye_usage_source": "providers.mireye.usage()",
+    }
 
 
 def _tally(values: Iterable[str]) -> dict[str, int]:
@@ -1161,6 +1312,13 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="enrich each county interior point via providers.mireye. Burns credits.",
     )
+    parser.add_argument(
+        "--max-credits",
+        type=float,
+        default=None,
+        help="stop enriching once the provider's meter passes this. Counties past the cap "
+        "still score, at county resolution.",
+    )
     parser.add_argument("--fresh", action="store_true", help="ignore prior progress and rescore")
     parser.add_argument("--refresh-index", action="store_true", help="re-parse the Census gazetteer")
     args = parser.parse_args(argv)
@@ -1171,6 +1329,7 @@ def main(argv: list[str] | None = None) -> int:
         with_mireye=args.with_mireye,
         resume=not args.fresh,
         refresh_index=args.refresh_index,
+        max_credits=args.max_credits,
     )
 
     fastest, slowest = extremes(payload)

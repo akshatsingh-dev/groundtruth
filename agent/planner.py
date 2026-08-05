@@ -174,9 +174,11 @@ class Project:
     def declared_jurisdiction(self) -> dict | None:
         if not (self.declared_county and self.declared_state):
             return None
+        from .tools import normalize_county, normalize_state
+
         return {
-            "county": self.declared_county,
-            "state": self.declared_state.upper()[:2],
+            "county": normalize_county(self.declared_county),
+            "state": normalize_state(self.declared_state, self.declared_fips),
             "fips": self.declared_fips,
             "latitude": self.declared_latitude,
             "longitude": self.declared_longitude,
@@ -1628,6 +1630,17 @@ class Planner:
                 "pipeline distance, receptors and Class I proximity are unknown, not absent. "
                 "Set MIREYE_API_KEY to run this for real."
             )
+        if ctx.site is not None:
+            from .pathway import STATE_OVERLAYS
+
+            if ctx.site.state not in STATE_OVERLAYS:
+                out.append(
+                    f"{ctx.site.state} is not one of the states modelled in detail. The timeline "
+                    f"is the federal default with no agency-specific adjustment, and state "
+                    f"toxics programs, transport-region membership and any EJ statute are not "
+                    f"evaluated. Treat the range as wider than shown and the trigger list as "
+                    f"incomplete."
+                )
         if ctx.site is not None and not ctx.site.nonattainment:
             out.append(
                 "No nonattainment designation was loaded for this county. If the Green Book "

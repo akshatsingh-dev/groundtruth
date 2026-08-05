@@ -490,6 +490,83 @@ TOOL_NAMES = tuple(t["name"] for t in TOOL_SCHEMAS)
 
 
 # --------------------------------------------------------------------------
+# Jurisdiction normalisation
+# --------------------------------------------------------------------------
+#
+# Providers return the state as a code, as a full name, or not at all, and the
+# county with or without the word "County". The pathway engine keys its state
+# overlays on the two-letter postal code, so getting this wrong is not cosmetic:
+# truncating "New Jersey" to "NE" silently loads the federal default overlay
+# instead of NJ DEP's, and the Ozone Transport Region and EJ-denial triggers
+# never fire. That bug shipped once. It does not ship again.
+
+#: (state FIPS, postal code, name). FIPS is the most reliable of the three
+#: because it comes off the county code the geocoder already returned.
+_STATES: tuple[tuple[str, str, str], ...] = (
+    ("01", "AL", "alabama"), ("02", "AK", "alaska"), ("04", "AZ", "arizona"),
+    ("05", "AR", "arkansas"), ("06", "CA", "california"), ("08", "CO", "colorado"),
+    ("09", "CT", "connecticut"), ("10", "DE", "delaware"), ("11", "DC", "district of columbia"),
+    ("12", "FL", "florida"), ("13", "GA", "georgia"), ("15", "HI", "hawaii"),
+    ("16", "ID", "idaho"), ("17", "IL", "illinois"), ("18", "IN", "indiana"),
+    ("19", "IA", "iowa"), ("20", "KS", "kansas"), ("21", "KY", "kentucky"),
+    ("22", "LA", "louisiana"), ("23", "ME", "maine"), ("24", "MD", "maryland"),
+    ("25", "MA", "massachusetts"), ("26", "MI", "michigan"), ("27", "MN", "minnesota"),
+    ("28", "MS", "mississippi"), ("29", "MO", "missouri"), ("30", "MT", "montana"),
+    ("31", "NE", "nebraska"), ("32", "NV", "nevada"), ("33", "NH", "new hampshire"),
+    ("34", "NJ", "new jersey"), ("35", "NM", "new mexico"), ("36", "NY", "new york"),
+    ("37", "NC", "north carolina"), ("38", "ND", "north dakota"), ("39", "OH", "ohio"),
+    ("40", "OK", "oklahoma"), ("41", "OR", "oregon"), ("42", "PA", "pennsylvania"),
+    ("44", "RI", "rhode island"), ("45", "SC", "south carolina"), ("46", "SD", "south dakota"),
+    ("47", "TN", "tennessee"), ("48", "TX", "texas"), ("49", "UT", "utah"),
+    ("50", "VT", "vermont"), ("51", "VA", "virginia"), ("53", "WA", "washington"),
+    ("54", "WV", "west virginia"), ("55", "WI", "wisconsin"), ("56", "WY", "wyoming"),
+    ("72", "PR", "puerto rico"),
+)
+_STATE_BY_FIPS = {fips: code for fips, code, _ in _STATES}
+_STATE_BY_NAME = {name: code for _, code, name in _STATES}
+_STATE_CODES = {code for _, code, _ in _STATES}
+
+_COUNTY_SUFFIXES = (
+    " county", " parish", " borough", " census area", " municipality", " city and borough"
+)
+
+
+def normalize_state(value: Any, county_fips: str | None = None) -> str:
+    """Two-letter postal code, or '??'.
+
+    The county FIPS wins when it is present, because a five-digit FIPS is
+    unambiguous and a provider's `state` field is not.
+    """
+    if county_fips:
+        code = _STATE_BY_FIPS.get(str(county_fips).zfill(5)[:2])
+        if code:
+            return code
+    if value is None:
+        return "??"
+    text = str(value).strip()
+    if len(text) == 2 and text.upper() in _STATE_CODES:
+        return text.upper()
+    code = _STATE_BY_NAME.get(text.lower())
+    return code or "??"
+
+
+def normalize_county(value: Any) -> str:
+    """County name without the trailing 'County' / 'Parish' / 'Borough'.
+
+    Keeps 'Cumberland County County' out of the narrative, and matters more
+    than that for the docket search, which appends the suffix itself.
+    """
+    if value is None:
+        return "unknown"
+    text = str(value).strip()
+    low = text.lower()
+    for suffix in _COUNTY_SUFFIXES:
+        if low.endswith(suffix):
+            return text[: -len(suffix)].strip() or text
+    return text
+
+
+# --------------------------------------------------------------------------
 # Fact folding
 # --------------------------------------------------------------------------
 
@@ -1027,13 +1104,13 @@ def _exec_resolve_site(ctx: ToolContext, args: dict) -> dict:
     lookup = ctx.provider.lookup(location)
     ctx.facts = ctx.facts.merge(lookup)
 
-    county = location.county or (lookup.get("county") if lookup else None) or "unknown"
-    state = location.state or (lookup.get("state") if lookup else None) or "??"
+    county = location.county or (lookup.get("county") if lookup else None)
+    state = location.state or (lookup.get("state") if lookup else None)
     fips = location.county_fips or (lookup.get("county_fips") if lookup else None)
 
     ctx.site = SiteContext(
-        state=str(state).upper()[:2],
-        county=str(county),
+        state=normalize_state(state, fips),
+        county=normalize_county(county),
         county_fips=fips,
         latitude=location.latitude,
         longitude=location.longitude,
