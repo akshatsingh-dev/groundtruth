@@ -96,7 +96,7 @@ CACHE_MAX_AGE_DAYS = 3.0
 #: what got a clean 27-county run. This is the reason the response cache is not
 #: optional — a cold reconciliation takes about twenty minutes and a warm one
 #: takes two seconds.
-GDELT_MIN_INTERVAL = 8.0
+GDELT_MIN_INTERVAL = 10.0
 GDELT_RETRIES = 6
 
 USER_AGENT = "deliverable/0.1 (permit pathway screen)"
@@ -415,6 +415,10 @@ class LocalSignal:
 
     no_data: bool = False
     reason: str = ""
+    #: Calls that failed on this signal. A rate-limited article list means the
+    #: story count is short and the posture is under-read, so it has to travel
+    #: with the number rather than sit in a log.
+    fetch_problems: list[str] = field(default_factory=list)
     queries: list[str] = field(default_factory=list)
     fetched: str = ""
 
@@ -1164,6 +1168,7 @@ def signals_for_county(
 
     if signal.article_count == 0 and not stories:
         signal.posture = Posture.QUIET
+        signal.fetch_problems = list(_status.failures)
         signal.evidence = [
             f"quiet: zero articles in {since_days} days matching {signal_q}. "
             f"{signal.baseline_articles} articles mentioned this county at all, so the "
@@ -1201,6 +1206,14 @@ def signals_for_county(
             f"{signal.dropped_other_county} stories were dropped because their "
             f"headline names a different county. They matched on a body mention of "
             f"{county} County and would have counted as evidence about it."
+        )
+    signal.fetch_problems = list(_status.failures)
+    if signal.fetch_problems:
+        signal.confidence = "low"
+        signal.evidence.append(
+            "partial fetch: " + "; ".join(signal.fetch_problems) + ". The volume "
+            "series may be complete while the article list is short, so the story "
+            "count is a floor and the posture is under-read, not over-read."
         )
     return signal
 

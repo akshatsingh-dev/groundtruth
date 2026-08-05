@@ -332,6 +332,46 @@ TOOL_SCHEMAS: list[dict] = [
         },
     },
     {
+        "name": "get_local_signal",
+        "description": (
+            "Read what the local press has published about data centers in this county "
+            "over the last six months, and derive a posture from it: quiet, "
+            "active_interest, organised_opposition or formal_action. Keyless — GDELT "
+            "DOC 2.0 for volume and trend, Bing News RSS for the summaries. Call it "
+            "after the site is resolved, and call it especially when "
+            "get_regulatory_context reports the county is not in the hand-entered file, "
+            "because that file covers 27 counties and this covers any of them.\n"
+            "How to read the result. It is a signal, not a finding. The posture is "
+            "derived from headlines and one-line summaries, never from a primary "
+            "source, and it always carries a confidence and a list of links. Quote the "
+            "links, not the label.\n"
+            "Three failure modes to respect in what you write:\n"
+            "- posture=quiet with no_data=true means the fetch failed. It is not a "
+            "finding that the county is quiet. Say the check did not run.\n"
+            "- volume is a media-market artifact as much as a posture. A county with "
+            "five newspapers outproduces a county with one. Use coverage_share, the "
+            "data-center share of all coverage naming this county, and treat "
+            "thin_media=true as a reason not to read anything into a low count.\n"
+            "- where this disagrees with the hand-entered county record, the record "
+            "wins, because it was checked against a primary source. Report the "
+            "disagreement as something to re-verify, not as a correction. This tool "
+            "never overwrites moratorium or zoning_posture."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "since_days": {
+                    "type": "integer",
+                    "description": "Window in days. Default 180. Volume and trend cover "
+                    "the whole window; individual articles reach back about 90 days.",
+                },
+                "county": {"type": "string", "description": "Defaults to the resolved site's."},
+                "state": {"type": "string", "description": "Two-letter code. Defaults to the site's."},
+            },
+            "required": [],
+        },
+    },
+    {
         "name": "estimate_emissions",
         "description": (
             "Potential to emit in tons per year for a generation config, from AP-42 "
@@ -1444,6 +1484,84 @@ def _exec_get_regulatory_context(ctx: ToolContext, args: dict) -> dict:
     return data
 
 
+def _exec_get_local_signal(ctx: ToolContext, args: dict) -> dict:
+    site = ctx.require_site()
+    county = normalize_county(args.get("county") or site.county)
+    state = normalize_state(args.get("state") or site.state, site.county_fips)
+    if not county or not state:
+        raise ToolError("No county resolved yet. Call resolve_site first.")
+
+    try:
+        from ingest import localnews
+    except Exception as exc:
+        return {
+            "available": False,
+            "posture": "quiet",
+            "no_data": True,
+            "reason": f"ingest.localnews unavailable ({exc.__class__.__name__}: {exc}). "
+            "The local news check did not run. This is not a finding of no opposition.",
+        }
+
+    try:
+        signal = localnews.signals_for_county(
+            county, state, int(args.get("since_days") or 180), fips=site.county_fips
+        )
+    except Exception as exc:
+        return {
+            "available": False,
+            "posture": "quiet",
+            "no_data": True,
+            "reason": f"Local news lookup failed ({exc.__class__.__name__}: {exc}). "
+            "The check did not run. This is not a finding of no opposition.",
+        }
+
+    # Writes to site.provenance only. The hand-entered record stays the value the
+    # pathway engine reads; a disagreement comes back as recheck, not as an edit.
+    localnews.apply_to(site, signal)
+    entry = site.provenance.get("local_news", {})
+
+    return {
+        "available": True,
+        "county": county,
+        "state": state,
+        "posture": signal.posture.value,
+        "posture_means": signal.posture.label,
+        "confidence": signal.confidence,
+        "no_data": signal.no_data,
+        "reason": signal.reason,
+        "distinct_stories": signal.story_count,
+        "headline_named": signal.headline_named,
+        "articles": signal.article_count,
+        "baseline_articles": signal.baseline_articles,
+        "coverage_share": signal.coverage_share,
+        "thin_media": signal.thin_media,
+        "trend": signal.trend.direction,
+        "trend_detail": signal.trend.describe(),
+        "window_days": signal.window_days,
+        "evidence": signal.evidence,
+        "items": [
+            {
+                "headline": i.headline,
+                "publication": i.publication,
+                "published": i.published,
+                "url": i.url,
+                "summary": i.summary,
+                "also_reported_by": list(i.also_reported_by),
+            }
+            for i in signal.items[:12]
+        ],
+        "recheck": entry.get("recheck"),
+        "fetch_problems": signal.fetch_problems,
+        "source": "GDELT DOC 2.0 + Bing News RSS, both keyless",
+        "fetched": signal.fetched,
+        "caveat": (
+            "Derived from headlines and feed summaries, not from a primary source. "
+            "The hand-entered county record in ingest/counties.json is what the pathway "
+            "engine reads; this flags records worth re-checking and never overwrites one."
+        ),
+    }
+
+
 def _exec_estimate_emissions(ctx: ToolContext, args: dict) -> dict:
     try:
         config = build_config(ctx.config(), args.get("config"))
@@ -1775,6 +1893,7 @@ EXECUTORS: dict[str, Callable[[ToolContext, dict], dict]] = {
     "get_physical_facts": _exec_get_physical_facts,
     "get_proximity": _exec_get_proximity,
     "get_regulatory_context": _exec_get_regulatory_context,
+    "get_local_signal": _exec_get_local_signal,
     "estimate_emissions": _exec_estimate_emissions,
     "determine_pathway": _exec_determine_pathway,
     "test_config": _exec_test_config,
