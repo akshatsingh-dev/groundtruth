@@ -627,25 +627,42 @@ function renderEmissions(report) {
   const left = el("div");
   left.appendChild(el("div", "block-label", "Potential to emit"));
   const table = el("table");
+  const tons = (full && full.tons_per_year) || e.tons_per_year || {};
+  const lbs = (full && full.lb_per_hour) || {};
+  const overSer = e.above_significant_emission_rate || {};
+  /* The recorded fixture carries tons but not lb/hr, so the third column
+     falls back to what it does have: whether the pollutant clears its PSD
+     significant emission rate. */
+  const hasLbs = Object.keys(lbs).length > 0;
+
   const thead = el("thead");
   const hr = el("tr");
-  ["Pollutant", "tpy", "lb/hr"].forEach((h, i) => {
-    const th = el("th", i ? "num-col" : null, h);
-    hr.appendChild(th);
+  ["Pollutant", "tpy", hasLbs ? "lb/hr" : "over SER"].forEach((h, i) => {
+    hr.appendChild(el("th", i ? "num-col" : null, h));
   });
   thead.appendChild(hr);
   table.appendChild(thead);
   const tbody = el("tbody");
-  const tons = (full && full.tons_per_year) || e.tons_per_year || {};
-  const lbs = (full && full.lb_per_hour) || {};
   Object.entries(tons)
     .sort((a, b) => b[1] - a[1])
     .forEach(([pollutant, tpy]) => {
       const tr = el("tr");
-      if (pollutant === e.largest_criteria_pollutant) tr.className = "over";
+      if (pollutant in overSer) tr.className = "over";
       tr.appendChild(el("td", "strong", pollutant));
       tr.appendChild(el("td", "num-col", fmt(tpy, 1)));
-      tr.appendChild(el("td", "num-col", lbs[pollutant] === undefined ? "—" : fmt(lbs[pollutant], 2)));
+      tr.appendChild(
+        el(
+          "td",
+          "num-col",
+          hasLbs
+            ? lbs[pollutant] === undefined
+              ? "—"
+              : fmt(lbs[pollutant], 2)
+            : pollutant in overSer
+            ? "yes"
+            : "—"
+        )
+      );
       tbody.appendChild(tr);
     });
   table.appendChild(tbody);
@@ -708,6 +725,9 @@ function renderAlternate(alt, gated) {
       chips.appendChild(el("span", "chip chip-add", `adds ${t.replace(/_/g, " ")}`))
     );
     left.appendChild(chips);
+    /* The honest notes ride with the recommendation, in the same column, not
+       tucked underneath it. */
+    (alt.notes || []).forEach((n) => left.appendChild(el("div", "note", n)));
     top.appendChild(left);
 
     const dl = el("dl", "kv");
@@ -738,10 +758,6 @@ function renderAlternate(alt, gated) {
     );
   } else if (alt) {
     panel.appendChild(el("div", "note", (alt.notes || []).join(" ") || "No better parcel found."));
-  }
-
-  if (alt && alt.best && (alt.notes || []).length) {
-    (alt.notes || []).forEach((n) => panel.appendChild(el("div", "note", n)));
   }
 
   panel.appendChild(altRunner());

@@ -324,6 +324,35 @@ def test_virginia_is_in_the_otr_only_around_washington():
     assert southern.pathway is not Pathway.MAJOR_NA_NSR
 
 
+def test_otr_matches_virginia_independent_cities():
+    """Census names them "Alexandria city", not "Alexandria".
+
+    Stripping only " County" dropped every Virginia independent city out of the
+    Ozone Transport Region, which handed those projects the 100 tpy PSD threshold
+    instead of the 50 tpy transport-region one. Wrong in the easy direction.
+    """
+    from agent.pathway import in_otr, normalise_county_name
+
+    for name in (
+        "Alexandria",
+        "Alexandria city",
+        "Falls Church city",
+        "Manassas Park city",
+        "Fairfax city",
+        "Fairfax County",
+        "Loudoun County",
+        "Arlington County",
+    ):
+        assert in_otr("VA", name), f"{name} is in the OTR"
+
+    for name in ("Mecklenburg County", "Bulloch", "Brunswick County"):
+        assert not in_otr("VA", name), f"{name} is not in the OTR"
+
+    assert normalise_county_name("St. Bernard Parish") == "St. Bernard"
+    assert normalise_county_name("Yukon-Koyukuk Census Area") == "Yukon-Koyukuk"
+    assert normalise_county_name(None) == ""
+
+
 def test_consumed_increment_costs_time_in_nonattainment_too():
     """Increment is consumed regardless of which review programme applies. The
     months were only being added under PSD, so a nonattainment site with a full

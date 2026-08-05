@@ -502,12 +502,39 @@ OTR_VA_COUNTIES = frozenset(
 )
 
 
+#: Census names Virginia's independent cities "Alexandria city", not "Alexandria",
+#: and Louisiana uses "Parish". Stripping only " County" silently dropped every
+#: Virginia independent city out of the OTR, which handed those projects the
+#: 100 tpy PSD threshold instead of the 50 tpy transport-region one.
+_COUNTY_SUFFIXES = (
+    " county",
+    " parish",
+    " borough",
+    " census area",
+    " municipality",
+    " city and borough",
+    " city",
+)
+
+
+def normalise_county_name(county: str | None) -> str:
+    """County or county-equivalent name with its jurisdictional suffix removed."""
+    if not county:
+        return ""
+    name = county.strip()
+    lowered = name.lower()
+    for suffix in _COUNTY_SUFFIXES:
+        if lowered.endswith(suffix):
+            return name[: -len(suffix)].strip()
+    return name
+
+
 def in_otr(state: str, county: str | None = None) -> bool:
     state = state.upper()
     if state in OTR_STATES:
         return True
     if state == "VA" and county:
-        return county.replace(" County", "").strip() in OTR_VA_COUNTIES
+        return normalise_county_name(county) in OTR_VA_COUNTIES
     return False
 
 
