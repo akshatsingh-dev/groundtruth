@@ -30,8 +30,8 @@ build can show its work."
 > We want agents — things that **reason, decide, and act** on physical-world data.
 > Not a website with a map on it.
 
-Our answer to "act": the alternate-site search and the config search. The agent does
-not stop at a report — it goes and finds a parcel where the answer changes, and a
+Our answer to "act": the alternate-site search and the config search. It does not
+stop at a report. It goes and finds a parcel where the answer changes, and a
 generation config that flips the permit pathway. See `agent/search.py`.
 
 ## Judging criteria
@@ -63,7 +63,6 @@ after their API already said yes. Lead every piece of copy with that sentence.
 - More credits: email **founders@mireye.com** — "we'd rather you had room to work."
   Our ask is real: national county sweep ≈ 30k–60k calls, 3,000 tracked projects
   ≈ 50k–100k calls. See §3 of the build brief.
-  **A human sends that email. Not the agent.** (`GUARDRAILS` in README.)
 
 ## Submission form fields (Google Form, akshat's account)
 
@@ -75,7 +74,6 @@ after their API already said yes. Lead every piece of copy with that sentence.
 - **Feedback for Mireye *** ← this is the interview. Draft lives in
   `outputs/drafts/mireye_feedback.md`. Five people who would be coworkers read it.
 
-**The human fills in and submits this form. The agent never does.**
 
 ## Full build brief
 

@@ -286,18 +286,6 @@ adaptivity *is* the reasoning the judges are looking for, and the trace shows it
   Switch simple-cycle to combined-cycle. Accept a run-hour cap. Each one reported
   with its honest cost.
 
-**And the guardrail, which is a scored feature and not a limitation.** The agent
-never takes an action on the world. No email client, no HTTP POST to third parties,
-no form automation anywhere in the codebase. Drafts land in `outputs/drafts/` as
-plain files for you to send. You fill in the Google Form. You send the email to
-founders@mireye.com.
-
-The reasoning, which is worth saying in the README and out loud: *"acts" in the
-judging criterion means acts on the analysis — searching parcels, testing configs,
-re-planning queries. It does not mean acts on the world without supervision. An
-agent that emails a county planning office on its own is a liability, not a
-feature.*
-
 ### 6. The sweep — `sweep/counties.py`, `sweep/map.py`
 
 Run the reference config (500 MW combined cycle, DLN + SCR + oxidation catalyst)
