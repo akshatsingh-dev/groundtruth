@@ -609,22 +609,28 @@ def _gdelt(params: dict, *, use_cache: bool = True, timeout: float = 60.0) -> di
             last = f"GDELT unreachable: {exc}"
             break
         _status.gdelt_calls += 1
-        text = response.text or ""
+        text = (response.text or "").strip()
         if _RATE_LIMIT_BODY in text[:200].lower() or response.status_code == 429:
             last = "GDELT rate limited (one request per 5 s, per IP)"
             continue
         if response.status_code != 200:
             last = f"GDELT returned HTTP {response.status_code}"
             break
-        try:
-            body = json.loads(text)
-        except json.JSONDecodeError:
+        if not text:
             # An empty result set is served as an empty body, not as empty JSON.
-            if not text.strip():
-                body = {}
-            else:
-                last = "GDELT returned a non-JSON body"
-                break
+            body = {}
+        elif not text.startswith("{"):
+            # Everything else GDELT says in plain text is a complaint about the
+            # query or the load, and it is worth reporting verbatim rather than
+            # as "no data".
+            last = f"GDELT returned a non-JSON body: {' '.join(text.split())[:160]}"
+            continue
+        else:
+            try:
+                body = json.loads(text)
+            except json.JSONDecodeError:
+                last = "GDELT returned malformed JSON"
+                continue
         if cache is not None:
             cache.set("gdelt/doc", params, response.status_code, body)
         return body

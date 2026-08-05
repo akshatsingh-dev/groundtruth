@@ -261,13 +261,16 @@ class DelayValuation:
         return self.month_value()["high"]
 
     def headline(self) -> str:
-        # "today's rate" is a claim about freshness, so it is only made when the
-        # rate is actually fresh. A fallback mark says which day it is from.
-        when = (
-            f"the {self.rate_fetched[:10]} reference rate"
-            if self.rate_is_stale
-            else "today's spot rate"
-        )
+        # "today's spot rate" is a claim about both freshness and provenance, so
+        # it is only made when the rate is fresh and actually came off a market.
+        # A fallback mark says which day it is from; a caller-supplied rate says
+        # it was supplied.
+        if self.likely.rate_kind == "caller-supplied":
+            when = f"a supplied rate of ${self.likely.usd_per_gpu_hour:.2f}/GPU-hr"
+        elif self.rate_is_stale:
+            when = f"the {self.rate_fetched[:10]} reference rate"
+        else:
+            when = "today's spot rate"
         if not self.months_delayed:
             return (
                 f"No delay against the announced date, so nothing to price. One month of "

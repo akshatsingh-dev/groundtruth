@@ -167,7 +167,7 @@ flowchart LR
     E -->|no| H
 ```
 
-Real tool-calling loop over ten tools. Not a chain of `if` statements. The model picks
+Real tool-calling loop over eleven tools. Not a chain of `if` statements. The model picks
 which Mireye calls to make. The engines decide what's true. Nothing in the output is a
 number the model wrote in prose.
 
@@ -286,18 +286,46 @@ board voting history, entered by hand from primary sources. Not a scraper. Faste
 more accurate at this scale, every record carries a source URL, and a county moratorium
 is a hard stop that no permit pathway routes around.
 
-### In progress
+### Spot GPU pricing → what the delay costs
 
-Three more are being wired in. This section gets updated with results when they land, not
-before.
+Four sources, all live, **none of them requiring an account or a key**: the Vast.ai offer
+book and SF Compute's cleared-price index for marketplace spot, RunPod and Lambda for
+published list. Spot and list are reported separately and never averaged, because one is
+what capacity clears at and the other is a posted ask. H100 SXM today: **$2.40 spot,
+$3.64 list.**
+
+**What it changes:** it converts a permit timeline into the unit a fund underwrites in.
+Cumberland County NJ, 300 MW of blocked IT load, 53 months late:
+
+```
+235,294 H100-equivalents  (1,275 W each at the server, PUE 1.33 derived)
+x 38,763 delayed hours x 80% utilisation x $2.40/GPU-hr
+
+= $17.5B foregone, range $8.8B to $29.2B
+  $329M per month of delay
+```
+
+Against a $10-25k site screen. The fuel-cell config the search already recommends
+recovers $14.5B of it.
+
+That number is an opportunity cost under a generous counterfactual, and the code says so
+in the output. It assumes the full load would have been energised on the announced date
+and sold at spot for every delayed month. A contracted lease marks it at $15.4B. Spot
+rates are volatile and falling, so a 53-month projection at today's rate is not a
+forecast and is never presented as one.
+
+There's a sanity check in code rather than in prose. The Microsoft contract at that site
+is $17.4B over 5 years for 300 MW, which is $11.6M per MW-year. The spot counterfactual
+implies $13.2M per MW-year, 1.14x. Right direction, right magnitude. The high case
+**fails** that check at 1.9x and is labelled as failing.
+
+### In progress
 
 - **Satellite imagery, Sentinel-2.** Is there a hole in the ground yet. Compares the
   announced groundbreaking date against observable clearing on the parcel. 60% of
   announced behind-the-meter generation exists only as an announcement, and this is how
   you tell which 60%. Validating against xAI Memphis as a positive control, because that
   one did get built and any method that can't see it is broken.
-- **Spot GPU pricing.** Converts a permit delay into foregone compute revenue, which is
-  the unit a fund actually underwrites in.
 - **Local news signal.** Opposition shows up in a county newspaper months before it shows
   up in a permit denial. Being reconciled against the 27 hand-entered records to see
   whether it reproduces postures that were verified by hand.
@@ -415,7 +443,7 @@ agent/
   pathway.py     decision engine. List of 28, NSR, overlays, timelines.
   planner.py     the tool-calling loop. 3 auth paths, one keyless.
   search.py      alternate-site + config search. This is the "act".
-  tools.py       10 tool schemas, shared across backends.
+  tools.py       11 tool schemas, shared across backends.
   report.py      terminal / markdown / JSON, with a provenance appendix.
 providers/
   base.py        PhysicalFactsProvider. Going international is a data problem.
