@@ -533,6 +533,16 @@ def _county_phrases(county: str, state: str, fips: str | None = None) -> tuple[s
     return tuple(dict.fromkeys(phrases))
 
 
+def _or_group(phrases: tuple[str, ...] | list[str]) -> str:
+    """GDELT rejects parentheses around anything that is not an OR list, with
+    "Parentheses may only be used around OR'd statements." A single-element
+    group therefore has to go in bare. That refusal arrives as a plain-text body
+    on an HTTP 200, so a wrapped single phrase reads as zero articles rather
+    than as an error, which would have made every one-name county look quiet."""
+    items = list(dict.fromkeys(phrases))
+    return items[0] if len(items) == 1 else "(" + " OR ".join(items) + ")"
+
+
 def _signal_query(county: str, state: str, fips: str | None = None) -> str:
     """County AND a data-center term. Nothing else.
 
@@ -544,15 +554,14 @@ def _signal_query(county: str, state: str, fips: str | None = None) -> str:
     terms are used as classifiers over the returned headlines instead, where
     they discriminate rather than dilute.
     """
-    counties = " OR ".join(_county_phrases(county, state, fips))
-    terms = " OR ".join(_DATA_CENTER_TERMS)
-    return f"({counties}) ({terms}) sourcecountry:US"
+    counties = _or_group(_county_phrases(county, state, fips))
+    terms = _or_group(_DATA_CENTER_TERMS)
+    return f"{counties} {terms} sourcecountry:US"
 
 
 def _baseline_query(county: str, state: str, fips: str | None = None) -> str:
     """County name alone. The denominator for the media-market problem."""
-    counties = " OR ".join(_county_phrases(county, state, fips))
-    return f"({counties}) sourcecountry:US"
+    return f"{_or_group(_county_phrases(county, state, fips))} sourcecountry:US"
 
 
 def _bing_query(county: str, state: str) -> str:

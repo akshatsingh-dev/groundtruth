@@ -165,6 +165,7 @@ we filed as a field request and Mireye's screener confirmed.
 | **Site selection.** Hyperscaler and colo teams, QTS, Vantage, CyrusOne, Aligned, behind-the-meter developers, turbine lessors | One wrong site is tens of millions in options, engineering and legal, plus 18 to 36 months. Nebius is the live example, under a $17.4B Microsoft deal. | **$250k–1M/yr** enterprise, or **$10–25k per site report**. The report is the path to revenue in months rather than years. |
 | **Air permitting consultancies.** Trinity, ERM, Onterris | They run this screen by hand today. They keep the billable interpretation and the stamp. | Per-seat or per-screen licence. Channel, not competitor. |
 | **Infrastructure lenders and funds** | Underwriting against announced energization dates. | Same feed, diligence use case. |
+| **The other side of the table**<br>county planning offices, state air agencies | The same engine runs backwards. Virginia DEQ has approved exactly one air permit for a data center campus with onsite gas. That is a capacity problem, not an obstruction one, and an agency that pre-screens an application in a day instead of a quarter is the version municipalities buy. | Public procurement. Slower to close, and the only buyer here with a standing budget line for it. |
 
 Sightline Climate, Data Center Watch, BNEF and JLL already sell pipeline tracking.
 None of them computes the permit pathway. None of them goes looking for a parcel

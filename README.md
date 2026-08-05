@@ -332,6 +332,15 @@ implies $13.2M per MW-year, 1.14x. Right direction, right magnitude. The high ca
 
 ---
 
+## Where this goes next: the other side of the table
+
+The same engine runs backwards. A county planning office and a state air agency answer
+the identical question, understaffed and from the opposite chair. Virginia DEQ has
+approved exactly one air permit for a data center campus with onsite gas, which is a
+capacity problem rather than an obstruction one. An agency that could pre-screen an
+application in a day instead of a quarter is the version of this that municipalities buy,
+and unlike developers they already have a procurement line for it.
+
 ## Where this goes next: India
 
 The thesis is not American. It's what happens anywhere capital arrives faster than

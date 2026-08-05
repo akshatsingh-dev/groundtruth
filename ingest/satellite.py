@@ -175,6 +175,9 @@ _SCL_LABEL = {
 
 #: Refuse above this fraction of the footprint being cloud, shadow or snow.
 MAX_AOI_CLOUD = 0.10
+#: Stop probing as soon as a scene is this clean. Between this and MAX_AOI_CLOUD
+#: a scene is usable but kept only if nothing better turns up in the budget.
+CLEAN_AOI_CLOUD = 0.02
 #: Refuse below this fraction of the footprint being usable at all.
 MIN_AOI_VALID = 0.60
 
@@ -873,10 +876,21 @@ def _pick_scene(
         return None, None, log
 
     if order == "nearest" and target is not None:
-        scenes.sort(key=lambda s: abs((_parse_iso(s.acquired_date) - target).days))
+        # Bucket by fortnight, then prefer the cleaner tile inside the bucket.
+        # Straight nearest-in-time picks a hazy scene over a clean one five days
+        # further out, and a hazy baseline is what a false clearing signal looks
+        # like. This is the ordering only; the gate below is still SCL.
+        scenes.sort(
+            key=lambda s: (
+                abs((_parse_iso(s.acquired_date) - target).days) // 15,
+                round(s.scene_cloud_pct),
+                abs((_parse_iso(s.acquired_date) - target).days),
+            )
+        )
     else:
         scenes.sort(key=lambda s: s.acquired, reverse=True)
 
+    best: tuple[Scene, _Grid] | None = None
     for scene in scenes[:probe_limit]:
         try:
             grid = _read_grid(reader, scene, lat, lon, radius_m, ring_factor)
@@ -892,10 +906,30 @@ def _pick_scene(
                 f"({', '.join(f'{k} {v}%' for k, v in list(hist.items())[:3])})"
             )
             continue
+
+        if best is None or cloud < (best[0].aoi_cloud_pct or 100.0):
+            best = (scene, grid)
+
+        if cloud <= CLEAN_AOI_CLOUD * 100:
+            log.append(
+                f"{scene.scene_id} ({scene.acquired_date}): accepted, "
+                f"{cloud:.1f}% footprint cloud, {valid:.1f}% usable, "
+                f"{scene.scene_cloud_pct:.1f}% over the whole tile"
+            )
+            return scene, grid, log
+
         log.append(
-            f"{scene.scene_id} ({scene.acquired_date}): accepted, "
-            f"{cloud:.1f}% footprint cloud, {valid:.1f}% usable, "
-            f"{scene.scene_cloud_pct:.1f}% over the whole tile"
+            f"{scene.scene_id} ({scene.acquired_date}): usable at {cloud:.1f}% footprint cloud "
+            f"but not clean; still looking for one under {CLEAN_AOI_CLOUD * 100:.0f}%"
+        )
+
+    if best is not None:
+        scene, grid = best
+        log.append(
+            f"{scene.scene_id} ({scene.acquired_date}): accepted as the cleanest of "
+            f"{min(len(scenes), probe_limit)} probed, {scene.aoi_cloud_pct:.1f}% footprint cloud. "
+            f"Residual haze and cloud shadow move reflectance, so read the change metric with "
+            f"that in mind."
         )
         return scene, grid, log
 
@@ -1659,23 +1693,44 @@ def _mireye_block(facts: dict | None) -> dict:
 #: from backtest/cases.py. Coordinates are published locations, not surveyed
 #: parcels.
 #:
-#: Memphis carries a correction. `backtest/cases.py` has 35.065, -90.075,
-#: labelled "South Memphis, approximate". That point is 7.3 km east of the site
-#: and lands in a residential neighbourhood off Kansas Street; run against it
-#: this module returns `no_visible_activity`, correctly, because nothing was
-#: built there. Colossus 1 is the former Electrolux plant, 3231 Paul R Lowry Rd,
-#: Memphis TN 38109, geocoded through Mireye at 0.95 confidence, rooftop grade,
-#: to 35.060553, -90.155133. Both are run below, because the pair is the
-#: cleanest demonstration in the repo of what an approximate coordinate costs.
+#: Two of the three published coordinates are wrong, and both are run anyway,
+#: against the corrected one, because the pairs are the clearest statement this
+#: repo can make about what an approximate coordinate costs.
+#:
+#: Memphis. `backtest/cases.py` has 35.065, -90.075, labelled "South Memphis,
+#: approximate". That point is 7.3 km east of the site, in a residential
+#: neighbourhood. Colossus 1 is the former Electrolux plant, 3231 Paul R Lowry
+#: Rd, Memphis TN 38109, geocoded through Mireye at 0.95 confidence, rooftop
+#: grade, to 35.060553, -90.155133.
+#:
+#: Santa Teresa. `backtest/cases.py` has 31.870, -106.690, labelled "Santa
+#: Teresa, approximate". No coordinate for Project Jupiter is public — Baxtel
+#: withholds the street address — so this one was found rather than looked up:
+#: the change metric was run over a 15 km window on the NM-136 corridor and the
+#: 300 m blocks were ranked by disturbed-pixel count. The top cluster is at
+#: 31.8175, -106.6675, which is 6.2 km south-southeast of the published point,
+#: 1.6 km off the Pete V. Domenici International Highway, 1.1 km from a
+#: substation, and 3.3 km from an EIA-860M generator Mireye reports as
+#: "V) UNDER CONSTRUCTION, MORE THAN 50 PERCENT COMPLETE". That is consistent
+#: with the reported Project Jupiter site and is not a confirmed parcel ID.
 BACKTEST_SITES = [
     {
-        "key": "jupiter",
-        "label": "Project Jupiter — Santa Teresa, NM",
+        "key": "jupiter-construction",
+        "label": "Project Jupiter — the construction found on the NM-136 corridor",
+        "lat": 31.8175, "lon": -106.6675,
+        "groundbreaking": "2025-09",
+        "energization": "Q4 2026",
+        "radius_m": 900.0,
+        "expect": "reported: construction began Sept 2025, 1,200+ workers by spring 2026",
+    },
+    {
+        "key": "jupiter-published-coord",
+        "label": "Project Jupiter — the approximate coordinate in backtest/cases.py",
         "lat": 31.870, "lon": -106.690,
         "groundbreaking": "2025-09",
         "energization": "Q4 2026",
         "radius_m": 1200.0,
-        "expect": "pipeline right-of-way denied twice, turbine applications withdrawn",
+        "expect": "6.2 km NNW of the construction; should read empty",
     },
     {
         "key": "vineland",
