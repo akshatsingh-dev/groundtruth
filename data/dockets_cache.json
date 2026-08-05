@@ -9,6 +9,11 @@
   "results": [],
   "total_matches": 0
  },
+ "court=ded|filed_after=2020-01-01|order_by=dateFiled desc|party_name=Sussex County|q=(\"data center\" OR \"data centre\" OR rezoning OR \"special exception\" OR \"conditional use\" OR \"comprehensive plan\" OR moratorium OR \"zoning ordinance\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
+  "fetched": "2026-08-05T10:06:06+00:00",
+  "results": [],
+  "total_matches": 0
+ },
  "court=ded|filed_after=2020-01-01|order_by=dateFiled desc|q=\"Kent County\" AND (\"data center\" OR \"data centre\" OR \"special exception\" OR \"conditional use permit\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
   "fetched": "2026-08-05T09:42:04+00:00",
   "results": [
@@ -177,6 +182,25 @@
    }
   ],
   "total_matches": 9
+ },
+ "court=ded|filed_after=2020-01-01|order_by=dateFiled desc|q=\"Sussex County\" AND (\"data center\" OR \"data centre\" OR \"special exception\" OR \"conditional use permit\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
+  "fetched": "2026-08-05T10:06:07+00:00",
+  "results": [
+   {
+    "case_name": "Manhattan Telecommunications Corp. v. Granite Telecommunications, LLC",
+    "cause": "28:1332 Diversity-Notice of Removal",
+    "court": "D. Del.",
+    "date_filed": "2020-06-09",
+    "docket_number": "1:20-cv-00775",
+    "parties": [
+     "Manhattan Telecommunications Corp.",
+     "Granite Telecommunications, LLC"
+    ],
+    "snippet": "Case 1:20-cv-00775-UNA Document 2-1 Filed 06/09/20 Page 1 of 423 PageID #: 12 EXHIBIT A Case 1:20-cv-00775-UNA Document 2-1 Filed 06/09/20 Page 2 of 423 PageID #: 13 MANHATTAN TELECOMMUNICATIONS CORP. D/B/A METROPOLITAN TELECOMMUNICATIONS, A/K/A METTEL v. GRANITE TELECOMMUNICATIONS, LLC Court of Chancery of the State of Delaware C.A. No. 2020-0380-JRS As of June 9, 2020",
+    "url": "https://www.courtlistener.com/docket/17234521/manhattan-telecommunications-corp-v-granite-telecommunications-llc/"
+   }
+  ],
+  "total_matches": 1
  },
  "court=mdd|filed_after=2020-01-01|order_by=dateFiled desc|party_name=Baltimore County|q=(\"data center\" OR \"data centre\" OR rezoning OR \"special exception\" OR \"conditional use\" OR \"comprehensive plan\" OR moratorium OR \"zoning ordinance\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
   "fetched": "2026-08-05T09:43:12+00:00",
@@ -576,6 +600,34 @@
   ],
   "total_matches": 1
  },
+ "court=mdd|filed_after=2020-01-01|order_by=dateFiled desc|party_name=Dorchester County|q=(\"data center\" OR \"data centre\" OR rezoning OR \"special exception\" OR \"conditional use\" OR \"comprehensive plan\" OR moratorium OR \"zoning ordinance\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
+  "fetched": "2026-08-05T10:11:43+00:00",
+  "results": [
+   {
+    "case_name": "Willey v. Webb",
+    "cause": "42:1988 Proceedings in Vindication of Civil Rights",
+    "court": "D. Maryland",
+    "date_filed": "2023-08-22",
+    "docket_number": "1:23-cv-02299",
+    "parties": [
+     "Second Amendment Foundation, Inc.",
+     "Marylanders to Prevent Gun Violence",
+     "Anthony G. Brown",
+     "Brady Center to Prevent Gun Violence",
+     "Giffords Law Center to Prevent Gun Violence",
+     "The Second Amendment Foundation",
+     "Susan E. Webb",
+     "Dorchester County, Maryland",
+     "James W. Phillips Jr.",
+     "Donald S. Willey",
+     "Kelly Roskam"
+    ],
+    "snippet": "Case 1:23-cv-02299-ELH Document 1-6 Filed 08/22/23 Page 1 of 8 EXHIBIT F Case 1:23-cv-02299-ELH Document 1-6 Filed 08/22/23 Page 2 of 8 COPY DORCHESTER COUNTY DEPARTMENT OF PLANNING AND ZONING 501 COURT LANE, PO BOX 107 CAMBRIDGE, MD 21613 410-228-3234 www.dorchestercountymd.com Notice of Violation June 1\u00b0, 2023 To: Donald Willey 1208 Parks Rd, Fishing Creek, MD 21634 COMPLAINT # 22-00164 Ref: Nui",
+    "url": "https://www.courtlistener.com/docket/67716215/willey-v-webb/"
+   }
+  ],
+  "total_matches": 1
+ },
  "court=mdd|filed_after=2020-01-01|order_by=dateFiled desc|q=\"Baltimore County\" AND (\"data center\" OR \"data centre\" OR \"special exception\" OR \"conditional use permit\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
   "fetched": "2026-08-05T09:43:12+00:00",
   "results": [
@@ -959,6 +1011,49 @@
     ],
     "snippet": "Case 1:25-cv-03392-ABA Document 1-1 Filed 10/14/25 Page 1 of 169 IN THE UNITED STATES DISTRICT COURT FOR THE DISTRICT OF MARYLAND (Northern Division \u2013 Baltimore) PSEG RENEWABLE * TRANSMISSION LLC * Petitioner * v.",
     "url": "https://www.courtlistener.com/docket/71643750/pseg-renewable-transmission-llc-v-butz/"
+   },
+   {
+    "case_name": "People for the Ethical Treatment of Animals, Inc. v. Shore Transit",
+    "cause": "42:1983 Civil Rights Act - Civil Action for Deprivation of Rights",
+    "court": "D. Maryland",
+    "date_filed": "2021-08-17",
+    "docket_number": "1:21-cv-02083",
+    "parties": [
+     "People for the Ethical Treatment of Animals, Inc.",
+     "Tri-County Council of the Lower Eastern Shore of Maryland",
+     "Shore Transit",
+     "Brad Bellacicco"
+    ],
+    "snippet": "EXHIBIT D EASTERN SHORE OF MARYLAND Contract for MANAGEMENT AND OPERATION OF REGIONAL TRANSIT ADVERTISING PROGRAM Contractor Vector Media Transit, LLC 1615 York Road, Suite 204 Lutherville, MD 21093 443-275-1770 x 317 msheely@veotormedia.com Clients Tri-County Council for the Lo",
+    "url": "https://www.courtlistener.com/docket/60187555/people-for-the-ethical-treatment-of-animals-inc-v-shore-transit/"
+   }
+  ],
+  "total_matches": 2
+ },
+ "court=mdd|filed_after=2020-01-01|order_by=dateFiled desc|q=\"Dorchester County\" AND (\"data center\" OR \"data centre\" OR \"special exception\" OR \"conditional use permit\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
+  "fetched": "2026-08-05T10:11:44+00:00",
+  "results": [
+   {
+    "case_name": "Willey v. Webb",
+    "cause": "42:1988 Proceedings in Vindication of Civil Rights",
+    "court": "D. Maryland",
+    "date_filed": "2023-08-22",
+    "docket_number": "1:23-cv-02299",
+    "parties": [
+     "Second Amendment Foundation, Inc.",
+     "Marylanders to Prevent Gun Violence",
+     "Anthony G. Brown",
+     "Brady Center to Prevent Gun Violence",
+     "Giffords Law Center to Prevent Gun Violence",
+     "The Second Amendment Foundation",
+     "Susan E. Webb",
+     "Dorchester County, Maryland",
+     "James W. Phillips Jr.",
+     "Donald S. Willey",
+     "Kelly Roskam"
+    ],
+    "snippet": "Case 1:23-cv-02299-ELH Document 1-6 Filed 08/22/23 Page 1 of 8 EXHIBIT F Case 1:23-cv-02299-ELH Document 1-6 Filed 08/22/23 Page 2 of 8 COPY DORCHESTER COUNTY DEPARTMENT OF PLANNING AND ZONING 501 COURT LANE, PO BOX 107 CAMBRIDGE, MD 21613 410-228-3234 www.dorchestercountymd.com Notice of Violation June 1\u00b0, 2023 To: Donald Willey 1208 Parks Rd, Fishing Creek, MD 21634 COMPLAINT # 22-00164 Ref: Nui",
+    "url": "https://www.courtlistener.com/docket/67716215/willey-v-webb/"
    },
    {
     "case_name": "People for the Ethical Treatment of Animals, Inc. v. Shore Transit",
@@ -3556,6 +3651,39 @@
   ],
   "total_matches": 2
  },
+ "court=njd|filed_after=2020-01-01|order_by=dateFiled desc|party_name=Ocean County|q=(\"data center\" OR \"data centre\" OR rezoning OR \"special exception\" OR \"conditional use\" OR \"comprehensive plan\" OR moratorium OR \"zoning ordinance\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
+  "fetched": "2026-08-05T10:10:23+00:00",
+  "results": [
+   {
+    "case_name": "COUNTY OF CAPE MAY v. UNITED STATES OF AMERICA",
+    "cause": "05:551 Administrative Procedure Act",
+    "court": "D.N.J.",
+    "date_filed": "2023-10-17",
+    "docket_number": "1:23-cv-21201",
+    "parties": [
+     "GARDEN STATE SEAFOOD ASSOCIATION",
+     "JANET COIT",
+     "LIZ KLEIN",
+     "BUREAU OF OCEAN ENERGY MANAGEMENT",
+     "SURFSIDE SEAFOOD PRODUCTS LLC",
+     "Ocean Wind LLC",
+     "NATIONAL MARINE FISHERIES SERVICE",
+     "DEB HAALAND",
+     "GREATER WILDWOOD HOTEL AND MOTEL ASSOCIATION",
+     "LAMONICA FINE FOODS, LLC",
+     "UNITED STATES OF AMERICA",
+     "UNITED STATES DEPARTMENT OF THE INTERIOR",
+     "CLEAN OCEAN ACTION",
+     "CAPE MAY COUNTY CHAMBER OF COMMERCE",
+     "LUNDS FISHERIES",
+     "COUNTY OF CAPE MAY"
+    ],
+    "snippet": "Case 1:23-cv-21201-KMW-SAK Document 1 Filed 10/17/23 Page 1 of 71 PageID: 1 IN THE UNITED STATES DISTRICT COURT FOR THE DISTRICT OF NEW JERSEY ) COUNTY OF CAPE MAY, a political ) Subdivision of the State of New Jersey; ) COUNTY OF CAPE MAY CHAMBER ) OF COMMERCE, a New Jersey Nonprofit ) Corporation; CLEAN OCEAN ACTION, ) a New",
+    "url": "https://www.courtlistener.com/docket/67887656/county-of-cape-may-v-united-states-of-america/"
+   }
+  ],
+  "total_matches": 1
+ },
  "court=njd|filed_after=2020-01-01|order_by=dateFiled desc|party_name=Salem County|q=(\"data center\" OR \"data centre\" OR rezoning OR \"special exception\" OR \"conditional use\" OR \"comprehensive plan\" OR moratorium OR \"zoning ordinance\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
   "fetched": "2026-08-05T09:41:05+00:00",
   "results": [
@@ -5003,6 +5131,138 @@
     ],
     "snippet": "Case 1:22-cv-07464-RMB-AMD Document 124 Filed 05/16/23 Page 1 of 235 PageID: 3877 [DOCKET NO. 8] IN THE UNITED STATES DISTRICT COURT FOR THE DISTRICT OF NEW JERSEY CAMDEN VICINAGE RONALD KOONS, et al., Civil No. 22-7464 (RMB/AMD) Plaintiffs, Consolidated with",
     "url": "https://www.courtlistener.com/docket/66677437/koons-v-platkin/"
+   }
+  ],
+  "total_matches": 5
+ },
+ "court=njd|filed_after=2020-01-01|order_by=dateFiled desc|q=\"Ocean County\" AND (\"data center\" OR \"data centre\" OR \"special exception\" OR \"conditional use permit\" OR \"Clean Air Act\" OR \"air permit\")|type=r": {
+  "fetched": "2026-08-05T10:10:23+00:00",
+  "results": [
+   {
+    "case_name": "MOTLEY v. COSMED GROUP, INC.",
+    "cause": "28:1441 Notice of Removal- Product Liability",
+    "court": "D.N.J.",
+    "date_filed": "2024-09-09",
+    "docket_number": "2:24-cv-09063",
+    "parties": [
+     "JS URBAN RENEWAL CORP.",
+     "ANGELA SANTIAGO",
+     "TERESA LIRIANO",
+     "DIANA VALDES",
+     "C.H.S. PROPERTY DEVELOPMENT LLC",
+     "BRENDA MOTLEY",
+     "BALCHEM CORPORATION",
+     "COSMED GROUP, INC.",
+     "JOHN DOE DEFENDANTS 1-25"
+    ],
+    "snippet": "Case 2:24-cv-09063-BRM-MAH Document 1-1 Filed 09/09/24 Page 1 of 40 PageID: 14 EXHIBIT 1 Case 2:24-cv-09063-BRM-MAH Document 1-1 Filed 09/09/24 Page 2 of 40 PageID: 15 Robert Gitelman (NJ# 039192004) NAPOLI SHKOLNIK PLLC SUPERIOR COURT OF NEW JERSEY 400 Broad.hollow Road - Suite 305 MelvilleNY 11747-4810 Union County - Law Division Tel. (212) 397-1000 rgitelm",
+    "url": "https://www.courtlistener.com/docket/69146377/motley-v-cosmed-group-inc/"
+   },
+   {
+    "case_name": "STATE OF NEW JERSEY v. UNITED STATES DEPARTMENT OF TRANSPORTATION",
+    "cause": "42:4321 Review of Agency Action-Environment",
+    "court": "D.N.J.",
+    "date_filed": "2023-07-21",
+    "docket_number": "2:23-cv-03885",
+    "parties": [
+     "HEALTH PROFESSIONALS & ALLIED EMPLOYEES",
+     "350NJ-ROCKLAND",
+     "New York League of Conservation Voters",
+     "TRI-STATE TRANSPORTATION CAMPAIGN",
+     "EMPOWERNJ",
+     "Transportation Alternatives",
+     "ISLES, INC",
+     "BIKEJC",
+     "STATE OF NEW JERSEY",
+     "ACTION TOGETHER NEW JERSEY",
+     "NEW JERSEY WORK ENVIRONMENT COUNCIL",
+     "NEW JERSEY ASSOCIATION OF RAILROAD PASSENGERS",
+     "NEW JERSEY CITIZEN ACTION",
+     "WE ACT for Environmental Justice",
+     "NEWARK SCIENCE AND SUSTAINABILITY INC.",
+     "Riders Alliance",
+     "StreetsPAC",
+     "UNITED STATES DEPARTMENT OF TRANSPORTATION",
+     "TURNPIKE TRAP COALITION",
+     "BIKE NORTH BERGEN",
+     "New York Lawyers for the Public Interest",
+     "SOUTH WARD ENVIRONMENTAL ALLIANCE",
+     "BIKE SOMA",
+     "Open Plans",
+     "RICHARD J. MARQUIS",
+     "UNITARIAN UNIVERSALIST FAITH ACTION NJ",
+     "TRIBOROUGH BRIDGE AND TUNNEL AUTHORITY",
+     "Real Estate Board of New York",
+     "NEW JERSEY ENVIRONMENTAL LOBBY",
+     "MARK SOKOLICH",
+     "RICHARD GALLER",
+     "New York Public Interest Research Group Fund",
+     "FEDERAL HIGHWAY ADMINISTRATION",
+     "HUDSON COUNTY COMPLETE STREET",
+     "SAFESTREETSJC",
+     "COUNTY OF BERGEN",
+     "NEW JERSEY POLICY PERSPECTIVE",
+     "SOMA ACTION",
+     "CLEAN WATER ACTION",
+     "HACKENSACK RIVERKEEPER INC",
+     "OUR REVOLUTION NJ",
+     "NEW JERSEY WORKING FAMILY PARTY",
+     "BIKE HOBOKEN",
+     "ECOPOETRY.ORG",
+     "PEOPLE OVER PIPELINES",
+     "DONT GAS THE MEADOWLANDS",
+     "FUND FOR A BETTER WATERFRONT",
+     "BLUEWAVENJ",
+     "NEWARK GREEN TEAM",
+     "BICI UC",
+     "FRIENDS OF LIBERTY STATE PARK",
+     "ENVIRONMENTAL DEFENSE FUND",
+     "SHAILEN BHATT",
+     "METROPOLITAN TRANSPORTATION AUTHORITY",
+     "PINELANDS PRESERVATION ALLIANCE"
+    ],
+    "snippet": "Case 2:23-cv-03885-BRM-LDW Document 7-6 Filed 07/21/23 Page 1 of 139 PagelD: 1921 EXHIBIT 2-A (Final Environmental Assessment available at: https://new.mta.info/document/1 10751) (Volume 6 of 6) Case 2:23-cv-03885-BRM-LDW Document 7-6 Filed 07/21/23 Page 2 of 139 PagelID: 1922 Table 17-4. Vehicle Access in the Regional Study Area sows i 4104 COs F(olUista7 (0 UDSAN DNS Man ees 00 sist\" 0 sDSSAN DI",
+    "url": "https://www.courtlistener.com/docket/67625362/state-of-new-jersey-v-united-states-department-of-transportation/"
+   },
+   {
+    "case_name": "United States v. NEW JERSEY HIGHER EDUCATION STUDENT ASSISTANCE AUTHORITY",
+    "cause": "28:1331 Federal Question: Other Civil Rights",
+    "court": "D.N.J.",
+    "date_filed": "2021-09-20",
+    "docket_number": "3:21-cv-17201",
+    "parties": [
+     "UNITED STATES OF AMERICA",
+     "NEW JERSEY HIGHER EDUCATION STUDENT ASSISTANCE AUTHORITY"
+    ],
+    "snippet": "Case 3:21-cv-17201 Document 1 Filed 09/20/21 Page 1 of 8 PageID: 1 RACHAEL A. HONIG KRISTEN CLARKE Acting United States Attorney Assistant Attorney General SUSAN MILLENKY Civil Rights Division Assistant United States Attorney SAMEENA SHINA MAJEED VICTOR J. WILLIAMSON Chief, Housing and Civil Enforcement Special Assistant United States Att",
+    "url": "https://www.courtlistener.com/docket/60397153/united-states-v-new-jersey-higher-education-student-assistance-authority/"
+   },
+   {
+    "case_name": "United States v. TOWNSHIP OF TOMS RIVER",
+    "cause": "28:1331 Federal Question: Other Civil Rights",
+    "court": "D.N.J.",
+    "date_filed": "2021-03-10",
+    "docket_number": "3:21-cv-04633",
+    "parties": [
+     "TOWNSHIP OF TOMS RIVER",
+     "UNITED STATES  OF  AMERICA"
+    ],
+    "snippet": "Case 3:21-cv-04633-FLW-LHG Document 4 Filed 03/11/21 Page 1 of 28 PageID: 60 RACHAEL A. HONIG Acting United States Attorney MICHAEL E. CAMPION SUSAN MILENKY Assistant U.S. Attorneys 970 Broad Street, Suite 700 Newark, NJ 07102 Tel: (973) 645-3141 michael.campion@usdoj.gov susan.millenky@usdoj.gov PAMELA S. KARLAN Principal Deputy Assistant Attorney General Civil Rights Division SAMEENA SHINA MAJEE",
+    "url": "https://www.courtlistener.com/docket/59718984/united-states-v-township-of-toms-river/"
+   },
+   {
+    "case_name": "JACKSON TRAILS, LLC v. TOWNSHIP OF JACKSON",
+    "cause": "42:405 Fair Housing Act",
+    "court": "D.N.J.",
+    "date_filed": "2020-02-03",
+    "docket_number": "3:20-cv-01150",
+    "parties": [
+     "TOWNSHIP OF JACKSON",
+     "JACKSON TRAILS, LLC",
+     "PLANNING BOARD OF THE TOWNSHIP OF JACKSON"
+    ],
+    "snippet": "Case 3:20-cv-01150-MAS-ZNQ Document 17 Filed 05/21/20 Page 1 of 38 PageID: 558 THE UNITED STATES DISTRICT COURT DISTRICT OF NEW JERSEY JACKSON TRAILS, LLC, a New Jersey limited liability corporation, Plaintiff, Civ. No. 3:20-cv-01150 v. (Returnable 6/15/20) TOWNSHIP OF JACKSON, a New Jersey municipal corporation",
+    "url": "https://www.courtlistener.com/docket/16797379/jackson-trails-llc-v-township-of-jackson/"
    }
   ],
   "total_matches": 5
@@ -7304,5 +7564,39 @@
    }
   ],
   "total_matches": 33
+ },
+ "filed_after=2026-01-01|order_by=dateFiled desc|q=xAI Clean Air Act turbines|type=r": {
+  "fetched": "2026-08-05T10:13:02+00:00",
+  "results": [
+   {
+    "case_name": "Cable News Network Inc v. Perplexity AI, Inc.",
+    "cause": "17:501 Copyright Infringement",
+    "court": "S.D.N.Y.",
+    "date_filed": "2026-05-28",
+    "docket_number": "1:26-cv-04427",
+    "parties": [
+     "Perplexity AI, Inc.",
+     "Cable News Network Inc"
+    ],
+    "snippet": "Case 1:26-cv-04427 Document 1-1 Filed 05/28/26 Page 1 of 1138 EXHIBIT A Case 1:26-cv-04427 Document 1-1 Filed 05/28/26 Page 2 of 1138 Exhibit A - CNN Works Title",
+    "url": "https://www.courtlistener.com/docket/73402641/cable-news-network-inc-v-perplexity-ai-inc/"
+   },
+   {
+    "case_name": "National Association for the Advancement of Colored People v. X.AI Corp.",
+    "cause": "42:7413(b) Clean Air Act",
+    "court": "N.D. Miss.",
+    "date_filed": "2026-04-14",
+    "docket_number": "3:26-cv-00074",
+    "parties": [
+     "MZX Tech LLC",
+     "National Association for the Advancement of Colored People",
+     "X.AI Corp.",
+     "Mississippi State Conference of the NAACP"
+    ],
+    "snippet": "Case: 3:26-cv-00074-DMB-JMV Doc #: 49-1 Filed: 06/10/26 1 of 2 PageID #: 914 IN THE UNITED STATES DISTRICT COURT FOR THE NORTHERN DISTRICT OF MISSISSIPPI NAACP and NAACP MISSISSIPPI STATE CONFERENCE Plaintiffs, v. No. 3:26-cv-00074-DMB-JMV X.AI CORP. and MZX TECH LLC Defendants. PLAINTIFFS\u2019 UNOPPOSED MOTION FOR LEAVE TO FILE",
+    "url": "https://www.courtlistener.com/docket/73188848/national-association-for-the-advancement-of-colored-people-v-xai-corp/"
+   }
+  ],
+  "total_matches": 2
  }
 }
