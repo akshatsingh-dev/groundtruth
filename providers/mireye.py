@@ -73,9 +73,11 @@ CONFIDENCE_BUCKETS: dict[str, float | None] = {
 
 #: Credit prices, from the public `GET /v1/meta/plans`.
 #:
-#: VERIFIED live 5 Aug 2026 against `GET /v1/users/me/usage`. Nineteen calls on
-#: the build plan billed 836 credits and the computed total from this table was
-#: 836 — exact. Measured per call type: geocode 1, lookup without parcel 1,
+#: VERIFIED live 5 Aug 2026 against `GET /v1/users/me/usage`. Twenty-five
+#: billable calls on the build plan billed 884 credits and the computed total
+#: from this table was 884 — exact (docs/mireye-api-notes.md §6). Re-checked on
+#: an independent 18-credit run the same afternoon: modelled 18, billed 18
+#: (4,099 -> 4,117). Measured per call type: geocode 1, lookup without parcel 1,
 #: lookup with parcel 300, fetch 1 per field (a preset bills its full expansion,
 #: so data_center_siting is 106), fetch/batch 1 per field per succeeding
 #: location, ask 10, proximity nearest straightline 2, proximity nearest driving

@@ -3,8 +3,8 @@
 Read this before you record. No code. Every term is defined the first time it
 appears.
 
-Every number here came out of a command in this repo. The command is named next to
-the number so you can re-run it under questioning.
+Every engine number here came out of the code in this repo, run on 5 August 2026. Where
+a command produces it, the command is written next to it.
 
 ---
 
@@ -26,9 +26,8 @@ permit. Score a 500 MW gas plant against every county in the country and that pa
 takes 11.5 months in the best case and 99.3 in the worst. What decides which end you
 land on is a set of facts about the dirt you already bought.
 
-The numbers around this are large. Morgan Stanley puts US data center demand at
-another 68 gigawatts between 2026 and 2028, with a 38 gigawatt hole in it before
-mitigations. Of about 90 gigawatts of announced on-site generation across 59
+Morgan Stanley puts US data center demand at another 68 gigawatts between 2026 and
+2028, with a 38 gigawatt hole in it before mitigations. Of about 90 gigawatts of announced on-site generation across 59
 projects, 2.2% is operating and roughly 60% is still just an announcement. In Q1
 2026, at least 75 projects worth about $130 billion were blocked or delayed.
 
@@ -208,8 +207,8 @@ key: `.venv/bin/python -m pytest -q`.
   first moment. The live Mireye implementation. A SQLite cache so re-runs cost nothing.
   An unresolvable address raises rather than returning a guess.
 - `agent/planner.py`, `agent/tools.py`, `agent/report.py`. The tool-calling loop, the
-  12 tools it can call, and the report renderer. The demo run used 13 tool calls and 94
-  Mireye credits.
+  10 tools it can call, and the report renderer. The demo run made 13 tool calls across
+  those 10 tools and spent 94 Mireye credits.
 - `agent/search.py`. Both search loops.
 - `ingest/greenbook.py`, `ingest/dockets.py`, `ingest/counties.py`. The EPA Green Book
   parsed to `data/greenbook.json`, CourtListener returning real federal dockets, and 27

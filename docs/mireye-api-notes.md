@@ -1036,6 +1036,226 @@ deadline**, so there is a real chance one goes live in time to demo.
   fields in `constraints.must_not_be` to force it to screen as a new build. Given we
   have 1 included field request and two builds already queued, accepting the near-miss
   and documenting the PM2.5 classification gap is the better trade.
+  **DECIDED 5 Aug 2026 — see §13A. Near miss confirmed, `ingest/greenbook.py` stays
+  authoritative, and it turns out the API has no way to record a confirmation.**
+
+---
+
+## 13A. Re-fire and decisions — 5 August 2026, 10:15–10:25 UTC
+
+Second run against all four. Everything below is verbatim from the wire. Raw bodies:
+`docs/api-captures/fr{1,2,3,4}-*-refire.json`, `fr1-confirm-attempt.json`,
+`fr1-classification-gap-evidence.json`, `fr2-resume-fetch.json`.
+
+**Why there was a second run at all — the bug.** The first attempt from inside the
+agent loop never reached the network. `agent/tools.py:_exec_request_field` called
+`provider.field_request(name, description)` with two arguments, and
+`/v1/field-requests` requires `example_locations` (`minItems: 1`), so the provider's own
+guard fired first:
+
+> `field_request needs at least one example location — it is what seeds the build's
+> eval cases and where the field is verified on prod`
+
+The guard was right and the caller was wrong. The four filings in §13 were made by hand,
+which is why they worked and the agent's did not. Fixed on both sides: the
+`request_field` tool schema now carries `example_locations`, `use_case` and
+`decision_threshold`; the executor falls back to the site `resolve_site` already
+resolved rather than inventing a coordinate, and refuses if there is no site and none
+was named; and `MireyeProvider.field_request()` now takes a `default_location` and
+normalises entries (`Location` / `"lat,lng"` / address string / raw dict) into the
+exactly-one-of `address` | `lat`+`lng` | `polygon` shape, rejecting unknown keys locally
+because the API answers those with `422 invalid_payload` rather than ignoring them.
+
+**All four re-fired through the fixed path, with the original idempotency keys.**
+Every one replayed: **HTTP 200 instead of the original 201, and `updated_at` identical
+to the first screening**, so the replay returned stored state and did not re-run the
+screener. Idempotency works exactly as documented. Total cost of the re-fire: **0
+credits**, 8 calls.
+
+| # | Ask | `request_id` | HTTP | `status` | `waiting_on` | Queue | ETA |
+|---|---|---|---|---|---|---|---|
+| 1 | County attainment/nonattainment by pollutant | `fr_72ffcf9048684a17860be106e8590aa2` | 200 | `awaiting_confirm` | `requester` | — | — |
+| 2 | Distance to nearest Class I area | `fr_bf22e9def8294b34b427c7862b33828e` | 200 | `matched` | `null` | — | — |
+| 3 | Background ambient PM2.5 / NO2 | `fr_42c2a7c653c84f30be9584644ce0c752` | 200 | `queued` | `null` | **2** | `2026-08-06T09:24:52.962142+00:00` |
+| 4 | Major stationary sources within X km | `fr_20b6653a4a584fd0ae00d022be197a49` | 200 | `queued` | `null` | **3** | `2026-08-06T09:24:58.538416+00:00` |
+
+`GET /v1/field-requests/{request_id}` on each returned the same four states. Nothing
+has moved since 09:24 UTC. Both builds are still ahead of Monday's deadline.
+
+### 1 — nonattainment by pollutant: `awaiting_confirm`, and the decision
+
+Unchanged: three `near_miss_confirm` dispositions, all `confirm_required: true`,
+offering `air_quality_nonattainment_pollutants`, `air_quality_worst_classification` and
+`air_quality_maintenance_pollutants`.
+
+**THE DECISION (5 Aug 2026): confirm the near miss, and keep `ingest/greenbook.py` as
+the authoritative source for nonattainment classification.** Reasoning, in order:
+
+1. **Their field cannot pick a major-source threshold for a non-ozone pollutant.**
+   Verified live rather than taken from the screener's own description. Three
+   coordinates, `POST /v1/fetch/batch`, fields `in_air_quality_nonattainment`,
+   `air_quality_nonattainment_pollutants`, `air_quality_worst_classification`:
+
+   | Coordinate | County | `..._nonattainment_pollutants` | `..._worst_classification` |
+   |---|---|---|---|
+   | 39.022183, -77.453578 | Loudoun VA (51107) | `"8-Hour Ozone (2015 Standard)"` | `"Moderate"` |
+   | 40.5423, -79.1620 | Indiana County PA (42063) | `"Sulfur Dioxide (2010 Standard)"` | **`null`, `status: "absent"`** |
+   | 29.9427, -89.9634 | St. Bernard Parish LA (22087) | `"Sulfur Dioxide (2010 Standard)"` | **`null`, `status: "absent"`** |
+
+   Both SO2 counties are whole-county designations in our Green Book mirror, so this is
+   not a partial-area artefact. The field's own note says so plainly, and the note is
+   good: *"worst ozone/CO classification among matches (Extreme>Severe>Serious>
+   Moderate>Marginal); blank for PM/lead/SO2/NO2"*.
+
+2. **Worse than blank: at a multi-pollutant site the one value is silently
+   attributable to the wrong pollutant.** Fresno CA (36.7378, -119.7871), one
+   `POST /v1/fetch`, 3 credits:
+
+   ```json
+   {"in_air_quality_nonattainment": true,
+    "air_quality_nonattainment_pollutants": "8-Hour Ozone (2008 Standard),8-Hour Ozone (2015 Standard),PM-2.5 (2012 Standard)",
+    "air_quality_worst_classification": "Extreme"}
+   ```
+
+   `"Extreme"` is the **ozone** classification. San Joaquin Valley's PM-2.5 (2012)
+   classification is *Serious*. A consumer that reads one scalar called "worst
+   classification" next to a pollutant list containing PM-2.5 has no way to know which
+   pollutant the scalar belongs to. `agent/pathway.py` needs
+   (pollutant → classification → threshold), and this is (area → one scalar).
+
+3. **The judging criterion explicitly rewards combining Mireye with a permit
+   database.** Green Book is one of their own listed examples. Keeping
+   `ingest/greenbook.py` — which parses `nayro.dbf` per (county, pollutant, NAAQS, area)
+   and carries the classification *per pollutant* plus the `partial` flag — is the
+   product answer, not a workaround. Mireye's fields stay in the output as the
+   coordinate-level cross-check: they answer "is this point inside a nonattainment
+   polygon", which a FIPS-keyed table genuinely cannot, and that is the half of the
+   problem Green Book is bad at. The two are complementary and both are cited.
+
+**How we confirmed it, and the finding that came out of trying.** There is no way to
+confirm. `/v1/field-requests` has exactly two routes — `POST /v1/field-requests` and
+`GET /v1/field-requests/{request_id}` (checked against `GET /v1/openapi.json`). The
+`FieldRequestPayload` schema has no confirm, accept or reject key. Re-POSTing the same
+idempotency key with `constraints.acceptable_substitutes` naming the three offered
+fields is rejected:
+
+```json
+{"detail": {"error": "idempotency_key_reused",
+            "message": "idempotency_key 'deliverable-fr1-nonattainment-20260805' was already used for a different request (fr_72ffcf9048684a17860be106e8590aa2). Use a new key, or re-send the identical payload.",
+            "retryable": false}}
+```
+`HTTP 409`, 0 credits. And every plausible mutation route 404s:
+
+```
+POST   /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2          -> 404
+PATCH  /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2          -> 404
+PUT    /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2          -> 404
+POST   /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2/confirm  -> 404
+POST   /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2/accept   -> 404
+```
+
+So `status: "awaiting_confirm"` with `waiting_on: "requester"` is a state the requester
+**cannot clear**. Accepting is a no-op you record on your own side; rejecting means
+filing a *new* request under a *new* key with `constraints.must_not_be`, which spends
+another allowance and creates a second `request_id` for the same ask. Our decision is
+therefore recorded here and in the code, and fr1 will sit at `awaiting_confirm`
+permanently. Feedback-field material, and #1 on the list.
+
+### 2 — nearest Class I area: still `matched`, sample re-verified live
+
+Three `matched_existing` dispositions, unchanged. The replayed response returns the
+sample captured at screening time, so we ran the `resume` call for real —
+`POST /v1/fetch`, `{"lat": 39.022183, "lng": -77.453578, "fields":
+["nearest_class_i_area_distance_m", "nearest_class_i_area_name",
+"nearest_class_i_area_agency"]}`, 3 credits:
+
+| Field | Value | Source |
+|---|---|---|
+| `nearest_class_i_area_distance_m` | `63478.439179638815` m | `EPA_CLASS_I_AREAS` |
+| `nearest_class_i_area_name` | `"Shenandoah NP"` | `EPA_CLASS_I_AREAS` |
+| `nearest_class_i_area_agency` | `"USDI-NPS"` | `EPA_CLASS_I_AREAS` |
+
+Identical to the screening sample, to the last digit. Note that `fetched_at` on all
+three is still `2026-08-05T09:21:18…` on a call made at 10:2x — `fetched_at` is when the
+*layer* read the source, not when we called. That is the honest thing to report and it
+is what we carry into the output, but it is worth knowing before you treat it as a
+request timestamp.
+
+63.5 km puts Ashburn **inside** the 100 km Federal Land Manager notification radius of
+40 CFR 52.21(p). This is a real finding on the demo site, not a plumbing check.
+
+### 3 — background ambient PM2.5 / NO2: still `queued`, position 2
+
+```json
+{"request_id": "fr_42c2a7c653c84f30be9584644ce0c752",
+ "status": "queued", "waiting_on": null, "phase": null,
+ "queue_position": 2,
+ "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00",
+ "created_at": "2026-08-05T09:24:48.836870+00:00",
+ "updated_at": "2026-08-05T09:24:52.976972+00:00"}
+```
+
+Four `accepted_new` sub-asks, `feasibility_class: "source_uncertain"`. First one
+verbatim:
+
+```json
+{"ask": "Background ambient air concentration at a coordinate for PM2.5 annual design value from the nearest representative regulatory monitor, with monitor AQS site id and distance",
+ "reason": "No candidate field addresses EPA AQS design values, PM2.5 background concentration, or regulatory monitor data. The hazard/utility layers offered do not include air-quality monitoring or NAAQS compliance fields.",
+ "field_id": "background_ambient_air_concentration_at_a_coordinate_for_pm2",
+ "disposition": "accepted_new",
+ "feasibility_class": "source_uncertain",
+ "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00"}
+```
+
+**New bug found on this pass: generated `field_id`s are truncated to 60 characters, and
+the truncation collides.** All four sub-asks are distinct — PM2.5 *annual* vs PM2.5
+*24-hour*, NO2 *annual* vs NO2 *1-hour* design value — and they produce exactly **two**
+field ids between them:
+
+```
+len=60  background_ambient_air_concentration_at_a_coordinate_for_pm2   <- PM2.5 annual
+len=60  background_ambient_air_concentration_at_a_coordinate_for_pm2   <- PM2.5 24-hour
+len=60  background_ambient_air_concentration_at_a_coordinate_for_no2   <- NO2 annual
+len=60  background_ambient_air_concentration_at_a_coordinate_for_no2   <- NO2 1-hour
+```
+
+Same in fr4: `count_of_permitted_major_stationary_air_pollution_sources_wi` (60, "within"
+cut mid-word) and `permitted_or_reported_annual_emissions_in_tons_per_year_for_` (60,
+trailing underscore, pollutant list gone). The averaging period is the whole point of a
+design value — annual PM2.5 is 9.0 µg/m³ and 24-hour is 35 µg/m³, and they gate
+different modelling. If those two builds publish under one id, one of them silently
+overwrites the other. The `resume` block names only one id for the whole request, so
+there is no way to tell from the response which sub-ask it will answer.
+
+### 4 — major stationary sources within X km: still `queued`, position 3
+
+```json
+{"request_id": "fr_20b6653a4a584fd0ae00d022be197a49",
+ "status": "queued", "waiting_on": null, "phase": null,
+ "queue_position": 3,
+ "estimated_ready_at": "2026-08-06T09:24:58.538416+00:00",
+ "created_at": "2026-08-05T09:24:54.431142+00:00",
+ "updated_at": "2026-08-05T09:24:58.552860+00:00"}
+```
+
+Three `accepted_new` sub-asks, `feasibility_class: "source_uncertain"`. Unchanged
+reasons; the first verbatim:
+
+> "No candidate field enumerates major stationary sources or their count within a
+> radius; existing hazards candidates cover air quality nonattainment status and
+> lightning, not source inventory."
+
+Still the one that matters most — PSD increment consumption is the hardest number in
+`agent/pathway.py` and we cannot compute it today. ETA is Thursday 6 Aug, ahead of
+Monday's deadline. Poll it again before filming.
+
+### Spend for this pass
+
+18 credits total: 12 for the four-location `fetch/batch` classification-gap evidence, 3
+for Fresno, 3 for the fr2 resume call. The account meter moved 4,099 → 4,117, which is
+18 — the cost model in `providers/mireye.py` predicted 18 and the meter billed 18, so
+the reconciliation in §6 still holds on a second, independent run. The eight
+`/v1/field-requests` calls and the five 404/409 probes billed nothing.
 
 ---
 
@@ -1088,6 +1308,28 @@ Found by running against production. All of this is feedback-field material.
    return `{"error", "message"}` only, while 404s and 422s include `retryable: false`.
    A client branching on `detail.retryable` has to handle its absence. Ours falls back
    to the status code.
+
+7. **`near_miss_confirm` asks for a confirmation the API cannot accept.** A request can
+   sit at `status: "awaiting_confirm"`, `waiting_on: "requester"`, with
+   `confirm_required: true` on every disposition — and there is no route that clears
+   it. `GET /v1/openapi.json` lists exactly two field-request routes, `POST
+   /v1/field-requests` and `GET /v1/field-requests/{request_id}`;
+   `FieldRequestPayload` has no confirm/accept/reject key; POST, PATCH and PUT on
+   `/v1/field-requests/{request_id}` and `POST .../{request_id}/confirm` and `/accept`
+   are all 404; and re-POSTing the same idempotency key with a `constraints` block
+   added is `409 idempotency_key_reused`. Rejecting a near miss costs a whole new
+   request under a new key. Measured 5 Aug 2026 — see §13A.
+
+8. **Generated `field_id`s are truncated to 60 characters and collide.** fr3's four
+   distinct `accepted_new` sub-asks (PM2.5 annual, PM2.5 24-hour, NO2 annual, NO2
+   1-hour design value) produced exactly two ids —
+   `background_ambient_air_concentration_at_a_coordinate_for_pm2` twice and
+   `…_for_no2` twice. fr4 gives
+   `count_of_permitted_major_stationary_air_pollution_sources_wi` (cut mid-word) and
+   `permitted_or_reported_annual_emissions_in_tons_per_year_for_` (trailing
+   underscore, pollutant list gone). The averaging period is the entire content of a
+   design value; two builds publishing under one id means one silently overwrites the
+   other. See §13A.
 
 ---
 
@@ -1144,6 +1386,10 @@ Every call made during verification, with its raw request and response in
 | `fr2-class-i.json` + `-status` | `/v1/field-requests` | 201 | 0 | `matched_existing` ×3, live sample |
 | `fr3-ambient-background.json` + `-status` | `/v1/field-requests` | 201 | 0 | `accepted_new`, queue position 2 |
 | `fr4-major-sources.json` + `-status` | `/v1/field-requests` | 201 | 0 | `accepted_new`, queue position 3 |
+| `fr1…fr4-*-refire.json` | `/v1/field-requests` | 200 | 0 | **idempotent replay: 200 not 201, `updated_at` unchanged** |
+| `fr1-confirm-attempt.json` | `/v1/field-requests` | 409 | 0 | **no confirm affordance exists** (§13A) |
+| `fr1-classification-gap-evidence.json` | `/v1/fetch/batch` + `/v1/fetch` | 200 | 15 | `worst_classification` blank for SO2, wrong pollutant at Fresno |
+| `fr2-resume-fetch.json` | `/v1/fetch` | 200 | 3 | Class I sample re-verified live: 63,478 m, Shenandoah NP |
 
 Everything above is also in `data/cache.sqlite`, keyed by endpoint and canonical params,
 so re-running any of it costs nothing. `python -m providers.cache` reports the totals.

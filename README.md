@@ -22,10 +22,10 @@ Now ask the next question.
 |---|---|
 | County ozone status | Nonattainment, Moderate |
 | Nearest Class I area | Shenandoah NP, 63 km. Inside the 100 km FLM radius. |
-| 500 MW combined cycle here | Major nonattainment NSR, ~57 months |
-| Same plant, Ellis County TX | Major PSD, ~20 months |
+| 500 MW combined cycle here | Major nonattainment NSR, likely 54 months |
+| Same plant, Anderson County TX | Major PSD, likely 20 months |
 
-Same machine. Same fuel. 37 months apart, decided by the dirt.
+Same machine. Same fuel. 34 months apart, decided by the dirt.
 
 Developers buy for power, fiber and price. They find this out at month nine.
 
