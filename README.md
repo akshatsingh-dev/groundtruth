@@ -358,11 +358,10 @@ constraint.
 
 ---
 
-## Where this goes: India
 
-US first because Mireye is US-only. **India is the market this is actually built for.**
 
-The thesis isn't American. It's what happens anywhere capital arrives faster than
+
+### It's what happens anywhere capital arrives faster than
 permitting capacity, and India has that gap wider than anywhere.
 
 Axis Capital says India's announced targets of **6 to 8 GW by 2030 look inflated**, and
