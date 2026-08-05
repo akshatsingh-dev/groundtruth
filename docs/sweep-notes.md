@@ -70,7 +70,7 @@ would be wrong.
 ### The consequence, which is the headline
 
 **There is no county in the United States where this plant is a minor source.**
-3,026 counties land on major PSD; 196 land on major nonattainment NSR. Zero minor
+2,843 counties land on major PSD; 379 land on major nonattainment NSR. Zero minor
 NSR, zero synthetic minor, zero permit-by-rule. The map is not "where can I build
 easily". It is "which major permit, and whose desk".
 

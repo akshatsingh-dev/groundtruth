@@ -54,108 +54,91 @@ PTE (tpy) = EF (lb/MMBtu) x heat input (MMBtu/hr) x hours (hr/yr) / 2000
 
 ## Alternate site
 
-**Move 37 miles W to New Castle County, DE. Save ~24 months.**
+**Move 25 miles SW to Kent County, DE. Save ~24 months.**
 
-- New Castle County, DE at 39.3905, -75.7133
+- Kent County, DE at 39.2314, -75.3541
 - Major nonattainment NSR, 26–66 months
-- 37 miles from the announced site
-- Clears: ej_denial_authority, state_toxics
-- Screened 13 of 16 parcels out to 120 km for 80 credits
+- 25 miles from the announced site
+- Clears: ej_denial_authority, nonattainment_designation, state_toxics
+- Screened 20 of 24 parcels out to 120 km for 120 credits
 
 ## Config alternatives at this parcel
 
 | Change | Pathway | Likely | Months saved | Availability | What it costs |
 |---|---|---:|---:|---:|---|
-| Switch to solid oxide fuel cells | Minor NSR construction permit | 22 | +44 | 100% | Solid oxide fuel cells emit almost no criteria pollutants, which usually takes the air permit off the critical path entirely. CO2 is not solved — they still burn gas. Much higher capital cost per MW, a supplier list you can count on one hand, and lead times that are themselves the constraint at data center scale. |
-| Add SCR | Major nonattainment NSR | 66 | +0 | 100% | SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO. |
-| Add oxidation catalyst | Major nonattainment NSR | 66 | +0 | 100% | An oxidation catalyst cuts CO by about 90% and VOC by about half. No reagent, no storage tank, small pressure drop, and it is cheap next to SCR. Worth checking first whenever CO is the pollutant sitting over the threshold — on an uncontrolled turbine that is more often the case than people expect. |
-| Add SCR + oxidation catalyst | Major nonattainment NSR | 66 | +0 | 100% | SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO. An oxidation catalyst cuts CO by about 90% and VOC by about half. No reagent, no storage tank, small pressure drop, and it is cheap next to SCR. Worth checking first whenever CO is the pollutant sitting over the threshold — on an uncontrolled turbine that is more often the case than people expect. |
-| Add dry low-NOx combustors | Major nonattainment NSR | 66 | +0 | 100% | Dry low-NOx combustors are a turbine specification, not an add-on: you order the machine that way. No reagent and no aftertreatment, but the reduction is smaller than SCR and there are turndown and CO trade-offs at part load. |
-| Switch simple cycle to combined cycle | Major nonattainment NSR | 66 | +0 | 100% | Combined cycle burns roughly two thirds the fuel per MWh, so tons per year drop with no control equipment at all. The catch is legal, not thermal: the HRSG and steam turbine make the plant a 'fossil fuel-fired steam electric plant' over 250 MMBtu/hr, which drops the PSD major threshold from 250 tpy to 100 tpy. Check both directions before assuming it helps. Also adds water, a longer build, and a second machine in an order book already full. |
-| Combined cycle + SCR + oxidation catalyst | Major nonattainment NSR | 66 | +0 | 100% | Combined cycle burns roughly two thirds the fuel per MWh, so tons per year drop with no control equipment at all. The catch is legal, not thermal: the HRSG and steam turbine make the plant a 'fossil fuel-fired steam electric plant' over 250 MMBtu/hr, which drops the PSD major threshold from 250 tpy to 100 tpy. Check both directions before assuming it helps. Also adds water, a longer build, and a second machine in an order book already full. SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO. |
-| Split into two separate sources | Major nonattainment NSR | 69 | -3 | 100% | Splitting the plant only works if the pieces are genuinely separate stationary sources. Units serving one campus, under one owner, will be aggregated. Treat this as a conversation with the agency, not a design decision. |
+| Switch to solid oxide fuel cells | Minor NSR construction permit | 9 | +57 | 100% | Solid oxide fuel cells emit almost no criteria pollutants, which usually takes the air permit off the critical path entirely. CO2 is not solved — they still burn gas. Much higher capital cost per MW, a supplier list you can count on one hand, and lead times that are themselves the constraint at data center scale. |
+| Add SCR | Major nonattainment NSR | 39 | +27 | 100% | SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO. |
+| Add oxidation catalyst | Major nonattainment NSR | 39 | +27 | 100% | An oxidation catalyst cuts CO by about 90% and VOC by about half. No reagent, no storage tank, small pressure drop, and it is cheap next to SCR. Worth checking first whenever CO is the pollutant sitting over the threshold — on an uncontrolled turbine that is more often the case than people expect. |
+| Add SCR + oxidation catalyst | Major nonattainment NSR | 39 | +27 | 100% | SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO. An oxidation catalyst cuts CO by about 90% and VOC by about half. No reagent, no storage tank, small pressure drop, and it is cheap next to SCR. Worth checking first whenever CO is the pollutant sitting over the threshold — on an uncontrolled turbine that is more often the case than people expect. |
+| Add dry low-NOx combustors | Major nonattainment NSR | 39 | +27 | 100% | Dry low-NOx combustors are a turbine specification, not an add-on: you order the machine that way. No reagent and no aftertreatment, but the reduction is smaller than SCR and there are turndown and CO trade-offs at part load. |
+| Switch simple cycle to combined cycle | Major nonattainment NSR | 39 | +27 | 100% | Combined cycle burns roughly two thirds the fuel per MWh, so tons per year drop with no control equipment at all. The catch is legal, not thermal: the HRSG and steam turbine make the plant a 'fossil fuel-fired steam electric plant' over 250 MMBtu/hr, which drops the PSD major threshold from 250 tpy to 100 tpy. Check both directions before assuming it helps. Also adds water, a longer build, and a second machine in an order book already full. |
+| Combined cycle + SCR + oxidation catalyst | Major nonattainment NSR | 39 | +27 | 100% | Combined cycle burns roughly two thirds the fuel per MWh, so tons per year drop with no control equipment at all. The catch is legal, not thermal: the HRSG and steam turbine make the plant a 'fossil fuel-fired steam electric plant' over 250 MMBtu/hr, which drops the PSD major threshold from 250 tpy to 100 tpy. Check both directions before assuming it helps. Also adds water, a longer build, and a second machine in an order book already full. SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO. |
+| Accept a run-hour cap, with SCR and oxidation catalyst | Major nonattainment NSR | 39 | +27 | 38% | A federally enforceable run-hour cap is the cheapest way to become a minor source and the most expensive way to run a data center. The cap becomes a permit condition with continuous recordkeeping and real enforcement exposure. At 3,348 hr/yr the plant is available 38% of the year. That is a peaker, not a data center plant — it cannot carry the load on its own. |
+| Split into two separate sources | Major nonattainment NSR | 42 | +24 | 100% | Splitting the plant only works if the pieces are genuinely separate stationary sources. Units serving one campus, under one owner, will be aggregated. Treat this as a conversation with the agency, not a design decision. |
 
-> Accept a run-hour cap (as designed): Holding NOx under 50 tpy would need a cap of 67 hr/yr (1% availability). That is not a data center power plant, it is a peaker.
-
-> Accept a run-hour cap, with SCR and oxidation catalyst: Holding NOx under 50 tpy would need a cap of 670 hr/yr (8% availability). That is not a data center power plant, it is a peaker.
+> Accept a run-hour cap (as designed): Holding NOx under 250 tpy would need a cap of 335 hr/yr (4% availability). That is not a data center power plant, it is a peaker.
 
 ## Field requests
 
-- `class_i_area_distance_km` — error. field_request needs at least one example location — it is what seeds the build's eval cases and where the field is verified on prod
-- `class_i_area_distance_km` — error. field_request needs at least one example location — it is what seeds the build's eval cases and where the field is verified on prod
+- `nj_overburdened_community_designation` — queued. 
+- `class_i_area_distance_km` — near_miss. 
 
 ## Agent's read
 
 I'll work this in order. Step 1 is potential to emit — free, and it decides what physical facts are worth buying.
 
-PTE is 5,887 tpy NOx uncontrolled — roughly 24x the 250 tpy major threshold, and formaldehyde at 13.1 tpy is over the 10 tpy single-HAP major line. This is a major source on any reading. Step 2 on category: a simple-cycle turbine with no heat recovery is **not** a "fossil fuel-fired steam electric plant," so the List-of-28 100 tpy threshold does not apply — it's 250 tpy. Irrelevant here; it clears both.
+PTE is NOx 5,887 tpy — roughly 24× the 250 tpy major threshold, and single-HAP formaldehyde at 13.1 tpy is over the 10 tpy major HAP line. This is a major source under any attainment status. That settles what I buy: this project is going to dispersion modelling, so terrain and land cover become worth credits rather than waste.
 
-Step 3 — resolve the site before buying anything.
+Step 3 — resolve the site before anything site-dependent.
 
-Resolved: Cumberland County, NJ (FIPS 34011), NJ DEP — matches the caller's declared jurisdiction, so this is a verified screen.
+Site resolves to Cumberland County, NJ — whole state is in the Ozone Transport Region, and NJ has an EJ denial statute. That shapes my buying.
 
-**My provider-call choices, and why:** I'm buying regulatory context (attainment is the fact most likely to flip the pathway, and NJ sits in the Ozone Transport Region), demographics (NJ's EJ statute N.J.S.A. 13:1D-157 is a *denial* authority, not a comment step — this is the single decisive fact here), points_of_interest (receptors feed both EJ review and NNSR modeling), utilities plus gas_pipeline proximity (no gas, no plant — the New Mexico failure mode), and terrain plus land_cover because at 5,887 tpy NOx a full AERMOD exercise is certain and both are AERMOD inputs. I'm skipping grid_interconnect (project is not grid-tied), flood_risk (already returned Zone X in the lookup), wildfire, soil and water — none of them touch the air pathway.
+**Provider calls I'm choosing and why:** `demographics` (NJ's EJ law N.J.S.A. 13:1D-157 can deny outright in an overburdened community — this is the single highest-consequence fact here); `points_of_interest` (receptors and opposition for a 5,887 tpy NOx source); `terrain` + `land_cover` (AERMOD is certain at this PTE — complex-terrain receptors and surface roughness are direct model inputs); `utilities` + `gas_pipeline` proximity (gas config, pipeline reachability is the classic non-air failure). **Skipping** `grid_interconnect` (behind-the-meter, not grid tied), flood/wildfire/soil/water (don't touch the air pathway).
 
-Step 4 is the one that decides this. Cumberland County is in **serious** nonattainment for the 2015 8-hour ozone NAAQS (Philadelphia-Atlantic City, PA-NJ — EPA Green Book, fetched 2026-07-31), and the whole state sits in the Ozone Transport Region. Serious classification drops the NOx major-source threshold to 50 tpy. The project is at 5,887 tpy.
+Step 4/5 findings are severe, so let me run the decision tree before probing fixes.
 
-Two gaps I need to close before the pathway is honest: the gas pipeline came back `missing` from the preset, and Class I area distance isn't indexed by any wired source. NJ has a Class I area (Brigantine Wilderness), so that is not a rounding error.
+Step 6 result: **Major nonattainment NSR, 66 months likely** against a 16-month announced energization. Step 7 — test whether any config at this parcel moves it.
 
-Step 6: **major nonattainment NSR**, 41–104 months, 66 likely. Announced energization is 16 months out. That is the headline.
+Only the fuel cell moves the pathway. Even full LAER-grade control (SCR + DLN + ox-cat) lands NOx at 182 tpy against a **50 tpy** threshold — still major NNSR, zero months saved. The site fails, so I'm spending the expensive call. I'm also filing two gaps the engine flagged as not-wired.
 
-Two things I need to fix or note before I act on it: the Class I request errored (it needs an example location), and the pipeline answer came back — nearest interstate trunkline is 34 km away.
+Class I is the material correction: **Brigantine Wilderness, 50.0 km, USDI-FWS** (EPA_CLASS_I_AREAS, fetched 2026-08-05T10:38:53Z). The pathway engine listed `class_i_aqrv` as *cleared* — that clear was returned with no underlying data source, and it is wrong. At 50 km, FLM notification and AQRV/visibility modelling are effectively certain.
 
-Step 7 — testing config changes at this parcel. These are free, so I'll probe the three levers that could actually defend themselves: SCR on the simple cycle, combined cycle with SCR (checking whether the steam cycle drops the PSD threshold and makes things worse), and a fuel cell.
-
-Config testing is decisive. SCR plus dry-low-NOx cuts NOx from 5,887 to 182 tpy and drops offsets from 7,064 tons to 219 — a real change in whether this is financeable — but it does not change the pathway, because the serious-ozone threshold is 50 tpy. Combined cycle gets to 111 tpy but pulls the plant onto the List of 28 as a steam electric plant, dropping the PSD threshold to 100 tpy. Only the fuel cell flips the pathway to minor NSR.
-
-The site fails on major nonattainment NSR, which is the condition for searching outward. Let me do that, and retry the Class I request with the example location it needs.
-
-I've spent 13 tool calls and I have what I need. Two field requests failed on a tool defect, which I'm reporting as a gap rather than papering over.
-
----
+The alternate search found nothing that escapes major NNSR — because the entire Mid-Atlantic OTR carries the same 50 tpy NOx threshold. Best candidate is Kent County, DE at 42 months. Let me test the one config that did move the pathway, at that better jurisdiction.
 
 ## Closing assessment
 
-**The pathway is major nonattainment NSR. Likely 66 months, range 41 to 104. The announced energization is 16 months away. This project does not switch on in 2027 as configured.**
+**The pathway.** Major nonattainment NSR. As announced — 400 MW simple-cycle turbine, uncontrolled, no hour cap — this is not a close call. NOx potential to emit is 5,887 tpy against a 50 tpy threshold. That is 118× over. Formaldehyde at 13.1 tpy also crosses the 10 tpy single-HAP line, so Title V and major-source MACT come with it.
 
-**What decides it — three things.**
+**The timeline.** 66 months likely, 41 to 104 months range, under NJ DEP's 1.6× multiplier. Announced energization is 16 months out. The gap is about four years, and it is not a scheduling problem you can compress.
 
-First, the county designation. Cumberland County is in **serious** nonattainment for the 2015 8-hour ozone NAAQS, Philadelphia-Atlantic City PA-NJ area (EPA Green Book, 40 CFR 81, fetched 2026-07-31). Serious classification sets the NOx major-source threshold at 50 tpy, not 250. New Jersey is also entirely inside the Ozone Transport Region under CAA 184, so that 50 tpy applies statewide regardless of what any local monitor says. There is no version of a 400 MW gas turbine that gets under 50 tpy NOx. Uncontrolled PTE is 5,887 tpy at 8760 hours. Synthetic minor is arithmetically real but commercially dead: it needs a 67 hr/yr cap, which is one percent availability. That is not a data center plant.
+**The three things that actually decide it.**
 
-Second, the offsets. At 1.2:1 you must buy 7,064 tons of verified NOx reductions from existing sources inside the nonattainment area (CAA 173). LAER applies with no cost defense. This is the item I would underwrite first, because it is the one that can be simply unavailable at any price in a mature Northeast airshed.
+First, the 50 tpy threshold, and the fact that it does not move. New Jersey is entirely in the Ozone Transport Region, and Cumberland County is separately designated serious nonattainment for the 2015 ozone standard (Philadelphia-Atlantic City PA-NJ; EPA Green Book, fetched 2026-07-31). I tested the full LAER-grade control stack — dry low-NOx plus SCR plus oxidation catalyst. It cuts NOx from 5,887 to 182 tpy, a 97% reduction, and saves exactly zero months. Still major. Combined cycle at 6,400 Btu/kWh gets to 111 tpy and is also still major, and it makes one thing worse: adding the HRSG turns the plant into a fossil fuel-fired steam electric plant over 250 MMBtu/hr, which drops the PSD threshold from 250 to 100 tpy. No gas turbine at any size or control level clears this bar. Combustion is the problem, not the controls.
 
-Third, and this is the one that can kill it outright rather than delay it — **NJ DEP holds environmental justice denial authority under N.J.S.A. 13:1D-157**. That is a discretionary denial, independent of whether your modeling passes. Look at where this coordinate actually sits: inside a Census-designated urban area, 344 m from Vineland Public Schools, 178 m from a medical facility, 476 points of interest within one kilometre (Overture Places and Census TIGER, fetched 2026-08-05T09:30). This is not an industrial edge parcel. It is central Vineland. For an overburdened-community determination that is close to a worst case. This is the Nebius failure mode and it is the reason I would not spend money on this parcel before getting a written EJ read.
+Second, the EJ denial authority. N.J.S.A. 13:1D-157 lets NJ DEP deny the permit outright in an overburdened community, regardless of whether the modelling passes. The site sits inside a Census urban area with 476 points of interest within 1 km, a school at 344 m and a hospital at 178 m (OVERTURE_PLACES, fetched 2026-08-05T09:30:50Z). This is downtown Vineland. That is a discretionary denial risk, not a delay — no amount of engineering answers it. I could not verify the block-group designation: the demographics preset returned market and POI fields but no EJ indicator, and the provider confirmed it does not index the NJ DEP overburdened community list. I have queued that field (request fr_826bce473c1a46e393471a2902413323, estimated 2026-08-06). Treat it as the open question that governs the site.
 
-**What actually changes the answer.**
+Third, offsets. 7,064 tons of verified NOx reductions bought from existing sources in the Philadelphia-Atlantic City area, at 1.2:1. I have no data on whether that many credits exist in this registry. My judgment is that they very likely do not at that volume, but I am not going to put a number on it I cannot cite.
 
-Controls change the economics but not the pathway. SCR plus dry-low-NOx plus oxidation catalyst takes NOx from 5,887 to 182 tpy and offsets from 7,064 tons to 219. That is a thirty-fold reduction in your hardest procurement problem, and you should carry it regardless. But 182 is still over 50, so you are still in major NNSR and still at 66 months.
+**One correction to the engine output.** The decision tree reported the Class I trigger as *cleared*. It is not. Brigantine Wilderness is 50.0 km from the site, managed by USDI-FWS (EPA_CLASS_I_AREAS, fetched 2026-08-05T10:38:53Z). The regulatory context had separately flagged Class I distance as not indexed by any wired source, so that "clear" was returned with nothing behind it. At 50 km, Federal Land Manager notification and an AQRV visibility analysis are effectively certain, and that adds months on top of the 66.
 
-Combined cycle is a trap worth naming. It gets NOx to 111 tpy on the better heat rate, but the HRSG and steam turbine make the plant a fossil fuel-fired steam electric plant over 250 MMBtu/hr — it joins the List of 28 and the PSD major threshold drops from 250 tpy to 100. You improve the emissions and worsen the category. Still major NNSR.
+**What I would change.**
 
-The only config that flips the pathway is the fuel cell: minor NSR, 21.6 months likely, 44 months saved. Non-combustion, so criteria pollutants collapse to 9 tpy CO and 3 tpy NOx. Note it does not clear the EJ trigger and it does not clear CO2e at 1.43 million tpy. And 21.6 months still misses December 2027.
+The only lever that moves the pathway is the prime mover. A 400 MW fuel cell drops the controlling pollutant to 9 tpy CO, lands on minor NSR, and clears Title V entirely — 21.6 months at this parcel, saving 44. Moving it to the Kent County, DE candidate the search surfaced gets to 9 months likely, which is the only combination I found that meets a December 2027 date. Note the caveat: Delaware is not one of the eight state agencies modelled in detail, so that range is a federal default and is wider than it looks. Delaware is also still in the OTR, so the 50 tpy NOx threshold follows you there — the DE advantage is that it clears the EJ denial statute, the nonattainment designation and the state toxics program, not that it relaxes the threshold.
 
-Moving does less than you would hope. The best alternates at 60 km — New Castle County DE and Delaware County PA — are still major nonattainment NSR. They clear the NJ EJ denial statute and NJ state toxics and save 24 months, landing at 42 likely. They do not escape the OTR, because the entire region from Virginia north is in it. You cannot drive out of the 50 tpy threshold inside 120 km.
+If the turbine is non-negotiable, relocation alone does not save it. The best alternate parcel in a 120 km sweep is still major NNSR at 42 months. Every county in that radius is inside the Mid-Atlantic OTR. You would have to leave the region entirely, which is a different question than the one asked.
 
-**One non-air item that is close to a hard stop.** The nearest interstate gas transmission line is **34 km away**, Columbia Gas Transmission (HIFLD Gas Transmission Pipelines, fetched 2026-08-05T09:30). EIA's 10 km buffer returned null, confirming nothing closer. A 34 km lateral for a 400 MW plant is its own multi-year permitting and construction project with its own eminent domain exposure. Diameter, pressure and firm capacity are not in the dataset and must come from the operator. Both alternate sites have pipeline within 2 km. This alone is a strong argument against the parcel.
+**Gaps I am reporting as gaps, not as clean results.** Gas pipeline distance did not return for this site — for a gas-fired config that is a live unknown, and it is the failure mode that killed the New Mexico project. PSD increment already consumed and background ambient NO2/PM2.5 are not indexed by any wired source; both feed the modelling demonstration directly. The county zoning and moratorium file does not contain Cumberland County, so I have no read on local posture. Two federal cases touch this county or developer, including MONTGOMERY v. DATAONE USA LLC (1:26-cv-05972, D.N.J., filed 2026-05-26, torts to land), which the engine scored at three months.
 
-**Gaps you should not read as clears.**
-
-The engine reports Class I AQRV as "clear" with no distance behind it. Class I area distance is not indexed by any wired source, and my two attempts to queue the field both failed on a tool error, not on a data judgment. Brigantine Wilderness is a Class I area roughly 50–60 km east of this coordinate by my own reckoning, which would put a PSD major source inside the 100 km Federal Land Manager review radius. Treat that "clear" as unverified. PSD increment already consumed and background ambient NO2 and PM2.5 at the coordinate are also unindexed. In a mature airshed, consumed increment is a live risk.
-
-I also paid for demographics, terrain and land cover, and the returned field set surfaced points of interest, power and water/sewer but no EJ indicator values and no terrain relief or land cover values. So I have not confirmed the overburdened-community designation from data — I am inferring elevated risk from the receptor density, and you should get the designation confirmed directly.
-
-**What I would change, in order.** Move the site — the parcel is urban, EJ-exposed and 34 km from gas, and all three are fixable by relocating. Carry SCR and dry-low-NOx in any case for the offset reduction. Get a written NJ DEP EJ read before optioning anything here. And reset the December 2027 date now; nothing in this analysis supports it, and the honest floor even on the fuel cell path is about 12 months with a likely case near 22.
-
-One flag on the fast path someone will raise: NSPS Subpart KKKKa was added by the 15 January 2026 rule (91 Fed. Reg. 1910), and the trailer-mounted turbine exclusion in it is **not operative** — it takes effect only if EPA later adopts Title II standards for portable turbines, which has not happened. The NAACP is seeking to shut down 27 unpermitted turbines at xAI's Colossus 2 with a PI hearing late this month. That is an open legal question, not a loophole.
-
-I have not contacted NJ DEP or anyone else, and I cannot. This is a screen for you to act on.
+I have not contacted anyone, filed anything, or committed to any agency. This is a screen for you to act on.
 
 ## What this does not know
 
+- DE is not one of the states modelled in detail. The timeline is the federal default with no agency-specific adjustment, and state toxics programs, transport-region membership and any EJ statute are not evaluated. Treat the range as wider than shown and the trigger list as incomplete.
+- No nonattainment designation was loaded for this county. If the Green Book ingest is not wired up, treat 'attainment' as unread rather than confirmed — it is the single fact most likely to flip the pathway.
 - Nearest Class I area distance is unknown. It was requested via the provider's field-request route. A Class I area inside 100 km adds a Federal Land Manager review that can stop a project on visibility grounds alone.
 - PSD increment consumption by existing major sources is unknown. A consumed increment can make a site un-permittable at any timeline.
 - This is a screen, not an applicability determination. A licensed professional signs that opinion and carries the liability.
-- The agent drafts and ranks. It does not contact agencies, file anything, or send anything. Drafts land in outputs/drafts/ for a person to review.
+- Timelines are agency review time from a complete application. Turbine delivery, construction and interconnection are separate constraints and each can bind first.
 
 ## Provenance
 
@@ -163,32 +146,28 @@ Every physical fact with its source, fetch timestamp and confidence.
 
 | Field | Value | Source | Fetched | Confidence |
 |---|---|---|---|---:|
-| ask.answer | The nearest interstate natural gas transmission pipeline to 39.4862, -75.0257 is 34,019 meters (approximately 34 km) away, operated by Columbia Gas Trans Co, per the HIFLD Gas Transmission Pipelines dataset. The EIA's 10 km proximity buffer returned null — confirming no interstate pipeline exists within that tighter radius — but the unbounded HIFLD query resolved a real distance at ~34 km. Diameter, line pressure, and firm transport capacity are not geospatial attributes and were not returned by the dataset; these must be confirmed directly with Columbia Gas Trans Co as part of any tap feasibility assessment. For a 400 MW gas-fired plant, a 34 km lateral to the nearest interstate trunkline represents a material infrastructure gap requiring operator-confirmed capacity, tap lead time, and lateral construction cost before fuel supply can be assumed viable. | Mireye /v1/ask over EIA_POWER, HIFLD_GAS_TRANSMISSION_PIPELINES | 2026-08-05T10:08:03.624847+00:00 | 0.60 |
-| ask.citations | [{'source': 'EIA_POWER', 'source_url': 'https://atlas.eia.gov/', 'fields': ['nearest_transmission_line_distance_m', 'nearest_transmission_line_voltage_kv'], 'fetched_at': '2026-08-05T09:30:51.042494+00:00', 'confidence': 'high'}, {'source': 'HIFLD_GAS_TRANSMISSION_PIPELINES', 'source_url': 'https://atlas.eia.gov/', 'fields': ['nearest_interstate_gas_pipeline_distance_m', 'nearest_interstate_gas_pipeline_operator'], 'fetched_at': '2026-08-05T09:30:54.576798+00:00', 'confidence': 'high'}] | Mireye /v1/ask | 2026-08-05T10:08:03.624847+00:00 | — |
-| ask.data_gaps | [{'field': 'nearest_gas_pipeline_distance_m', 'reason': 'source returned null: no gas pipeline within 10 km'}] | Mireye /v1/ask | 2026-08-05T10:08:03.624847+00:00 | — |
-| ask.plan | {'fields_requested': ['nearest_transmission_line_distance_m', 'nearest_transmission_line_voltage_kv', 'nearest_gas_pipeline_distance_m', 'nearest_interstate_gas_pipeline_distance_m', 'nearest_interstate_gas_pipeline_operator'], 'preset_expanded': None, 'planner_model': 'claude-haiku-4-5', 'synthesizer_model': 'claude-sonnet-4-6'} | Mireye /v1/ask trace | 2026-08-05T10:08:03.624847+00:00 | — |
 | aspect_cardinal | S | USGS_3DEP_COG | 2026-08-05T09:30:42.700466+00:00 | 0.60 |
 | bedrock_depth_cm | 4800.0 centimeters | PELLETIER_DTB | 2026-08-05T09:30:43.496043+00:00 | 0.30 |
-| block_geoid | 340110411012017 | US Census Geocoder | 2026-08-05T10:07:20+00:00 | — |
-| block_group_geoid | 340110411012 | US Census Geocoder | 2026-08-05T10:07:20+00:00 | — |
-| cbsa_code | 47220 | US Census Geocoder | 2026-08-05T10:07:20+00:00 | — |
-| cbsa_name | Vineland, NJ Metro Area | US Census Geocoder | 2026-08-05T10:07:20+00:00 | — |
+| block_geoid | 100010401002002 | US Census Geocoder | 2026-08-05T10:39:08+00:00 | — |
+| block_group_geoid | 100010401002 | US Census Geocoder | 2026-08-05T10:39:08+00:00 | — |
+| cbsa_code | 20100 | US Census Geocoder | 2026-08-05T10:39:08+00:00 | — |
+| cbsa_name | Dover, DE Metro Area | US Census Geocoder | 2026-08-05T10:39:08+00:00 | — |
 | cdl_class | Developed/High Intensity | USDA_NASS_CDL | 2026-08-05T09:30:43.577539+00:00 | 0.60 |
 | coast_distance_m | 9618.396788994687 meters | NOAA_CUSP | 2026-08-05T09:30:42.703785+00:00 | 0.90 |
-| coastal_high_hazard | False | FEMA NFHL | 2026-08-05T10:07:20+00:00 | — |
-| congressional_district | NJ-02 | US Census Geocoder | 2026-08-05T10:07:20+00:00 | — |
-| county | Cumberland County | US Census Geocoder | 2026-08-05T10:07:20+00:00 | — |
-| county_fips | 34011 | US Census Geocoder | 2026-08-05T10:07:20+00:00 | — |
-| county_market.building_permits_sf_annual | 143 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
-| county_market.building_permits_total_annual | 143 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
-| county_market.building_permits_yoy_pct | -43.4783 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
-| county_market.employment_total | 60285 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
-| county_market.employment_yoy_pct | 1.0002 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
-| county_market.hpi_yoy_pct | 9.61 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
-| county_market.median_household_income_usd | 64499 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
-| county_market.net_domestic_migration | 148 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
-| county_market.population | 157148 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
-| county_market.population_growth_1yr_pct | 0.4738 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:07:20+00:00 | — |
+| coastal_high_hazard | False | FEMA NFHL | 2026-08-05T10:39:08+00:00 | — |
+| congressional_district | DE-00 | US Census Geocoder | 2026-08-05T10:39:08+00:00 | — |
+| county | Kent County | US Census Geocoder | 2026-08-05T10:39:08+00:00 | — |
+| county_fips | 10001 | US Census Geocoder | 2026-08-05T10:39:08+00:00 | — |
+| county_market.building_permits_sf_annual | 1030 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
+| county_market.building_permits_total_annual | 1261 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
+| county_market.building_permits_yoy_pct | 4.9958 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
+| county_market.employment_total | 70834 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
+| county_market.employment_yoy_pct | -0.3335 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
+| county_market.hpi_yoy_pct | 5.58 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
+| county_market.median_household_income_usd | 72872 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
+| county_market.net_domestic_migration | 1393 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
+| county_market.population | 194786 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
+| county_market.population_growth_1yr_pct | 0.9903 | US Census PEP/BPS/ACS, FHFA, BLS QCEW | 2026-08-05T10:39:08+00:00 | — |
 | county_median_household_income | 64499 USD | CENSUS_ACS | 2026-08-05T09:30:52.349617+00:00 | 0.60 |
 | county_population | 157148 people | CENSUS_PEP | 2026-08-05T09:30:52.349412+00:00 | 0.60 |
 | county_population_growth_1yr_pct | 0.4738 percent | CENSUS_PEP | 2026-08-05T09:30:52.349507+00:00 | 0.60 |
@@ -196,11 +175,11 @@ Every physical fact with its source, fetch timestamp and confidence.
 | domestic_well_households_per_km2 | 0.0 households/km2 | USGS_SELF_SUPPLIED_HOUSEHOLDS | 2026-08-05T09:30:50.992791+00:00 | 0.60 |
 | dominant_crop_5y | None | USDA_NASS_CDL | 2026-08-05T09:30:43.579999+00:00 | 0.60 |
 | elevation | 32.64278030395508 meters | USGS_3DEP_COG | 2026-08-05T09:30:42.699564+00:00 | 0.60 |
-| elevation_m | 32.64278030395508 meters | USGS 3DEP/EPQS | 2026-08-05T10:07:20+00:00 | — |
-| fema_flood_zone | X | FEMA NFHL | 2026-08-05T10:07:20+00:00 | — |
+| elevation_m | 15.475613594055176 meters | USGS 3DEP/EPQS | 2026-08-05T10:39:08+00:00 | — |
+| fema_flood_zone | X | FEMA NFHL | 2026-08-05T10:39:08+00:00 | — |
 | housing_units_density_per_km2 | 653.818075328233 units/km2 | CENSUS_TIGERWEB | 2026-08-05T09:30:52.568353+00:00 | 0.60 |
 | housing_units_within_1km | 3148 | CENSUS_TIGERWEB | 2026-08-05T09:30:52.568270+00:00 | 0.60 |
-| in_opportunity_zone | True | US Treasury Qualified Opportunity Zones | 2026-08-05T10:07:20+00:00 | — |
+| in_opportunity_zone | False | US Treasury Qualified Opportunity Zones | 2026-08-05T10:39:08+00:00 | — |
 | land_use_class | Developed | USFS_LCMS | 2026-08-05T09:30:43.584374+00:00 | 0.60 |
 | lcms_class | Barren or Impervious | USFS_LCMS | 2026-08-05T09:30:43.582662+00:00 | 0.60 |
 | max_transmission_line_voltage_class_within_radius | UNDER 100 | EIA_POWER | 2026-08-05T09:30:51.042574+00:00 | 0.90 |
@@ -243,10 +222,8 @@ Every physical fact with its source, fetch timestamp and confidence.
 | nearest_wastewater_plant_name | Landis Sewerage Authority - CS/STP | EPA_CWNS | 2026-08-05T09:30:51.019556+00:00 | 0.60 |
 | nearest_wastewater_plant_population_served | 74954 | EPA_CWNS | 2026-08-05T09:30:51.019566+00:00 | 0.60 |
 | nearest_water_service_area_distance_m | 0.0 meters | EPA_CWS_SERVICE_AREAS | 2026-08-05T09:30:51.977618+00:00 | 0.90 |
-| nonattainment.ozone | marginal — Philadelphia-Atlantic City, PA-NJ | EPA Green Book (8-Hour Ozone (2008)) | 2026-07-31 | — |
-| nonattainment.ozone | serious — Philadelphia-Atlantic City, PA-NJ | EPA Green Book (8-Hour Ozone (2015)) | 2026-07-31 | — |
-| opportunity_zone_tract_geoid | 34011041100 | US Treasury Qualified Opportunity Zones | 2026-08-05T10:07:20+00:00 | — |
-| parcel | 39.4862,-75.0257 | caller-supplied coordinate | 2026-08-05T10:07:20+00:00 | — |
+| opportunity_zone_tract_geoid | 34011041100 | US Treasury Qualified Opportunity Zones | 2026-08-05T10:34:24+00:00 | — |
+| parcel | 39.214843,-75.628841 | caller-supplied coordinate | 2026-08-05T10:39:08+00:00 | — |
 | poi_count_1km | 476 | OVERTURE_PLACES | 2026-08-05T09:30:50.528304+00:00 | 0.60 |
 | proximity.airport | 4.56 km | FAA_NASR | 2026-08-05T09:30:54.040210+00:00 | — |
 | proximity.school | 0.34 km | OVERTURE_PLACES | 2026-08-05T09:30:50.528061+00:00 | — |
@@ -255,20 +232,20 @@ Every physical fact with its source, fetch timestamp and confidence.
 | sewer_service_area_provider | Landis Sewerage Authority - CS/STP | EPA_SEWERSHEDS | 2026-08-05T09:30:51.932078+00:00 | 0.90 |
 | slope_degrees | 0.8287137746810913 degrees | USGS_3DEP_COG | 2026-08-05T09:30:42.700429+00:00 | 0.60 |
 | soil_drainage_class | Well drained | NRCS_gNATSGO | 2026-08-05T09:30:43.489526+00:00 | 0.90 |
-| state | New Jersey | US Census Geocoder | 2026-08-05T10:07:20+00:00 | — |
-| state_fips | 34 | US Census Geocoder | 2026-08-05T10:07:20+00:00 | — |
-| timezone | America/New_York | IANA tz database | 2026-08-05T10:07:20+00:00 | — |
+| state | Delaware | US Census Geocoder | 2026-08-05T10:39:08+00:00 | — |
+| state_fips | 10 | US Census Geocoder | 2026-08-05T10:39:08+00:00 | — |
+| timezone | America/New_York | IANA tz database | 2026-08-05T10:39:08+00:00 | — |
 | tract_civilian_labor_force | 1300 people | CENSUS_TRACT_WORKFORCE | 2026-08-05T09:30:52.805330+00:00 | 0.60 |
-| tract_geoid | 34011041101 | US Census Geocoder (2020 vintage) | 2026-08-05T10:07:20+00:00 | — |
+| tract_geoid | 10001040100 | US Census Geocoder (2020 vintage) | 2026-08-05T10:39:08+00:00 | — |
 | tract_population | 3259 people | CENSUS_TRACT_WORKFORCE | 2026-08-05T09:30:52.805388+00:00 | 0.60 |
 | transmission_lines_within_radius_count | 1 | EIA_POWER | 2026-08-05T09:30:51.042584+00:00 | 0.90 |
 | tree_canopy_pct | 1.0 percent | USFS_NLCD_TCC | 2026-08-05T09:30:43.587699+00:00 | 0.90 |
 | water_service_area_provenance | utility_sourced | EPA_CWS_SERVICE_AREAS | 2026-08-05T09:30:51.977658+00:00 | 0.90 |
 | water_system_name | VINELAND WATER & SEWER UTILITY | EPA_CWS_SERVICE_AREAS | 2026-08-05T09:30:51.977646+00:00 | 0.90 |
-| within_floodplain | False | FEMA NFHL | 2026-08-05T10:07:20+00:00 | — |
+| within_floodplain | False | FEMA NFHL | 2026-08-05T10:39:08+00:00 | — |
 | within_sewer_service_area | True | EPA_SEWERSHEDS | 2026-08-05T09:30:51.931970+00:00 | 0.90 |
 | within_water_service_area | True | EPA_CWS_SERVICE_AREAS | 2026-08-05T09:30:51.977539+00:00 | 0.90 |
 
-*Generated 2026-08-05T10:12:36+00:00 · Claude Agent SDK tool-calling loop (claude-opus-5) · 13 tool calls · 94 credits.*
+*Generated 2026-08-05T10:39:47+00:00 · Claude Agent SDK tool-calling loop (claude-opus-5) · 14 tool calls · 133 credits.*
 
-*Screen, not an applicability determination. The agent does not contact agencies, file anything, or send anything.*
+*Screen, not an applicability determination. A licensed professional signs that opinion and carries the liability.*

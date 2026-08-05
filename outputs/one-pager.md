@@ -47,7 +47,8 @@ queue in the county. Any siting deck signs this off.
 exactly one air permit for a data center campus with onsite gas generation, Vantage
 VA2.
 
-One call. 106 credits. Both answers, each cited to EPA with a fetch timestamp.
+One call. 106 credits. Both answers, each cited to EPA_GREEN_BOOK, EPA_CLASS_I_AREAS
+or EIA_POWER with a fetch timestamp. Raw captures in `docs/api-captures/`.
 
 ---
 
@@ -59,8 +60,8 @@ One call. 106 credits. Both answers, each cited to EPA with a fetch timestamp.
 3. **Potential to emit.** MW × heat rate × AP-42 factors × 8,760 hours. Local
    arithmetic, no network, so it runs before anything is bought.
 4. **Pathway.** Source category, threshold, attainment classification, offset ratio,
-   Class I distance, state overlay. Out comes permit-by-rule, minor NSR, synthetic
-   minor, major PSD or major nonattainment NSR, with a month range for that agency.
+   Class I distance, state overlay. Out comes one of five pathways, from
+   permit-by-rule to major nonattainment NSR, with a month range for that agency.
 5. **Non-air blockers.** County moratoria and zoning posture, federal dockets, gas
    reachability.
 6. **Act.** When the pathway fails, the agent mutates the input and re-runs itself.
@@ -160,7 +161,7 @@ we filed as a field request and Mireye's screener confirmed.
 
 | Buyer | Why now | Deal shape |
 |---|---|---|
-| **Hedge funds and asset managers** long GEV, Vertiv, Bloom, Constellation, Talen, Vistra, Equinix | The market prices announced capacity as deliverable capacity. It is not the same quantity. That is the trade. | Alt-data subscription, **$50k–500k/yr**. 2–6 week cycle, no procurement gauntlet. |
+| **Hedge funds and asset managers** long GEV, Vertiv, Bloom, Constellation, Talen, Vistra, Equinix | The market prices announced capacity as deliverable capacity. That is the trade. | Alt-data subscription, **$50k–500k/yr**. 2–6 week cycle, no procurement gauntlet. |
 | **Site selection.** Hyperscaler and colo teams, QTS, Vantage, CyrusOne, Aligned, behind-the-meter developers, turbine lessors | One wrong site is tens of millions in options, engineering and legal, plus 18 to 36 months. Nebius is the live example, under a $17.4B Microsoft deal. | **$250k–1M/yr** enterprise, or **$10–25k per site report**. The report is the path to revenue in months rather than years. |
 | **Air permitting consultancies.** Trinity, ERM, Onterris | They run this screen by hand today. They keep the billable interpretation and the stamp. | Per-seat or per-screen licence. Channel, not competitor. |
 | **Infrastructure lenders and funds** | Underwriting against announced energization dates. | Same feed, diligence use case. |
@@ -187,12 +188,11 @@ credits and takes the same cadence to ~2M credits a month.
 
 - **The backtest is 3 cases and one is a self-declared miss.** Vineland NJ and
   Project Jupiter NM both hit on the mechanism that actually bound. xAI Colossus 1 in
-  Memphis is the miss. The engine said major PSD, roughly 26 months, and xAI energised
+  Memphis is the miss: the engine said major PSD, roughly 26 months, and xAI energised
   in weeks by taking the position that trailer-mounted turbines are nonroad engines.
   The engine prices the compliant path. It has no variable for a developer who runs
-  anyway and litigates. Three cases with the arithmetic shown is a demonstration. A
-  real backtest needs a point-in-time panel across hundreds of projects and that panel
-  does not exist.
+  anyway and litigates. A real backtest needs a point-in-time panel across hundreds of
+  projects, and that panel does not exist.
 - **8 states modelled** from public permit records: VA, TX, GA, OH, AZ, NJ, NM, IL.
   The other 42 fall back to federal defaults and every record says which.
 - **27 county posture records entered by hand.** Absence of a moratorium record is

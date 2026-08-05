@@ -6,6 +6,11 @@ venv/
 data/cache.sqlite
 data/cache.sqlite-*
 data/raw/
+# ...except the Census cartographic boundaries the map is drawn from. Same reason
+# as county_index.json: `python -m sweep.map` on a fresh clone otherwise fails on
+# a TLS error instead of drawing a map. 3.9 MB.
+!data/raw/cb_county_5m.zip
+!data/raw/cb_state_5m.zip
 outputs/*.json
 outputs/*.html
 !outputs/drafts/

@@ -1,7 +1,7 @@
 {
   "mode": "Claude Agent SDK tool-calling loop (claude-opus-5)",
   "model": "claude-opus-5",
-  "started": "2026-08-05T10:07:06+00:00",
+  "started": "2026-08-05T10:34:12+00:00",
   "steps": [
     {
       "index": 1,
@@ -16,7 +16,7 @@
       "citation": null,
       "credits": 0,
       "elapsed_s": 0.0,
-      "at": "2026-08-05T10:07:06+00:00"
+      "at": "2026-08-05T10:34:12+00:00"
     },
     {
       "index": 2,
@@ -30,8 +30,8 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 0.27,
-      "at": "2026-08-05T10:07:06+00:00"
+      "elapsed_s": 0.23,
+      "at": "2026-08-05T10:34:12+00:00"
     },
     {
       "index": 3,
@@ -45,8 +45,8 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 1.57,
-      "at": "2026-08-05T10:07:08+00:00"
+      "elapsed_s": 1.84,
+      "at": "2026-08-05T10:34:14+00:00"
     },
     {
       "index": 4,
@@ -60,8 +60,8 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 4.24,
-      "at": "2026-08-05T10:07:10+00:00"
+      "elapsed_s": 4.21,
+      "at": "2026-08-05T10:34:16+00:00"
     },
     {
       "index": 5,
@@ -75,8 +75,8 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 4.48,
-      "at": "2026-08-05T10:07:11+00:00"
+      "elapsed_s": 4.23,
+      "at": "2026-08-05T10:34:16+00:00"
     },
     {
       "index": 6,
@@ -123,38 +123,38 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 4.48,
-      "at": "2026-08-05T10:07:11+00:00"
+      "elapsed_s": 4.23,
+      "at": "2026-08-05T10:34:16+00:00"
     },
     {
       "index": 7,
       "stage": "loop",
       "kind": "thought",
       "title": "Reasoning",
-      "why": "The NOx emissions are massively over the major source threshold at nearly 5,900 tpy, and since this is a simple cycle turbine rather than a steam electric plant, it doesn't qualify for the 28-source exemption anyway. The formaldehyde HAP emissions at 13.1 tpy also push this well into major HAP source territory, triggering both Title V and MACT requirements under Subpart YYYY.\n\nNow I need to pin down the exact site location using those coordinates \u2014 39.4862\u00b0N, 75.0257\u00b0W puts it in the Dividing Creek area of Cumberland County, New Jersey, near Delaware Bay. Once I resolve the site and confirm the FIPS code, I can determine the specific regulatory requirements that apply.",
+      "why": "The NOx emissions at 5,886.7 tpy are far exceeding the threshold, and since this is a simple cycle turbine rather than a steam electric plant, the 250 tpy limit applies\u2014making it a major source. The formaldehyde HAP at 13.1 tpy also triggers major source status since it exceeds 10 tpy, requiring Title V and MACT compliance. Now I'm pinpointing the location using those coordinates, which appear to be in the Delaware/New Jersey region.",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 12.37,
-      "at": "2026-08-05T10:07:19+00:00"
+      "elapsed_s": 10.49,
+      "at": "2026-08-05T10:34:22+00:00"
     },
     {
       "index": 8,
       "stage": "loop",
       "kind": "reasoning",
       "title": "Model states its plan",
-      "why": "PTE is 5,887 tpy NOx uncontrolled \u2014 roughly 24x the 250 tpy major threshold, and formaldehyde at 13.1 tpy is over the 10 tpy single-HAP major line. This is a major source on any reading. Step 2 on category: a simple-cycle turbine with no heat recovery is **not** a \"fossil fuel-fired steam electric plant,\" so the List-of-28 100 tpy threshold does not apply \u2014 it's 250 tpy. Irrelevant here; it clears both.\n\nStep 3 \u2014 resolve the site before buying anything.",
+      "why": "PTE is NOx 5,887 tpy \u2014 roughly 24\u00d7 the 250 tpy major threshold, and single-HAP formaldehyde at 13.1 tpy is over the 10 tpy major HAP line. This is a major source under any attainment status. That settles what I buy: this project is going to dispersion modelling, so terrain and land cover become worth credits rather than waste.\n\nStep 3 \u2014 resolve the site before anything site-dependent.",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 13.57,
-      "at": "2026-08-05T10:07:20+00:00"
+      "elapsed_s": 12.24,
+      "at": "2026-08-05T10:34:24+00:00"
     },
     {
       "index": 9,
@@ -163,15 +163,13 @@
       "title": "resolve_site",
       "why": null,
       "tool": "resolve_site",
-      "tool_input": {
-        "address": "39.4862,-75.0257"
-      },
+      "tool_input": {},
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 2,
-      "elapsed_s": 13.74,
-      "at": "2026-08-05T10:07:20+00:00"
+      "elapsed_s": 12.25,
+      "at": "2026-08-05T10:34:24+00:00"
     },
     {
       "index": 10,
@@ -192,7 +190,7 @@
         "parcel_id": null,
         "confidence": null,
         "source": "caller-supplied coordinate",
-        "fetched": "2026-08-05T10:07:20+00:00",
+        "fetched": "2026-08-05T10:34:24+00:00",
         "permitting_agency": "NJ DEP",
         "agency_note": "Whole state is in the Ozone Transport Region, so NOx is regulated as if nonattainment regardless of local monitors. NJ DEP also runs an environmental justice law (N.J.S.A. 13:1D-157) that lets it deny a permit in an overburdened community outright. This is the Nebius failure mode.",
         "lookup_facts": [
@@ -201,7 +199,7 @@
             "value": "34011",
             "unit": null,
             "source": "US Census Geocoder",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -209,7 +207,7 @@
             "value": "Cumberland County",
             "unit": null,
             "source": "US Census Geocoder",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -217,7 +215,7 @@
             "value": "New Jersey",
             "unit": null,
             "source": "US Census Geocoder",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -225,7 +223,7 @@
             "value": "34",
             "unit": null,
             "source": "US Census Geocoder",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -233,7 +231,7 @@
             "value": "34011041101",
             "unit": null,
             "source": "US Census Geocoder (2020 vintage)",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -241,7 +239,7 @@
             "value": "340110411012",
             "unit": null,
             "source": "US Census Geocoder",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -249,7 +247,7 @@
             "value": "340110411012017",
             "unit": null,
             "source": "US Census Geocoder",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -257,7 +255,7 @@
             "value": "NJ-02",
             "unit": null,
             "source": "US Census Geocoder",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -265,7 +263,7 @@
             "value": "Vineland, NJ Metro Area",
             "unit": null,
             "source": "US Census Geocoder",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -273,7 +271,7 @@
             "value": "47220",
             "unit": null,
             "source": "US Census Geocoder",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -281,7 +279,7 @@
             "value": "X",
             "unit": null,
             "source": "FEMA NFHL",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -289,7 +287,7 @@
             "value": false,
             "unit": null,
             "source": "FEMA NFHL",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -297,7 +295,7 @@
             "value": false,
             "unit": null,
             "source": "FEMA NFHL",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -305,7 +303,7 @@
             "value": true,
             "unit": null,
             "source": "US Treasury Qualified Opportunity Zones",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -313,7 +311,7 @@
             "value": "34011041100",
             "unit": null,
             "source": "US Treasury Qualified Opportunity Zones",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -321,7 +319,7 @@
             "value": "America/New_York",
             "unit": null,
             "source": "IANA tz database",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -329,7 +327,7 @@
             "value": 32.64278030395508,
             "unit": "meters",
             "source": "USGS 3DEP/EPQS",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -337,7 +335,7 @@
             "value": 157148,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -345,7 +343,7 @@
             "value": 0.4738,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -353,7 +351,7 @@
             "value": 148,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -361,7 +359,7 @@
             "value": 143,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -369,7 +367,7 @@
             "value": 143,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -377,7 +375,7 @@
             "value": -43.4783,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -385,7 +383,7 @@
             "value": 9.61,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -393,7 +391,7 @@
             "value": 60285,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -401,7 +399,7 @@
             "value": 1.0002,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           },
           {
@@ -409,7 +407,7 @@
             "value": 64499,
             "unit": null,
             "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-            "fetched": "2026-08-05T10:07:20+00:00",
+            "fetched": "2026-08-05T10:34:24+00:00",
             "confidence": null
           }
         ]
@@ -417,38 +415,38 @@
       "conclusion": null,
       "citation": null,
       "credits": 2,
-      "elapsed_s": 13.74,
-      "at": "2026-08-05T10:07:20+00:00"
+      "elapsed_s": 12.25,
+      "at": "2026-08-05T10:34:24+00:00"
     },
     {
       "index": 11,
       "stage": "loop",
       "kind": "thought",
       "title": "Reasoning",
-      "why": "Now I'm looking at the regulatory context for Cumberland County \u2014 it's in the Ozone Transport Region, which means stricter NOx thresholds apply for major sources in nonattainment areas. The county falls under the Philadelphia-Wilmington marginal to moderate ozone nonattainment classification, and in the OTR, VOC and NOx are treated as if the area were in moderate nonattainment, which affects the 100 tpy threshold.\n\nFor the physical facts I need to gather, the regulatory context and attainment status are critical, along with gas pipeline accessibility since this is gas-fired. Demographics and environmental justice considerations are essential \u2014 New Jersey's EJ law is likely the key denial mechanism here. I should also pull terrain and land cover data since AERMOD modeling will definitely be required for a major PSD/NNSR project. Proximity to Class I areas matters too \u2014 Brigantine Wilderness in New Jersey is about 50 kilometers away, which is significant for air quality impact analysis.\n\nI'm going to batch the regulatory context, physical facts, and proximity queries together to stay within my budget.",
+      "why": "Looking at Cumberland County in New Jersey's Ozone Transport Region, NOx is treated as nonattainment since the area far exceeds the major source threshold of 50 tpy for moderate areas. This triggers LAER requirements and offset obligations, but the real constraint here is New Jersey's environmental justice law. Moving into the regulatory context now.\n\nI need to gather the physical facts and demographic data to assess this properly. I'm pulling demographics under the NJ EJ statute, identifying receptor locations and points of interest, and mapping terrain and land cover since AERMOD modeling will be essential for a 5,887 tpy NOx source\u2014this triggers PSD review for PM2.5, CO, and SO2, plus NNSR for NOx itself. I'm also checking proximity to gas pipelines, schools, urban areas, and airports to understand the infrastructure and exposure landscape.\n\nMaking three parallel API calls to fetch regulatory context, physical facts, and proximity data. I've used 2 credits so far with plenty remaining, and the preset costs should be manageable within the 400-credit budget.",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 25.4,
-      "at": "2026-08-05T10:07:32+00:00"
+      "elapsed_s": 25.97,
+      "at": "2026-08-05T10:34:38+00:00"
     },
     {
       "index": 12,
       "stage": "loop",
       "kind": "reasoning",
       "title": "Model states its plan",
-      "why": "Resolved: Cumberland County, NJ (FIPS 34011), NJ DEP \u2014 matches the caller's declared jurisdiction, so this is a verified screen.\n\n**My provider-call choices, and why:** I'm buying regulatory context (attainment is the fact most likely to flip the pathway, and NJ sits in the Ozone Transport Region), demographics (NJ's EJ statute N.J.S.A. 13:1D-157 is a *denial* authority, not a comment step \u2014 this is the single decisive fact here), points_of_interest (receptors feed both EJ review and NNSR modeling), utilities plus gas_pipeline proximity (no gas, no plant \u2014 the New Mexico failure mode), and terrain plus land_cover because at 5,887 tpy NOx a full AERMOD exercise is certain and both are AERMOD inputs. I'm skipping grid_interconnect (project is not grid-tied), flood_risk (already returned Zone X in the lookup), wildfire, soil and water \u2014 none of them touch the air pathway.",
+      "why": "Site resolves to Cumberland County, NJ \u2014 whole state is in the Ozone Transport Region, and NJ has an EJ denial statute. That shapes my buying.\n\n**Provider calls I'm choosing and why:** `demographics` (NJ's EJ law N.J.S.A. 13:1D-157 can deny outright in an overburdened community \u2014 this is the single highest-consequence fact here); `points_of_interest` (receptors and opposition for a 5,887 tpy NOx source); `terrain` + `land_cover` (AERMOD is certain at this PTE \u2014 complex-terrain receptors and surface roughness are direct model inputs); `utilities` + `gas_pipeline` proximity (gas config, pipeline reachability is the classic non-air failure). **Skipping** `grid_interconnect` (behind-the-meter, not grid tied), flood/wildfire/soil/water (don't touch the air pathway).",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 28.42,
-      "at": "2026-08-05T10:07:35+00:00"
+      "elapsed_s": 27.51,
+      "at": "2026-08-05T10:34:39+00:00"
     },
     {
       "index": 13,
@@ -462,8 +460,8 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 28.43,
-      "at": "2026-08-05T10:07:35+00:00"
+      "elapsed_s": 27.52,
+      "at": "2026-08-05T10:34:39+00:00"
     },
     {
       "index": 14,
@@ -539,32 +537,32 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 28.44,
-      "at": "2026-08-05T10:07:35+00:00"
+      "elapsed_s": 27.53,
+      "at": "2026-08-05T10:34:39+00:00"
     },
     {
       "index": 15,
       "stage": "stage 3 \u2014 physical read",
       "kind": "tool",
       "title": "get_physical_facts",
-      "why": "NJ's EJ denial statute makes demographics and receptors decisive rather than informational; a 5,887 tpy NOx source is certain to be dispersion modelled so terrain and land cover are real AERMOD inputs; utilities because a gas-fired plant with no reachable pipeline fails on fuel before it fails on air.",
+      "why": "PTE of 5,887 tpy NOx makes AERMOD certain (terrain, land_cover), NJ's EJ denial statute makes demographics and receptors decision-controlling, and a gas config always needs pipeline reachability.",
       "tool": "get_physical_facts",
       "tool_input": {
         "intents": [
           "demographics",
           "points_of_interest",
-          "utilities",
           "terrain",
-          "land_cover"
+          "land_cover",
+          "utilities"
         ],
-        "reason": "NJ's EJ denial statute makes demographics and receptors decisive rather than informational; a 5,887 tpy NOx source is certain to be dispersion modelled so terrain and land cover are real AERMOD inputs; utilities because a gas-fired plant with no reachable pipeline fails on fuel before it fails on air."
+        "reason": "PTE of 5,887 tpy NOx makes AERMOD certain (terrain, land_cover), NJ's EJ denial statute makes demographics and receptors decision-controlling, and a gas config always needs pipeline reachability."
       },
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 5,
-      "elapsed_s": 30.77,
-      "at": "2026-08-05T10:07:37+00:00"
+      "elapsed_s": 29.47,
+      "at": "2026-08-05T10:34:41+00:00"
     },
     {
       "index": 16,
@@ -578,11 +576,11 @@
         "intents": [
           "demographics",
           "points_of_interest",
-          "utilities",
           "terrain",
-          "land_cover"
+          "land_cover",
+          "utilities"
         ],
-        "reason": "NJ's EJ denial statute makes demographics and receptors decisive rather than informational; a 5,887 tpy NOx source is certain to be dispersion modelled so terrain and land cover are real AERMOD inputs; utilities because a gas-fired plant with no reachable pipeline fails on fuel before it fails on air.",
+        "reason": "PTE of 5,887 tpy NOx makes AERMOD certain (terrain, land_cover), NJ's EJ denial statute makes demographics and receptors decision-controlling, and a gas config always needs pipeline reachability.",
         "fields_returned": 68,
         "facts": [
           {
@@ -643,15 +641,15 @@
       "conclusion": null,
       "citation": null,
       "credits": 5,
-      "elapsed_s": 30.78,
-      "at": "2026-08-05T10:07:37+00:00"
+      "elapsed_s": 29.48,
+      "at": "2026-08-05T10:34:41+00:00"
     },
     {
       "index": 17,
       "stage": "stage 3 \u2014 physical read",
       "kind": "tool",
       "title": "get_proximity",
-      "why": "Gas pipeline for fuel reachability; school and urban area as sensitive receptors driving EJ and opposition; airport because a major turbine in NNSR modeling usually needs a tall stack and that interacts with airspace review.",
+      "why": "Pipeline for fuel deliverability; school and urban area for NJ EJ/receptor review; airport because a major turbine in modelled terrain usually needs a tall stack and airspace review.",
       "tool": "get_proximity",
       "tool_input": {
         "targets": [
@@ -660,14 +658,14 @@
           "urban_area",
           "airport"
         ],
-        "reason": "Gas pipeline for fuel reachability; school and urban area as sensitive receptors driving EJ and opposition; airport because a major turbine in NNSR modeling usually needs a tall stack and that interacts with airspace review."
+        "reason": "Pipeline for fuel deliverability; school and urban area for NJ EJ/receptor review; airport because a major turbine in modelled terrain usually needs a tall stack and airspace review."
       },
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 4,
-      "elapsed_s": 32.48,
-      "at": "2026-08-05T10:07:39+00:00"
+      "elapsed_s": 30.7,
+      "at": "2026-08-05T10:34:42+00:00"
     },
     {
       "index": 18,
@@ -684,7 +682,7 @@
           "urban_area",
           "airport"
         ],
-        "reason": "Gas pipeline for fuel reachability; school and urban area as sensitive receptors driving EJ and opposition; airport because a major turbine in NNSR modeling usually needs a tall stack and that interacts with airspace review.",
+        "reason": "Pipeline for fuel deliverability; school and urban area for NJ EJ/receptor review; airport because a major turbine in modelled terrain usually needs a tall stack and airspace review.",
         "results": {
           "school": {
             "distance_km": 0.34,
@@ -737,38 +735,38 @@
       "conclusion": null,
       "citation": null,
       "credits": 4,
-      "elapsed_s": 32.48,
-      "at": "2026-08-05T10:07:39+00:00"
+      "elapsed_s": 30.71,
+      "at": "2026-08-05T10:34:42+00:00"
     },
     {
       "index": 19,
       "stage": "loop",
       "kind": "thought",
       "title": "Reasoning",
-      "why": "Looking at the Philadelphia-Atlantic City ozone nonattainment area, this is classified as serious, which means the major source threshold for NOx drops to 50 tons per year. The facility's NOx emissions of 5,887 tpy far exceed that threshold, making it a major source requiring New Source Review with a 1.2:1 offset ratio \u2014 meaning I'd need to secure roughly 7,064 tons per year of NOx emission reduction credits, which is practically impossible to find in New Jersey. PSD regulations also apply to this situation.\n\nThe location itself is deeply problematic from an environmental justice perspective: it's in downtown Vineland, just 343 meters from a school and 177 meters from a hospital, with 476 points of interest within a kilometer radius. This is clearly an overburdened community. I notice the gas pipeline distance wasn't returned in the data, and while the API indicated 68 fields were available, only about 40 appear in the visible results \u2014 demographics, terrain, and land cover values are missing from what I can see.\n\nI'm going to call determine_pathway next and batch in requests for the missing Class I area distance (Brigantine Wilderness is a Class I area in New Jersey that's likely within 100 kilometers) and the gas pipeline information.",
+      "why": "Looking at the Philadelphia-Atlantic City nonattainment area, this is classified as serious for ozone under the 2015 8-hour standard, which means the major source threshold drops to 50 tpy for NOx and VOC. The facility's NOx emissions of 5,887 tpy far exceed this threshold, triggering requirements for lowest achievable emission rate (LAER) controls and offsets at a 1.2:1 ratio.\n\nThe offset requirement is staggering\u2014roughly 7,064 tpy of NOx emission reduction credits needed, which is essentially unobtainable in New Jersey's market. Beyond the serious ozone nonattainment, the facility also triggers Prevention of Significant Deterioration (PSD) requirements for PM2.5 and CO, since emissions exceed the 250 tpy major source threshold for non-listed sources. This means dual regulatory pathways\u2014both NNSR and PSD apply.\n\nThe formaldehyde emissions at 13.1 tpy exceed the 10 tpy single HAP threshold, making this a major HAP source subject to Title V permitting and MACT standards. The location itself is deeply problematic: it's in downtown Vineland, an overburdened environmental justice community, with a school 344 meters away and a hospital just 178 meters away. This mirrors the exact failure mode from the Nebius case. The demographics data returned no EJ indicator fields despite the request, and several critical data gaps exist\u2014class I area distances, PSD increment consumption, background ambient concentrations, and gas pipeline proximity information are all missing. The site sits on ",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 49.0,
-      "at": "2026-08-05T10:07:55+00:00"
+      "elapsed_s": 46.22,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 20,
       "stage": "loop",
       "kind": "reasoning",
       "title": "Model states its plan",
-      "why": "Step 4 is the one that decides this. Cumberland County is in **serious** nonattainment for the 2015 8-hour ozone NAAQS (Philadelphia-Atlantic City, PA-NJ \u2014 EPA Green Book, fetched 2026-07-31), and the whole state sits in the Ozone Transport Region. Serious classification drops the NOx major-source threshold to 50 tpy. The project is at 5,887 tpy.\n\nTwo gaps I need to close before the pathway is honest: the gas pipeline came back `missing` from the preset, and Class I area distance isn't indexed by any wired source. NJ has a Class I area (Brigantine Wilderness), so that is not a rounding error.",
+      "why": "Step 4/5 findings are severe, so let me run the decision tree before probing fixes.",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 51.9,
-      "at": "2026-08-05T10:07:58+00:00"
+      "elapsed_s": 46.22,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 21,
@@ -782,8 +780,8 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 52.45,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 22,
@@ -881,8 +879,8 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 52.45,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 23,
@@ -896,8 +894,8 @@
       "conclusion": null,
       "citation": "40 CFR 52.21(b)(1)(i)(a); the 'List of 28' named source categories",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 24,
@@ -911,8 +909,8 @@
       "conclusion": null,
       "citation": "40 CFR 52.21(b)(1)(i)(a); the 'List of 28' named source categories",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 25,
@@ -926,8 +924,8 @@
       "conclusion": null,
       "citation": "40 CFR 52.21(b)(4)",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 26,
@@ -941,8 +939,8 @@
       "conclusion": null,
       "citation": "EPA Green Book, 40 CFR 81",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 27,
@@ -956,8 +954,8 @@
       "conclusion": null,
       "citation": "CAA 173; 40 CFR 51.165(a)(1)(iv)(A)",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 28,
@@ -971,8 +969,8 @@
       "conclusion": null,
       "citation": "40 CFR 52.21(p)",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 29,
@@ -986,8 +984,8 @@
       "conclusion": null,
       "citation": "40 CFR Part 70",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 30,
@@ -1001,8 +999,8 @@
       "conclusion": null,
       "citation": "NJ DEP EJ Law N.J.S.A. 13:1D-157, effective April 2023",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 31,
@@ -1016,8 +1014,8 @@
       "conclusion": null,
       "citation": "CAA 184; 40 CFR 51.165",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 32,
@@ -1031,8 +1029,8 @@
       "conclusion": null,
       "citation": "NJ DEP EJ Law N.J.S.A. 13:1D-157, effective April 2023",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 33,
@@ -1046,8 +1044,8 @@
       "conclusion": null,
       "citation": "CourtListener / RECAP",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 34,
@@ -1061,198 +1059,48 @@
       "conclusion": null,
       "citation": "agent/pathway.py decision tree",
       "credits": 0,
-      "elapsed_s": 52.46,
-      "at": "2026-08-05T10:07:59+00:00"
+      "elapsed_s": 46.25,
+      "at": "2026-08-05T10:34:58+00:00"
     },
     {
       "index": 35,
-      "stage": "stage 4 \u2014 regulatory",
-      "kind": "tool",
-      "title": "request_field",
-      "why": "Great-circle distance in kilometres from the site coordinate to the nearest federal Class I area boundary (40 CFR 81 Subpart D \u2014 national parks and wilderness areas). Pure geometry over published federal boundaries. Decisive here: a PSD major source within ~100 km of a Class I area triggers Federal Land Manager notification, Class I increment analysis and AQRV/visibility modelling, which adds months. NJ contains Brigantine Wilderness (Edwin B. Forsythe NWR).",
-      "tool": "request_field",
-      "tool_input": {
-        "field_name": "class_i_area_distance_km",
-        "description": "Great-circle distance in kilometres from the site coordinate to the nearest federal Class I area boundary (40 CFR 81 Subpart D \u2014 national parks and wilderness areas). Pure geometry over published federal boundaries. Decisive here: a PSD major source within ~100 km of a Class I area triggers Federal Land Manager notification, Class I increment analysis and AQRV/visibility modelling, which adds months. NJ contains Brigantine Wilderness (Edwin B. Forsythe NWR)."
-      },
-      "result": null,
-      "conclusion": null,
-      "citation": null,
-      "credits": 0,
-      "elapsed_s": 54.77,
-      "at": "2026-08-05T10:08:01+00:00"
-    },
-    {
-      "index": 36,
-      "stage": "stage 4 \u2014 regulatory",
-      "kind": "observation",
-      "title": "request_field returned",
-      "why": null,
-      "tool": null,
-      "tool_input": null,
-      "result": {
-        "field_name": "class_i_area_distance_km",
-        "description": "Great-circle distance in kilometres from the site coordinate to the nearest federal Class I area boundary (40 CFR 81 Subpart D \u2014 national parks and wilderness areas). Pure geometry over published federal boundaries. Decisive here: a PSD major source within ~100 km of a Class I area triggers Federal Land Manager notification, Class I increment analysis and AQRV/visibility modelling, which adds months. NJ contains Brigantine Wilderness (Edwin B. Forsythe NWR).",
-        "requested_at": "2026-08-05T10:08:01+00:00",
-        "supported": false,
-        "outcome": "error",
-        "note": "field_request needs at least one example location \u2014 it is what seeds the build's eval cases and where the field is verified on prod"
-      },
-      "conclusion": null,
-      "citation": null,
-      "credits": 0,
-      "elapsed_s": 54.77,
-      "at": "2026-08-05T10:08:01+00:00"
-    },
-    {
-      "index": 37,
-      "stage": "stage 3 \u2014 physical read",
-      "kind": "tool",
-      "title": "ask_mireye",
-      "why": null,
-      "tool": "ask_mireye",
-      "tool_input": {
-        "question": "What is the distance from 39.4862,-75.0257 to the nearest interstate natural gas transmission pipeline, and what is its operator and diameter? The get_proximity preset returned gas_pipeline as missing for this site and a 400 MW gas-fired plant cannot be fuelled without it."
-      },
-      "result": null,
-      "conclusion": null,
-      "citation": null,
-      "credits": 3,
-      "elapsed_s": 56.24,
-      "at": "2026-08-05T10:08:02+00:00"
-    },
-    {
-      "index": 38,
-      "stage": "stage 3 \u2014 physical read",
-      "kind": "observation",
-      "title": "ask_mireye returned",
-      "why": null,
-      "tool": null,
-      "tool_input": null,
-      "result": {
-        "question": "What is the distance from 39.4862,-75.0257 to the nearest interstate natural gas transmission pipeline, and what is its operator and diameter? The get_proximity preset returned gas_pipeline as missing for this site and a 400 MW gas-fired plant cannot be fuelled without it.",
-        "fields_returned": 4,
-        "facts": [
-          {
-            "key": "ask.answer",
-            "value": "The nearest interstate natural gas transmission pipeline to 39.4862, -75.0257 is 34,019 meters (approximately 34 km) away, operated by Columbia Gas Trans Co, per the HIFLD Gas Transmission Pipelines dataset. The EIA's 10 km proximity buffer returned null \u2014 confirming no interstate pipeline exists within that tighter radius \u2014 but the unbounded HIFLD query resolved a real distance at ~34 km. Diameter, line pressure, and firm transport capacity are not geospatial attributes and were not returned by the dataset; these must be confirmed directly with Columbia Gas Trans Co as part of any tap feasibility assessment. For a 400 MW gas-fired plant, a 34 km lateral to the nearest interstate trunkline represents a material infrastructure gap requiring operator-confirmed capacity, tap lead time, and lateral construction cost before fuel supply can be assumed viable.",
-            "unit": null,
-            "source": "Mireye /v1/ask over EIA_POWER, HIFLD_GAS_TRANSMISSION_PIPELINES",
-            "fetched": "2026-08-05T10:08:03.624847+00:00",
-            "confidence": 0.6
-          },
-          {
-            "key": "ask.citations",
-            "value": [
-              {
-                "source": "EIA_POWER",
-                "source_url": "https://atlas.eia.gov/",
-                "fields": [
-                  "nearest_transmission_line_distance_m",
-                  "nearest_transmission_line_voltage_kv"
-                ],
-                "fetched_at": "2026-08-05T09:30:51.042494+00:00",
-                "confidence": "high"
-              },
-              {
-                "source": "HIFLD_GAS_TRANSMISSION_PIPELINES",
-                "source_url": "https://atlas.eia.gov/",
-                "fields": [
-                  "nearest_interstate_gas_pipeline_distance_m",
-                  "nearest_interstate_gas_pipeline_operator"
-                ],
-                "fetched_at": "2026-08-05T09:30:54.576798+00:00",
-                "confidence": "high"
-              }
-            ],
-            "unit": null,
-            "source": "Mireye /v1/ask",
-            "fetched": "2026-08-05T10:08:03.624847+00:00",
-            "confidence": null
-          },
-          {
-            "key": "ask.data_gaps",
-            "value": [
-              {
-                "field": "nearest_gas_pipeline_distance_m",
-                "reason": "source returned null: no gas pipeline within 10 km"
-              }
-            ],
-            "unit": null,
-            "source": "Mireye /v1/ask",
-            "fetched": "2026-08-05T10:08:03.624847+00:00",
-            "confidence": null
-          },
-          {
-            "key": "ask.plan",
-            "value": {
-              "fields_requested": [
-                "nearest_transmission_line_distance_m",
-                "nearest_transmission_line_voltage_kv",
-                "nearest_gas_pipeline_distance_m",
-                "nearest_interstate_gas_pipeline_distance_m",
-                "nearest_interstate_gas_pipeline_operator"
-              ],
-              "preset_expanded": null,
-              "planner_model": "claude-haiku-4-5",
-              "synthesizer_model": "claude-sonnet-4-6"
-            },
-            "unit": null,
-            "source": "Mireye /v1/ask trace",
-            "fetched": "2026-08-05T10:08:03.624847+00:00",
-            "confidence": null
-          }
-        ],
-        "mapped_to_site_context": {
-          "nearest_airport_km": "proximity:airport"
-        },
-        "note": null
-      },
-      "conclusion": null,
-      "citation": null,
-      "credits": 3,
-      "elapsed_s": 68.49,
-      "at": "2026-08-05T10:08:15+00:00"
-    },
-    {
-      "index": 39,
       "stage": "loop",
       "kind": "thought",
       "title": "Reasoning",
-      "why": "Looking at the major nonattainment NSR pathway with a 41-104 month timeline and announced energization in 16 months \u2014 this is essentially dead on arrival. The Class I field request failed and needs a location example to retry, while the nearest gas pipeline is 34 kilometers away through Columbia Gas Trans, making that lateral a significant constraint. For step 7, I'm testing config changes to see what could work since synthetic minor is infeasible at 67 hours per year \u2014 SCR combined with dry low NOx technology might be viable.\n\nTesting three configurations: SCR plus dry low NOx on a simple cycle, combined cycle with SCR and dry low NOx, and fuel cell. The SCR reduces NOx by 90%+ but even dropping from 5,887 to 300-500 tpy keeps us over the 50 tpy major nonattainment NSR threshold. A combined cycle improves heat rate but still lands around 350 tpy with SCR. Realistically, only a fuel cell approach gets a 400 MW gas plant under 50 tpy NOx in a serious ozone nonattainment area. The site itself fails the major nonattainment NSR test, which is the explicit trigger, though crossing into Delaware or Pennsylvania across the bay or state lines doesn't help since the whole OTR is nonattainment. I'll batch test these configurations \u2014 I've used 8 calls so far and have room to explore.",
+      "why": "The major nonattainment NSR timeline is looking grim\u201466 months versus the 16 months announced. Now I'm testing control configurations to see what's actually feasible: SCR combined with dry low NOx burners and an oxidation catalyst for CO, plus a combined cycle option. The math is brutal though\u2014even with SCR and DLN achieving 90-95% reduction, the uncontrolled NOx of 5,887 tpy only drops to 300-600 tpy, still far exceeding the 50 tpy threshold for major NSR. I'm checking whether combined cycle changes the picture.\n\nA combined cycle with a heat rate around 6,400 would exceed 250 MMBtu/hr, triggering PSD thresholds at 100 tpy, but the NSR threshold for NOx stays at 50 tpy regardless. Realistically, nothing at this location gets NOx below 50 tpy except fuel cells, so I'm going to test two scenarios in parallel: the best available control stack with combined cycle plus SCR, DLN, and oxidation catalyst, and a standalone 400 MW fuel cell. The geographic reality is sobering\u2014the entire search radius within 120 km is in ozone transport regions: all of New Jersey, Delaware, and southeastern Pennsylvania are OTR, plus Maryland's Cecil County. The whole region is already nonattainment, which makes searching for alternate sites potentially low-value, though the guidance does call for it when major NSR applies.\n\nThe real differentiator is that Maryland and Delaware lack New Jersey's environmental justice denial statute, which is the discretionary killer here. So it's worth making that one c",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 81.78,
-      "at": "2026-08-05T10:08:28+00:00"
+      "elapsed_s": 64.39,
+      "at": "2026-08-05T10:35:16+00:00"
     },
     {
-      "index": 40,
+      "index": 36,
       "stage": "loop",
       "kind": "reasoning",
       "title": "Model states its plan",
-      "why": "Step 6: **major nonattainment NSR**, 41\u2013104 months, 66 likely. Announced energization is 16 months out. That is the headline.\n\nTwo things I need to fix or note before I act on it: the Class I request errored (it needs an example location), and the pipeline answer came back \u2014 nearest interstate trunkline is 34 km away.\n\nStep 7 \u2014 testing config changes at this parcel. These are free, so I'll probe the three levers that could actually defend themselves: SCR on the simple cycle, combined cycle with SCR (checking whether the steam cycle drops the PSD threshold and makes things worse), and a fuel cell.",
+      "why": "Step 6 result: **Major nonattainment NSR, 66 months likely** against a 16-month announced energization. Step 7 \u2014 test whether any config at this parcel moves it.",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 82.73,
-      "at": "2026-08-05T10:08:29+00:00"
+      "elapsed_s": 64.39,
+      "at": "2026-08-05T10:35:16+00:00"
     },
     {
-      "index": 41,
+      "index": 37,
       "stage": "stage 6 \u2014 act",
       "kind": "tool",
       "title": "test_config",
       "why": null,
       "tool": "test_config",
       "tool_input": {
-        "label": "SCR + DLN, simple cycle",
+        "label": "Best-available control, simple cycle",
         "config_changes": {
           "controls": [
             "dry_low_nox",
@@ -1265,11 +1113,11 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 83.71,
-      "at": "2026-08-05T10:08:30+00:00"
+      "elapsed_s": 64.42,
+      "at": "2026-08-05T10:35:16+00:00"
     },
     {
-      "index": 42,
+      "index": 38,
       "stage": "stage 6 \u2014 act",
       "kind": "observation",
       "title": "test_config returned",
@@ -1278,7 +1126,7 @@
       "tool_input": null,
       "result": {
         "feasible": true,
-        "label": "SCR + DLN, simple cycle",
+        "label": "Best-available control, simple cycle",
         "config": "400 MW simple_cycle_turbine on natural_gas (dry_low_nox, scr, oxidation_catalyst), no enforceable hour cap (PTE at 8760)",
         "emissions": {
           "config": "400 MW simple_cycle_turbine on natural_gas (dry_low_nox, scr, oxidation_catalyst), no enforceable hour cap (PTE at 8760)",
@@ -1416,18 +1264,18 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 83.71,
-      "at": "2026-08-05T10:08:30+00:00"
+      "elapsed_s": 64.42,
+      "at": "2026-08-05T10:35:16+00:00"
     },
     {
-      "index": 43,
+      "index": 39,
       "stage": "stage 6 \u2014 act",
       "kind": "tool",
       "title": "test_config",
       "why": null,
       "tool": "test_config",
       "tool_input": {
-        "label": "Combined cycle + SCR + DLN",
+        "label": "Combined cycle + full controls",
         "config_changes": {
           "prime_mover": "combined_cycle_turbine",
           "controls": [
@@ -1442,11 +1290,11 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 85.13,
-      "at": "2026-08-05T10:08:31+00:00"
+      "elapsed_s": 64.48,
+      "at": "2026-08-05T10:35:16+00:00"
     },
     {
-      "index": 44,
+      "index": 40,
       "stage": "stage 6 \u2014 act",
       "kind": "observation",
       "title": "test_config returned",
@@ -1455,7 +1303,7 @@
       "tool_input": null,
       "result": {
         "feasible": true,
-        "label": "Combined cycle + SCR + DLN",
+        "label": "Combined cycle + full controls",
         "config": "400 MW combined_cycle_turbine on natural_gas (dry_low_nox, scr, oxidation_catalyst), no enforceable hour cap (PTE at 8760)",
         "emissions": {
           "config": "400 MW combined_cycle_turbine on natural_gas (dry_low_nox, scr, oxidation_catalyst), no enforceable hour cap (PTE at 8760)",
@@ -1589,34 +1437,31 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 85.13,
-      "at": "2026-08-05T10:08:31+00:00"
+      "elapsed_s": 64.48,
+      "at": "2026-08-05T10:35:16+00:00"
     },
     {
-      "index": 45,
+      "index": 41,
       "stage": "stage 6 \u2014 act",
       "kind": "tool",
       "title": "test_config",
       "why": null,
       "tool": "test_config",
       "tool_input": {
-        "label": "Fuel cell, 400 MW",
+        "label": "Fuel cell 400 MW",
         "config_changes": {
-          "prime_mover": "fuel_cell",
-          "controls": [
-            "none"
-          ]
+          "prime_mover": "fuel_cell"
         }
       },
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 85.46,
-      "at": "2026-08-05T10:08:32+00:00"
+      "elapsed_s": 64.72,
+      "at": "2026-08-05T10:35:16+00:00"
     },
     {
-      "index": 46,
+      "index": 42,
       "stage": "stage 6 \u2014 act",
       "kind": "observation",
       "title": "test_config returned",
@@ -1625,7 +1470,7 @@
       "tool_input": null,
       "result": {
         "feasible": true,
-        "label": "Fuel cell, 400 MW",
+        "label": "Fuel cell 400 MW",
         "config": "400 MW fuel_cell on natural_gas (uncontrolled), no enforceable hour cap (PTE at 8760)",
         "emissions": {
           "config": "400 MW fuel_cell on natural_gas (uncontrolled), no enforceable hour cap (PTE at 8760)",
@@ -1739,59 +1584,59 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 85.46,
-      "at": "2026-08-05T10:08:32+00:00"
+      "elapsed_s": 64.72,
+      "at": "2026-08-05T10:35:16+00:00"
     },
     {
-      "index": 47,
+      "index": 43,
       "stage": "loop",
       "kind": "thought",
       "title": "Reasoning",
-      "why": "Looking at the emissions control scenarios, SCR with DLN cuts NOx to 182.5 tpy and dramatically reduces offsets from 7,064 down to 219 tons\u2014a major practical win even though it stays classified as a major NNSR source. The combined cycle with SCR achieves lower emissions at 111 tpy NOx and triggers the 28-source list due to crossing the 100 tpy PSD threshold, though it still qualifies as major NNSR since that threshold is 50 tpy. The fuel cell option appears to be the minimum emissions pathway.\n\nThe fuel cell approach would cut permitting time by 44 months\u2014from 65.6 months down to 21.6\u2014but still falls short of the 16-month target, and the EJ denial authority would still apply. I'm considering whether to search for alternate sites since the major nonattainment NSR trigger is clearly met, though the entire OTR region from Virginia northward operates under the 50 tpy statewide NOx rule, so relocating within 120 km likely won't escape that threshold. However, moving to Delaware or Maryland could sidestep the serious ozone nonattainment designation and New Jersey's EJ denial statute with its 1.6x multiplier, which would meaningfully change the regulatory pathway and agency requirements\u2014worth exploring.\n\nI've got 13 API calls remaining and plenty of credits, so I'll run the alternate site search with a smaller sample size and tighter radius to manage costs, then batch it with a retry of the class I area request using a specific location.",
+      "why": "The fuel cell pathway is the only option that moves the timeline meaningfully, but even with the best turbine controls available, we're still hitting major NNSR status since the NOx emissions exceed the 50 tpy threshold. The site isn't viable, so I need to search for alternate locations, though the whole region is in OTR. Given the major NNSR designation, making that regional call is justified. I should also complete the request fields where there are gaps.\n\nThe critical missing piece is whether this block group qualifies as a designated NJ DEP overburdened community\u2014that's the deciding factor, and the demographics data didn't flag any EJ indicators. I also need the distance to the nearest Class I area; Brigantine Wilderness Area is roughly 60-70 km east, which is significant. The system cleared the class I trigger without actually having the distance data, so that's a false clear I need to flag. Let me request the overburdened community designation and the Class I area distance, then move forward with searching alternate sites.",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 100.23,
-      "at": "2026-08-05T10:08:46+00:00"
+      "elapsed_s": 78.32,
+      "at": "2026-08-05T10:35:30+00:00"
     },
     {
-      "index": 48,
+      "index": 44,
       "stage": "loop",
       "kind": "reasoning",
       "title": "Model states its plan",
-      "why": "Config testing is decisive. SCR plus dry-low-NOx cuts NOx from 5,887 to 182 tpy and drops offsets from 7,064 tons to 219 \u2014 a real change in whether this is financeable \u2014 but it does not change the pathway, because the serious-ozone threshold is 50 tpy. Combined cycle gets to 111 tpy but pulls the plant onto the List of 28 as a steam electric plant, dropping the PSD threshold to 100 tpy. Only the fuel cell flips the pathway to minor NSR.\n\nThe site fails on major nonattainment NSR, which is the condition for searching outward. Let me do that, and retry the Class I request with the example location it needs.",
+      "why": "Only the fuel cell moves the pathway. Even full LAER-grade control (SCR + DLN + ox-cat) lands NOx at 182 tpy against a **50 tpy** threshold \u2014 still major NNSR, zero months saved. The site fails, so I'm spending the expensive call. I'm also filing two gaps the engine flagged as not-wired.",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 100.83,
-      "at": "2026-08-05T10:08:47+00:00"
+      "elapsed_s": 79.5,
+      "at": "2026-08-05T10:35:31+00:00"
     },
     {
-      "index": 49,
+      "index": 45,
       "stage": "stage 6 \u2014 act",
       "kind": "tool",
       "title": "search_alternate_sites",
       "why": null,
       "tool": "search_alternate_sites",
       "tool_input": {
-        "n": 16,
-        "radius_km": 30
+        "radius_km": 40,
+        "n": 24
       },
       "result": null,
       "conclusion": null,
       "citation": null,
-      "credits": 80,
-      "elapsed_s": 101.39,
-      "at": "2026-08-05T10:08:48+00:00"
+      "credits": 120,
+      "elapsed_s": 80.0,
+      "at": "2026-08-05T10:35:32+00:00"
     },
     {
-      "index": 50,
+      "index": 46,
       "stage": "stage 6 \u2014 act",
       "kind": "observation",
       "title": "search_alternate_sites returned",
@@ -1806,45 +1651,45 @@
           "months_likely": 66.0
         },
         "rings_km": [
-          30.0,
+          40.0,
           60.0,
           120.0
         ],
-        "candidates_considered": 16,
-        "candidates_resolved": 13,
+        "candidates_considered": 24,
+        "candidates_resolved": 20,
         "unresolved_sample": [
           {
-            "latitude": 39.07199,
-            "longitude": -74.57894,
+            "latitude": 39.01838,
+            "longitude": -74.67845,
             "ring_km": 60.0,
             "unresolved": true,
             "reason": "No county or state returned for this point (open water, or outside the provider's coverage). An unscreened parcel is not an attainment parcel, so it is dropped rather than ranked."
           },
           {
-            "latitude": 39.29071,
-            "longitude": -73.65244,
+            "latitude": 39.75765,
+            "longitude": -73.66968,
             "ring_km": 120.0,
             "unresolved": true,
             "reason": "No county or state returned for this point (open water, or outside the provider's coverage). An unscreened parcel is not an attainment parcel, so it is dropped rather than ranked."
           },
           {
-            "latitude": 38.47114,
-            "longitude": -74.55428,
+            "latitude": 38.9404,
+            "longitude": -73.82409,
             "ring_km": 120.0,
             "unresolved": true,
             "reason": "No county or state returned for this point (open water, or outside the provider's coverage). An unscreened parcel is not an attainment parcel, so it is dropped rather than ranked."
           }
         ],
         "best": {
-          "label": "New Castle County, DE (39.3905, -75.7133)",
-          "latitude": 39.390475,
-          "longitude": -75.713294,
-          "county": "New Castle",
+          "label": "Kent County, DE (39.2314, -75.3541)",
+          "latitude": 39.231371,
+          "longitude": -75.354084,
+          "county": "Kent",
           "state": "DE",
-          "county_fips": "10003",
-          "distance_km": 60.0,
-          "distance_miles": 37.3,
-          "bearing": "W",
+          "county_fips": "10001",
+          "distance_km": 40.0,
+          "distance_miles": 24.9,
+          "bearing": "SW",
           "pathway": "major_nonattainment_nsr",
           "pathway_label": "Major nonattainment NSR",
           "months_low": 26.0,
@@ -1855,289 +1700,290 @@
           "hard_stops": [],
           "triggers_cleared": [
             "ej_denial_authority",
+            "nonattainment_designation",
             "state_toxics"
           ],
           "triggers_added": [],
-          "gas_pipeline_km": 1.7,
+          "gas_pipeline_km": null,
           "transmission_km": null,
           "geocode_confidence": null,
           "provenance": {
             "county_fips": {
               "source": "US Census Geocoder",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county": {
               "source": "US Census Geocoder",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "state": {
               "source": "US Census Geocoder",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "state_fips": {
               "source": "US Census Geocoder",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "tract_geoid": {
               "source": "US Census Geocoder (2020 vintage)",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "block_group_geoid": {
               "source": "US Census Geocoder",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "block_geoid": {
               "source": "US Census Geocoder",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "congressional_district": {
               "source": "US Census Geocoder",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "cbsa_name": {
               "source": "US Census Geocoder",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "cbsa_code": {
               "source": "US Census Geocoder",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "fema_flood_zone": {
               "source": "FEMA NFHL",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "within_floodplain": {
               "source": "FEMA NFHL",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "coastal_high_hazard": {
               "source": "FEMA NFHL",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "in_opportunity_zone": {
               "source": "US Treasury Qualified Opportunity Zones",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "timezone": {
               "source": "IANA tz database",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "elevation_m": {
               "source": "USGS 3DEP/EPQS",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.population": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.population_growth_1yr_pct": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.net_domestic_migration": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.building_permits_total_annual": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.building_permits_sf_annual": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.building_permits_yoy_pct": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.hpi_yoy_pct": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.employment_total": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.employment_yoy_pct": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "county_market.median_household_income_usd": {
               "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
-              "fetched": "2026-08-05T10:10:41+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             },
             "domestic_well_household_density_class": {
               "source": "USGS_SELF_SUPPLIED_HOUSEHOLDS",
-              "fetched": "2026-08-05T10:10:41.566306+00:00",
+              "fetched": "2026-08-05T10:36:21.459849+00:00",
               "confidence": 0.6
             },
             "domestic_well_households_per_km2": {
               "source": "USGS_SELF_SUPPLIED_HOUSEHOLDS",
-              "fetched": "2026-08-05T10:10:41.566256+00:00",
+              "fetched": "2026-08-05T10:36:21.459782+00:00",
               "confidence": 0.6
-            },
-            "nearest_gas_pipeline_distance_m": {
-              "source": "EIA_PIPELINES",
-              "fetched": "2026-08-05T10:10:41.599312+00:00",
-              "confidence": 0.9
             },
             "nearest_power_plant_capacity_mw": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:41.790123+00:00",
+              "fetched": "2026-08-05T10:36:21.569631+00:00",
               "confidence": 0.9
             },
             "nearest_power_plant_distance_m": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:41.790095+00:00",
+              "fetched": "2026-08-05T10:36:21.569601+00:00",
               "confidence": 0.9
             },
             "nearest_power_plant_name": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:41.790105+00:00",
+              "fetched": "2026-08-05T10:36:21.569612+00:00",
               "confidence": 0.9
             },
             "nearest_power_plant_primary_fuel": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:41.790114+00:00",
+              "fetched": "2026-08-05T10:36:21.569621+00:00",
               "confidence": 0.9
             },
             "nearest_sewer_service_area_distance_m": {
               "source": "EPA_SEWERSHEDS",
-              "fetched": "2026-08-05T10:10:43.114125+00:00",
+              "fetched": "2026-08-05T10:36:22.040116+00:00",
               "confidence": 0.6
             },
             "nearest_wastewater_plant_distance_m": {
               "source": "EPA_CWNS",
-              "fetched": "2026-08-05T10:10:41.584406+00:00",
+              "fetched": "2026-08-05T10:36:21.475629+00:00",
               "confidence": 0.6
             },
             "nearest_wastewater_plant_name": {
               "source": "EPA_CWNS",
-              "fetched": "2026-08-05T10:10:41.584469+00:00",
+              "fetched": "2026-08-05T10:36:21.475745+00:00",
               "confidence": 0.6
             },
             "nearest_wastewater_plant_population_served": {
               "source": "EPA_CWNS",
-              "fetched": "2026-08-05T10:10:41.584481+00:00",
+              "fetched": "2026-08-05T10:36:21.475758+00:00",
               "confidence": 0.6
             },
             "nearest_water_service_area_distance_m": {
               "source": "EPA_CWS_SERVICE_AREAS",
-              "fetched": "2026-08-05T10:10:42.978905+00:00",
+              "fetched": "2026-08-05T10:36:22.101007+00:00",
               "confidence": 0.6
             },
             "sewer_service_area_provenance": {
               "source": "EPA_SEWERSHEDS",
-              "fetched": "2026-08-05T10:10:43.114112+00:00",
+              "fetched": "2026-08-05T10:36:22.040106+00:00",
               "confidence": 0.6
             },
             "sewer_service_area_provider": {
               "source": "EPA_SEWERSHEDS",
-              "fetched": "2026-08-05T10:10:43.114092+00:00",
+              "fetched": "2026-08-05T10:36:22.040094+00:00",
               "confidence": 0.6
             },
             "transmission_lines_within_radius_count": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:41.621283+00:00",
+              "fetched": "2026-08-05T10:36:21.479672+00:00",
               "confidence": 0.9
             },
             "water_service_area_provenance": {
               "source": "EPA_CWS_SERVICE_AREAS",
-              "fetched": "2026-08-05T10:10:42.978932+00:00",
+              "fetched": "2026-08-05T10:36:22.101031+00:00",
               "confidence": 0.6
             },
             "water_system_name": {
               "source": "EPA_CWS_SERVICE_AREAS",
-              "fetched": "2026-08-05T10:10:42.978919+00:00",
+              "fetched": "2026-08-05T10:36:22.101020+00:00",
               "confidence": 0.6
             },
             "within_sewer_service_area": {
               "source": "EPA_SEWERSHEDS",
-              "fetched": "2026-08-05T10:10:43.113947+00:00",
+              "fetched": "2026-08-05T10:36:22.040011+00:00",
               "confidence": 0.6
             },
             "within_water_service_area": {
               "source": "EPA_CWS_SERVICE_AREAS",
-              "fetched": "2026-08-05T10:10:42.978801+00:00",
+              "fetched": "2026-08-05T10:36:22.100947+00:00",
               "confidence": 0.6
             },
             "max_transmission_line_voltage_class_within_radius": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:43.148688+00:00",
+              "fetched": "2026-08-05T10:36:22.143741+00:00",
               "confidence": null
             },
             "max_transmission_line_voltage_kv_within_radius": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:43.148688+00:00",
+              "fetched": "2026-08-05T10:36:22.143741+00:00",
+              "confidence": null
+            },
+            "nearest_gas_pipeline_distance_m": {
+              "source": "EIA_PIPELINES",
+              "fetched": "2026-08-05T10:36:22.143741+00:00",
               "confidence": null
             },
             "nearest_transmission_line_distance_m": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:43.148688+00:00",
+              "fetched": "2026-08-05T10:36:22.143741+00:00",
               "confidence": null
             },
             "nearest_transmission_line_owner": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:43.148688+00:00",
+              "fetched": "2026-08-05T10:36:22.143741+00:00",
               "confidence": null
             },
             "nearest_transmission_line_status": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:43.148688+00:00",
+              "fetched": "2026-08-05T10:36:22.143741+00:00",
               "confidence": null
             },
             "nearest_transmission_line_voltage_basis": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:43.148688+00:00",
+              "fetched": "2026-08-05T10:36:22.143741+00:00",
               "confidence": null
             },
             "nearest_transmission_line_voltage_class": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:43.148688+00:00",
+              "fetched": "2026-08-05T10:36:22.143741+00:00",
               "confidence": null
             },
             "nearest_transmission_line_voltage_kv": {
               "source": "EIA_POWER",
-              "fetched": "2026-08-05T10:10:43.148688+00:00",
+              "fetched": "2026-08-05T10:36:22.143741+00:00",
               "confidence": null
             },
             "geocode": {
               "source": "caller-supplied coordinate",
-              "fetched": "2026-08-05T10:10:40+00:00",
+              "fetched": "2026-08-05T10:36:20+00:00",
               "confidence": null
             }
           }
         },
-        "delta_statement": "Move 37 miles W to New Castle County, DE. Save ~24 months.",
+        "delta_statement": "Move 25 miles SW to Kent County, DE. Save ~24 months.",
         "crossed_county_line": true,
         "crossed_state_line": true,
-        "credits_spent": 80,
+        "credits_spent": 120,
         "notes": [
           "DE is not one of the states modelled in detail, so its timeline is the federal default and its state-specific triggers (toxics programs, transport region, EJ statutes) are not evaluated. Some of the apparent gain may be that gap rather than a real difference. Confirm with the state agency before optioning land on it.",
           "Same pathway category, faster timeline. That is a scheduling improvement, not a regulatory one \u2014 the same review still has to happen."
@@ -2145,30 +1991,293 @@
       },
       "conclusion": null,
       "citation": null,
-      "credits": 80,
-      "elapsed_s": 277.41,
-      "at": "2026-08-05T10:11:44+00:00"
+      "credits": 120,
+      "elapsed_s": 271.78,
+      "at": "2026-08-05T10:38:43+00:00"
     },
     {
-      "index": 51,
+      "index": 47,
       "stage": "stage 4 \u2014 regulatory",
       "kind": "tool",
       "title": "request_field",
-      "why": "Great-circle distance in km from a site coordinate to the nearest federal Class I area boundary (40 CFR 81 Subpart D). Example location: 39.4862,-75.0257 (Cumberland County, NJ) \u2014 expected nearest is Brigantine Wilderness, Edwin B. Forsythe NWR, roughly 50-60 km east. Pure geometry over published federal boundaries. Needed because a PSD major source within 100 km of a Class I area triggers Federal Land Manager notification, Class I increment consumption analysis and AQRV/visibility modelling, which adds months to the schedule. The pathway engine currently reports class_i_aqrv as \"clear\" for this site with no distance behind it, which is an unverified clear.",
+      "why": "Boolean plus supporting criteria for whether a census block group is on NJ DEP's published Overburdened Community (OBC) list under N.J.S.A. 13:1D-157, with the qualifying criterion (low-income / minority population / limited English proficiency) and the DEP list vintage. This is a published, mapped geographic boundary layer keyed to 2020 census block groups \u2014 pure geometry over a public state boundary file.",
       "tool": "request_field",
       "tool_input": {
-        "field_name": "class_i_area_distance_km",
-        "description": "Great-circle distance in km from a site coordinate to the nearest federal Class I area boundary (40 CFR 81 Subpart D). Example location: 39.4862,-75.0257 (Cumberland County, NJ) \u2014 expected nearest is Brigantine Wilderness, Edwin B. Forsythe NWR, roughly 50-60 km east. Pure geometry over published federal boundaries. Needed because a PSD major source within 100 km of a Class I area triggers Federal Land Manager notification, Class I increment consumption analysis and AQRV/visibility modelling, which adds months to the schedule. The pathway engine currently reports class_i_aqrv as \"clear\" for this site with no distance behind it, which is an unverified clear."
+        "field_name": "nj_overburdened_community_designation",
+        "description": "Boolean plus supporting criteria for whether a census block group is on NJ DEP's published Overburdened Community (OBC) list under N.J.S.A. 13:1D-157, with the qualifying criterion (low-income / minority population / limited English proficiency) and the DEP list vintage. This is a published, mapped geographic boundary layer keyed to 2020 census block groups \u2014 pure geometry over a public state boundary file.",
+        "use_case": "This is the single fact that decides whether NJ DEP can deny the permit outright regardless of whether the dispersion modeling passes. If the block group is designated OBC, a major source faces the EJ review under N.J.S.A. 13:1D-157 with discretionary denial authority and a mandatory public hearing in the community \u2014 the Nebius failure mode. If it is not designated, the project is a long but ordinary major NNSR permit. The demographics preset returned POI and market fields but no EJ indicator, so this is currently unanswerable at the site.",
+        "decision_threshold": "Designated OBC = discretionary denial risk becomes the governing risk, ahead of timeline. Not designated = timeline governs.",
+        "example_locations": [
+          {
+            "lat": 39.4862,
+            "lng": -75.0257,
+            "note": "Subject site, block group 340110411012, City of Vineland, Cumberland County NJ. Inside a Census urban area, 476 POIs within 1 km, school 344 m, hospital 178 m. Vineland is widely understood to contain OBC-designated block groups.",
+            "claimed_value": "believed designated, unverified"
+          }
+        ]
       },
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 277.58,
-      "at": "2026-08-05T10:11:44+00:00"
+      "elapsed_s": 271.78,
+      "at": "2026-08-05T10:38:43+00:00"
     },
     {
-      "index": 52,
+      "index": 48,
+      "stage": "stage 4 \u2014 regulatory",
+      "kind": "observation",
+      "title": "request_field returned",
+      "why": null,
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "field_name": "nj_overburdened_community_designation",
+        "description": "Boolean plus supporting criteria for whether a census block group is on NJ DEP's published Overburdened Community (OBC) list under N.J.S.A. 13:1D-157, with the qualifying criterion (low-income / minority population / limited English proficiency) and the DEP list vintage. This is a published, mapped geographic boundary layer keyed to 2020 census block groups \u2014 pure geometry over a public state boundary file.",
+        "requested_at": "2026-08-05T10:38:43+00:00",
+        "example_locations": [
+          {
+            "lat": 39.4862,
+            "lng": -75.0257,
+            "note": "Subject site, block group 340110411012, City of Vineland, Cumberland County NJ. Inside a Census urban area, 476 POIs within 1 km, school 344 m, hospital 178 m. Vineland is widely understood to contain OBC-designated block groups.",
+            "claimed_value": "believed designated, unverified"
+          }
+        ],
+        "supported": true,
+        "response": {
+          "outcome": "queued",
+          "requested": "nj_overburdened_community_designation",
+          "http_status": 201,
+          "request_id": "fr_826bce473c1a46e393471a2902413323",
+          "status": "queued",
+          "waiting_on": null,
+          "field_id": "boolean_indicator_for_whether_a_census_block_group_is_on_nj_",
+          "ask": "Boolean indicator for whether a census block group is on NJ DEP's published Overburdened Community (OBC) list under N.J.S.A. 13:1D-157",
+          "reason": "No candidate field indexes NJ DEP OBC designations or regulatory EJ thresholds; census block group attributes (tract_population) exist, but the OBC list itself is a state administrative boundary determination outside the candidate set.",
+          "description": null,
+          "units": null,
+          "sample": null,
+          "sample_omitted_reason": null,
+          "resume": {
+            "url": "https://api.mireye.com/v1/fetch",
+            "body": {
+              "lat": 39.4862,
+              "lng": -75.0257,
+              "fields": [
+                "boolean_indicator_for_whether_a_census_block_group_is_on_nj_"
+              ]
+            },
+            "method": "POST"
+          },
+          "confirm_required": false,
+          "candidates": null,
+          "rejection_code": null,
+          "routing_hint": null,
+          "queue_position": 4,
+          "estimated_ready_at": "2026-08-06T10:38:49.332295+00:00",
+          "resolved_locations": [
+            {
+              "index": 0,
+              "claimed_value": "believed designated, unverified",
+              "resolved_location": {
+                "lat": 39.4862,
+                "lng": -75.0257,
+                "source": "coordinate"
+              }
+            }
+          ],
+          "dispositions": [
+            {
+              "ask": "Boolean indicator for whether a census block group is on NJ DEP's published Overburdened Community (OBC) list under N.J.S.A. 13:1D-157",
+              "reason": "No candidate field indexes NJ DEP OBC designations or regulatory EJ thresholds; census block group attributes (tract_population) exist, but the OBC list itself is a state administrative boundary determination outside the candidate set.",
+              "resume": {
+                "url": "https://api.mireye.com/v1/fetch",
+                "body": {
+                  "lat": 39.4862,
+                  "lng": -75.0257,
+                  "fields": [
+                    "boolean_indicator_for_whether_a_census_block_group_is_on_nj_"
+                  ]
+                },
+                "method": "POST"
+              },
+              "field_id": "boolean_indicator_for_whether_a_census_block_group_is_on_nj_",
+              "disposition": "accepted_new",
+              "feasibility_class": "source_uncertain",
+              "estimated_ready_at": "2026-08-06T10:38:49.332295+00:00"
+            },
+            {
+              "ask": "The qualifying criterion (low-income / minority population / limited English proficiency) for OBC designation",
+              "reason": "While demographic proxies exist (county_population, county_median_household_income), the OBC qualifying criterion is a state administrative judgment that applies to block groups, not a measured field in the candidate set.",
+              "resume": {
+                "url": "https://api.mireye.com/v1/fetch",
+                "body": {
+                  "lat": 39.4862,
+                  "lng": -75.0257,
+                  "fields": [
+                    "the_qualifying_criterion_low_income_minority_population_limi"
+                  ]
+                },
+                "method": "POST"
+              },
+              "field_id": "the_qualifying_criterion_low_income_minority_population_limi",
+              "disposition": "accepted_new",
+              "feasibility_class": "source_uncertain",
+              "estimated_ready_at": "2026-08-06T10:38:49.332295+00:00"
+            },
+            {
+              "ask": "The DEP list vintage (publication date or version of the OBC designation)",
+              "reason": "The candidate set contains no field for regulatory list vintages or administrative versions of EJ designations.",
+              "resume": {
+                "url": "https://api.mireye.com/v1/fetch",
+                "body": {
+                  "lat": 39.4862,
+                  "lng": -75.0257,
+                  "fields": [
+                    "the_dep_list_vintage_publication_date_or_version_of_the_obc_"
+                  ]
+                },
+                "method": "POST"
+              },
+              "field_id": "the_dep_list_vintage_publication_date_or_version_of_the_obc_",
+              "disposition": "accepted_new",
+              "feasibility_class": "source_uncertain",
+              "estimated_ready_at": "2026-08-06T10:38:49.332295+00:00"
+            }
+          ],
+          "raw": {
+            "request_id": "fr_826bce473c1a46e393471a2902413323",
+            "status": "queued",
+            "waiting_on": null,
+            "phase": null,
+            "queue_position": 4,
+            "estimated_ready_at": "2026-08-06T10:38:49.332295+00:00",
+            "resolved_locations": [
+              {
+                "index": 0,
+                "claimed_value": "believed designated, unverified",
+                "resolved_location": {
+                  "lat": 39.4862,
+                  "lng": -75.0257,
+                  "source": "coordinate"
+                }
+              }
+            ],
+            "disposition": [
+              {
+                "ask": "Boolean indicator for whether a census block group is on NJ DEP's published Overburdened Community (OBC) list under N.J.S.A. 13:1D-157",
+                "reason": "No candidate field indexes NJ DEP OBC designations or regulatory EJ thresholds; census block group attributes (tract_population) exist, but the OBC list itself is a state administrative boundary determination outside the candidate set.",
+                "resume": {
+                  "url": "https://api.mireye.com/v1/fetch",
+                  "body": {
+                    "lat": 39.4862,
+                    "lng": -75.0257,
+                    "fields": [
+                      "boolean_indicator_for_whether_a_census_block_group_is_on_nj_"
+                    ]
+                  },
+                  "method": "POST"
+                },
+                "field_id": "boolean_indicator_for_whether_a_census_block_group_is_on_nj_",
+                "disposition": "accepted_new",
+                "feasibility_class": "source_uncertain",
+                "estimated_ready_at": "2026-08-06T10:38:49.332295+00:00"
+              },
+              {
+                "ask": "The qualifying criterion (low-income / minority population / limited English proficiency) for OBC designation",
+                "reason": "While demographic proxies exist (county_population, county_median_household_income), the OBC qualifying criterion is a state administrative judgment that applies to block groups, not a measured field in the candidate set.",
+                "resume": {
+                  "url": "https://api.mireye.com/v1/fetch",
+                  "body": {
+                    "lat": 39.4862,
+                    "lng": -75.0257,
+                    "fields": [
+                      "the_qualifying_criterion_low_income_minority_population_limi"
+                    ]
+                  },
+                  "method": "POST"
+                },
+                "field_id": "the_qualifying_criterion_low_income_minority_population_limi",
+                "disposition": "accepted_new",
+                "feasibility_class": "source_uncertain",
+                "estimated_ready_at": "2026-08-06T10:38:49.332295+00:00"
+              },
+              {
+                "ask": "The DEP list vintage (publication date or version of the OBC designation)",
+                "reason": "The candidate set contains no field for regulatory list vintages or administrative versions of EJ designations.",
+                "resume": {
+                  "url": "https://api.mireye.com/v1/fetch",
+                  "body": {
+                    "lat": 39.4862,
+                    "lng": -75.0257,
+                    "fields": [
+                      "the_dep_list_vintage_publication_date_or_version_of_the_obc_"
+                    ]
+                  },
+                  "method": "POST"
+                },
+                "field_id": "the_dep_list_vintage_publication_date_or_version_of_the_obc_",
+                "disposition": "accepted_new",
+                "feasibility_class": "source_uncertain",
+                "estimated_ready_at": "2026-08-06T10:38:49.332295+00:00"
+              }
+            ],
+            "resume": {
+              "url": "https://api.mireye.com/v1/fetch",
+              "body": {
+                "lat": 39.4862,
+                "lng": -75.0257,
+                "fields": [
+                  "boolean_indicator_for_whether_a_census_block_group_is_on_nj_"
+                ]
+              },
+              "method": "POST"
+            },
+            "context_blob": null,
+            "created_at": "2026-08-05T10:38:44.107723+00:00",
+            "updated_at": "2026-08-05T10:38:49.347755+00:00"
+          }
+        },
+        "outcome": "queued",
+        "request_id": "fr_826bce473c1a46e393471a2902413323",
+        "status": "queued"
+      },
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 277.3,
+      "at": "2026-08-05T10:38:49+00:00"
+    },
+    {
+      "index": 49,
+      "stage": "stage 4 \u2014 regulatory",
+      "kind": "tool",
+      "title": "request_field",
+      "why": "Great-circle distance in kilometers from the site to the nearest federal Class I area, with the area name and managing agency. Class I areas are a fixed, published federal boundary set (40 CFR 81 Subpart D) \u2014 this is pure geometry over public federal polygons, not a modeled value.",
+      "tool": "request_field",
+      "tool_input": {
+        "field_name": "class_i_area_distance_km",
+        "description": "Great-circle distance in kilometers from the site to the nearest federal Class I area, with the area name and managing agency. Class I areas are a fixed, published federal boundary set (40 CFR 81 Subpart D) \u2014 this is pure geometry over public federal polygons, not a modeled value.",
+        "use_case": "Drives whether FLM notification under 40 CFR 52.21(p) and an AQRV analysis (visibility, deposition, CALPUFF long-range transport) are required, which adds 6-12 months to a PSD/NNSR review. The pathway engine reported class_i_aqrv as a CLEARED trigger for this site while the regulatory context simultaneously reported class_i_area_distance as not indexed by any wired source. That is a clear returned without data, and for this site it is probably wrong: Brigantine Wilderness (Edwin B. Forsythe NWR, USFWS) is a Class I area on the New Jersey coast and appears to be well inside 100 km of Vineland.",
+        "decision_threshold": "Within 100 km triggers FLM notification and AQRV review for a major source; inside ~50 km it is effectively certain and drives stack height and possibly visibility-based control decisions.",
+        "example_locations": [
+          {
+            "lat": 39.4862,
+            "lng": -75.0257,
+            "note": "Subject site, Vineland, Cumberland County NJ. Major NNSR source at 5,887 tpy NOx; engine cleared the Class I trigger with no underlying data source.",
+            "claimed_value": "approximately 55-70 km to Brigantine Wilderness, unverified"
+          }
+        ]
+      },
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 277.31,
+      "at": "2026-08-05T10:38:49+00:00"
+    },
+    {
+      "index": 50,
       "stage": "stage 4 \u2014 regulatory",
       "kind": "observation",
       "title": "request_field returned",
@@ -2177,65 +2286,748 @@
       "tool_input": null,
       "result": {
         "field_name": "class_i_area_distance_km",
-        "description": "Great-circle distance in km from a site coordinate to the nearest federal Class I area boundary (40 CFR 81 Subpart D). Example location: 39.4862,-75.0257 (Cumberland County, NJ) \u2014 expected nearest is Brigantine Wilderness, Edwin B. Forsythe NWR, roughly 50-60 km east. Pure geometry over published federal boundaries. Needed because a PSD major source within 100 km of a Class I area triggers Federal Land Manager notification, Class I increment consumption analysis and AQRV/visibility modelling, which adds months to the schedule. The pathway engine currently reports class_i_aqrv as \"clear\" for this site with no distance behind it, which is an unverified clear.",
-        "requested_at": "2026-08-05T10:11:44+00:00",
-        "supported": false,
-        "outcome": "error",
-        "note": "field_request needs at least one example location \u2014 it is what seeds the build's eval cases and where the field is verified on prod"
+        "description": "Great-circle distance in kilometers from the site to the nearest federal Class I area, with the area name and managing agency. Class I areas are a fixed, published federal boundary set (40 CFR 81 Subpart D) \u2014 this is pure geometry over public federal polygons, not a modeled value.",
+        "requested_at": "2026-08-05T10:38:49+00:00",
+        "example_locations": [
+          {
+            "lat": 39.4862,
+            "lng": -75.0257,
+            "note": "Subject site, Vineland, Cumberland County NJ. Major NNSR source at 5,887 tpy NOx; engine cleared the Class I trigger with no underlying data source.",
+            "claimed_value": "approximately 55-70 km to Brigantine Wilderness, unverified"
+          }
+        ],
+        "supported": true,
+        "response": {
+          "outcome": "near_miss",
+          "requested": "class_i_area_distance_km",
+          "http_status": 201,
+          "request_id": "fr_1f7a0b2cc95d4c9cb669ff4e57082535",
+          "status": "awaiting_confirm",
+          "waiting_on": "requester",
+          "field_id": "nearest_class_i_area_distance_m",
+          "ask": "Great-circle distance in kilometers from the site to the nearest federal Class I area",
+          "reason": "Field provides exact geometry over federal Class I boundaries but in meters, not kilometers; simple unit conversion (divide by 1000) answers the ask.",
+          "description": "Geodesic distance to the nearest EPA mandatory Class I federal area (national park / wilderness > 6000 acres); 0 when the point lies inside one.",
+          "units": "meters",
+          "sample": {
+            "unit": "meters",
+            "value": 50039.43863553498,
+            "source": "EPA_CLASS_I_AREAS",
+            "fetched_at": "2026-08-05T10:38:53.044791+00:00",
+            "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+          },
+          "sample_omitted_reason": null,
+          "resume": {
+            "url": "https://api.mireye.com/v1/fetch",
+            "body": {
+              "lat": 39.4862,
+              "lng": -75.0257,
+              "fields": [
+                "nearest_class_i_area_distance_m"
+              ]
+            },
+            "method": "POST"
+          },
+          "confirm_required": true,
+          "candidates": null,
+          "rejection_code": null,
+          "routing_hint": null,
+          "queue_position": null,
+          "estimated_ready_at": null,
+          "resolved_locations": [
+            {
+              "index": 0,
+              "claimed_value": "approximately 55-70 km to Brigantine Wilderness, unverified",
+              "resolved_location": {
+                "lat": 39.4862,
+                "lng": -75.0257,
+                "source": "coordinate"
+              }
+            }
+          ],
+          "dispositions": [
+            {
+              "ask": "Great-circle distance in kilometers from the site to the nearest federal Class I area",
+              "units": "meters",
+              "reason": "Field provides exact geometry over federal Class I boundaries but in meters, not kilometers; simple unit conversion (divide by 1000) answers the ask.",
+              "resume": {
+                "url": "https://api.mireye.com/v1/fetch",
+                "body": {
+                  "lat": 39.4862,
+                  "lng": -75.0257,
+                  "fields": [
+                    "nearest_class_i_area_distance_m"
+                  ]
+                },
+                "method": "POST"
+              },
+              "sample": {
+                "unit": "meters",
+                "value": 50039.43863553498,
+                "source": "EPA_CLASS_I_AREAS",
+                "fetched_at": "2026-08-05T10:38:53.044791+00:00",
+                "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+              },
+              "field_id": "nearest_class_i_area_distance_m",
+              "description": "Geodesic distance to the nearest EPA mandatory Class I federal area (national park / wilderness > 6000 acres); 0 when the point lies inside one.",
+              "disposition": "near_miss_confirm",
+              "confirm_required": true,
+              "interpretation_hints": "A BTM gas plant clearing PSD major-source thresholds near a Class I area triggers mandatory Federal-Land-Manager consultation + visibility / air-quality-related-values modeling (customary screening ~300 km) \u2014 a lead-time and cost escalator distinct from nonattainment NNSR. Large or null far from any Class I area."
+            },
+            {
+              "ask": "Name of the nearest federal Class I area",
+              "units": null,
+              "reason": "Directly provides the name of the nearest Class I federal area.",
+              "resume": {
+                "url": "https://api.mireye.com/v1/fetch",
+                "body": {
+                  "lat": 39.4862,
+                  "lng": -75.0257,
+                  "fields": [
+                    "nearest_class_i_area_name"
+                  ]
+                },
+                "method": "POST"
+              },
+              "sample": {
+                "unit": null,
+                "value": "Brigantine Wilderness",
+                "source": "EPA_CLASS_I_AREAS",
+                "fetched_at": "2026-08-05T10:38:53.044710+00:00",
+                "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+              },
+              "field_id": "nearest_class_i_area_name",
+              "description": "Name of the nearest Class I federal area (e.g. \"Yosemite NP\", \"Sequoia NP\").",
+              "disposition": "matched_existing",
+              "interpretation_hints": "The specific national park / wilderness whose Federal Land Manager would be consulted in PSD permitting. Null when no area is within the search radius."
+            },
+            {
+              "ask": "Managing agency of the nearest federal Class I area",
+              "units": null,
+              "reason": "Directly provides the Federal Land Manager (NPS, USDA-FS, USFWS, or BIA) governing the nearest Class I area.",
+              "resume": {
+                "url": "https://api.mireye.com/v1/fetch",
+                "body": {
+                  "lat": 39.4862,
+                  "lng": -75.0257,
+                  "fields": [
+                    "nearest_class_i_area_agency"
+                  ]
+                },
+                "method": "POST"
+              },
+              "sample": {
+                "unit": null,
+                "value": "USDI-FWS",
+                "source": "EPA_CLASS_I_AREAS",
+                "fetched_at": "2026-08-05T10:38:53.044780+00:00",
+                "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+              },
+              "field_id": "nearest_class_i_area_agency",
+              "description": "Managing federal agency of the nearest Class I area (USDI-NPS / USDA-FS / USDI-FWS / BIA).",
+              "disposition": "matched_existing",
+              "interpretation_hints": "Identifies which Federal Land Manager (National Park Service, Forest Service, Fish & Wildlife Service, or Bureau of Indian Affairs) governs the consultation. Null when no area is within the search radius."
+            }
+          ],
+          "raw": {
+            "request_id": "fr_1f7a0b2cc95d4c9cb669ff4e57082535",
+            "status": "awaiting_confirm",
+            "waiting_on": "requester",
+            "phase": null,
+            "queue_position": null,
+            "estimated_ready_at": null,
+            "resolved_locations": [
+              {
+                "index": 0,
+                "claimed_value": "approximately 55-70 km to Brigantine Wilderness, unverified",
+                "resolved_location": {
+                  "lat": 39.4862,
+                  "lng": -75.0257,
+                  "source": "coordinate"
+                }
+              }
+            ],
+            "disposition": [
+              {
+                "ask": "Great-circle distance in kilometers from the site to the nearest federal Class I area",
+                "units": "meters",
+                "reason": "Field provides exact geometry over federal Class I boundaries but in meters, not kilometers; simple unit conversion (divide by 1000) answers the ask.",
+                "resume": {
+                  "url": "https://api.mireye.com/v1/fetch",
+                  "body": {
+                    "lat": 39.4862,
+                    "lng": -75.0257,
+                    "fields": [
+                      "nearest_class_i_area_distance_m"
+                    ]
+                  },
+                  "method": "POST"
+                },
+                "sample": {
+                  "unit": "meters",
+                  "value": 50039.43863553498,
+                  "source": "EPA_CLASS_I_AREAS",
+                  "fetched_at": "2026-08-05T10:38:53.044791+00:00",
+                  "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+                },
+                "field_id": "nearest_class_i_area_distance_m",
+                "description": "Geodesic distance to the nearest EPA mandatory Class I federal area (national park / wilderness > 6000 acres); 0 when the point lies inside one.",
+                "disposition": "near_miss_confirm",
+                "confirm_required": true,
+                "interpretation_hints": "A BTM gas plant clearing PSD major-source thresholds near a Class I area triggers mandatory Federal-Land-Manager consultation + visibility / air-quality-related-values modeling (customary screening ~300 km) \u2014 a lead-time and cost escalator distinct from nonattainment NNSR. Large or null far from any Class I area."
+              },
+              {
+                "ask": "Name of the nearest federal Class I area",
+                "units": null,
+                "reason": "Directly provides the name of the nearest Class I federal area.",
+                "resume": {
+                  "url": "https://api.mireye.com/v1/fetch",
+                  "body": {
+                    "lat": 39.4862,
+                    "lng": -75.0257,
+                    "fields": [
+                      "nearest_class_i_area_name"
+                    ]
+                  },
+                  "method": "POST"
+                },
+                "sample": {
+                  "unit": null,
+                  "value": "Brigantine Wilderness",
+                  "source": "EPA_CLASS_I_AREAS",
+                  "fetched_at": "2026-08-05T10:38:53.044710+00:00",
+                  "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+                },
+                "field_id": "nearest_class_i_area_name",
+                "description": "Name of the nearest Class I federal area (e.g. \"Yosemite NP\", \"Sequoia NP\").",
+                "disposition": "matched_existing",
+                "interpretation_hints": "The specific national park / wilderness whose Federal Land Manager would be consulted in PSD permitting. Null when no area is within the search radius."
+              },
+              {
+                "ask": "Managing agency of the nearest federal Class I area",
+                "units": null,
+                "reason": "Directly provides the Federal Land Manager (NPS, USDA-FS, USFWS, or BIA) governing the nearest Class I area.",
+                "resume": {
+                  "url": "https://api.mireye.com/v1/fetch",
+                  "body": {
+                    "lat": 39.4862,
+                    "lng": -75.0257,
+                    "fields": [
+                      "nearest_class_i_area_agency"
+                    ]
+                  },
+                  "method": "POST"
+                },
+                "sample": {
+                  "unit": null,
+                  "value": "USDI-FWS",
+                  "source": "EPA_CLASS_I_AREAS",
+                  "fetched_at": "2026-08-05T10:38:53.044780+00:00",
+                  "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+                },
+                "field_id": "nearest_class_i_area_agency",
+                "description": "Managing federal agency of the nearest Class I area (USDI-NPS / USDA-FS / USDI-FWS / BIA).",
+                "disposition": "matched_existing",
+                "interpretation_hints": "Identifies which Federal Land Manager (National Park Service, Forest Service, Fish & Wildlife Service, or Bureau of Indian Affairs) governs the consultation. Null when no area is within the search radius."
+              }
+            ],
+            "resume": {
+              "url": "https://api.mireye.com/v1/fetch",
+              "body": {
+                "lat": 39.4862,
+                "lng": -75.0257,
+                "fields": [
+                  "nearest_class_i_area_distance_m"
+                ]
+              },
+              "method": "POST"
+            },
+            "context_blob": null,
+            "created_at": "2026-08-05T10:38:49.891685+00:00",
+            "updated_at": "2026-08-05T10:38:53.071959+00:00"
+          }
+        },
+        "outcome": "near_miss",
+        "request_id": "fr_1f7a0b2cc95d4c9cb669ff4e57082535",
+        "status": "awaiting_confirm"
       },
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 277.58,
-      "at": "2026-08-05T10:11:44+00:00"
+      "elapsed_s": 280.99,
+      "at": "2026-08-05T10:38:53+00:00"
     },
     {
-      "index": 53,
+      "index": 51,
       "stage": "loop",
       "kind": "thought",
       "title": "Reasoning",
-      "why": "The field request failed again despite providing an example location\u2014it seems to need a structured parameter that doesn't exist, which means Class I area distance is genuinely unobtainable due to a tool limitation. Looking at alternatives, the best option is New Castle, Delaware with about 42 months, still well short of the 16-month target and within the major NNSR constraint. I've explored 13 sites so far and nothing within 120 km escapes the OTR requirement.\n\nNow I'm compiling the key findings: the origin site faces 66 months likely under major NNSR versus the 16-month target, while the best alternate still hits 42 months. A fuel cell at the current parcel drops to 21.6 months under minor NSR\u2014the only real pathway shift\u2014but still exceeds the target. Fuel cell at an alternate site in Delaware or Pennsylvania could potentially reach 12-14 months by clearing both EJ and state toxics, though that's speculative since I haven't tested it. However, there's a critical constraint: any gas-fired configuration, including fuel cells running on natural gas, triggers a 34 km lateral distance rule from Columbia Gas Trans, and the New Castle and Delaware County candidates have pipelines at 1.7 km and 0.9 km respectively. The site itself is essentially downtown Vineland with a school 343 meters away, a hospital at 178 meters, and 476 points of interest within 1 km\u2014a densely populated urban area that compounds the EJ concerns.\n\nI'm also flagging several data gaps: the demographics and terrai",
+      "why": "I'm looking at the Brigantine Wilderness Class I area data from the EPA, which shows it's only 50 kilometers away \u2014 well within the 100 kilometer notification threshold for Federal Land Managers. This means the engine's assessment marking it as \"clear\" is incorrect, and it actually requires a full air quality and visibility analysis that could add six to twelve months to the process.\n\nThe FLM here is the U.S. Fish and Wildlife Service. I've been exploring alternate sites, and Kent County, Delaware looks promising at around 42 months, saving about 24 months compared to the current location. It clears the environmental justice denial authority, nonattainment designation, and state toxics issues, but it's still subject to major NSR because Delaware falls within the Ozone Transport Region with a 50 tpy NOx threshold. That's the real constraint \u2014 nothing within 120 kilometers of this region can escape major NSR for a gas turbine because the entire Mid-Atlantic OTR has that same 50 tpy NOx floor.\n\nA fuel cell at the current parcel would be minor NSR at 21.6 months, still missing the December 2027 deadline by about six months. A fuel cell at Kent, Delaware would be even better, clearing the EJ and state toxics issues and probably coming in at 12-14 months. That's the key insight \u2014 fuel cell is the only real lever here. I should test that configuration at Kent, Delaware, which means I need to resolve the site first and then run the test. That's two more API calls, but it's worth it f",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 300.57,
-      "at": "2026-08-05T10:12:07+00:00"
+      "elapsed_s": 296.45,
+      "at": "2026-08-05T10:39:08+00:00"
     },
     {
-      "index": 54,
+      "index": 52,
       "stage": "loop",
       "kind": "reasoning",
       "title": "Model states its plan",
-      "why": "I've spent 13 tool calls and I have what I need. Two field requests failed on a tool defect, which I'm reporting as a gap rather than papering over.\n\n---\n\n## Closing assessment\n\n**The pathway is major nonattainment NSR. Likely 66 months, range 41 to 104. The announced energization is 16 months away. This project does not switch on in 2027 as configured.**\n\n**What decides it \u2014 three things.**\n\nFirst, the county designation. Cumberland County is in **serious** nonattainment for the 2015 8-hour ozone NAAQS, Philadelphia-Atlantic City PA-NJ area (EPA Green Book, 40 CFR 81, fetched 2026-07-31). Serious classification sets the NOx major-source threshold at 50 tpy, not 250. New Jersey is also entirely inside the Ozone Transport Region under CAA 184, so that 50 tpy applies statewide regardless of what any local monitor says. There is no version of a 400 MW gas turbine that gets under 50 tpy NOx. Uncontrolled PTE is 5,887 tpy at 8760 hours. Synthetic minor is arithmetically real but commercially dead: it needs a 67 hr/yr cap, which is one percent availability. That is not a data center plant.\n\nSecond, the offsets. At 1.2:1 you must buy 7,064 tons of verified NOx reductions from existing sources inside the nonattainment area (CAA 173). LAER applies with no cost defense. This is the item I would underwrite first, because it is the one that can be simply unavailable at any price in a mature Northeast airshed.\n\nThird, and this is the one that can kill it outright rather than delay it \u2014 **",
+      "why": "Class I is the material correction: **Brigantine Wilderness, 50.0 km, USDI-FWS** (EPA_CLASS_I_AREAS, fetched 2026-08-05T10:38:53Z). The pathway engine listed `class_i_aqrv` as *cleared* \u2014 that clear was returned with no underlying data source, and it is wrong. At 50 km, FLM notification and AQRV/visibility modelling are effectively certain.\n\nThe alternate search found nothing that escapes major NNSR \u2014 because the entire Mid-Atlantic OTR carries the same 50 tpy NOx threshold. Best candidate is Kent County, DE at 42 months. Let me test the one config that did move the pathway, at that better jurisdiction.",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 329.62,
-      "at": "2026-08-05T10:12:36+00:00"
+      "elapsed_s": 296.45,
+      "at": "2026-08-05T10:39:08+00:00"
+    },
+    {
+      "index": 53,
+      "stage": "stage 2 \u2014 resolve",
+      "kind": "tool",
+      "title": "resolve_site",
+      "why": null,
+      "tool": "resolve_site",
+      "tool_input": {
+        "address": "39.214843,-75.628841"
+      },
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 2,
+      "elapsed_s": 296.46,
+      "at": "2026-08-05T10:39:08+00:00"
+    },
+    {
+      "index": 54,
+      "stage": "stage 2 \u2014 resolve",
+      "kind": "observation",
+      "title": "resolve_site returned",
+      "why": null,
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "resolved": true,
+        "formatted_address": null,
+        "latitude": 39.214843,
+        "longitude": -75.628841,
+        "county": "Kent",
+        "state": "DE",
+        "county_fips": "10001",
+        "parcel_id": null,
+        "confidence": null,
+        "source": "caller-supplied coordinate",
+        "fetched": "2026-08-05T10:39:08+00:00",
+        "permitting_agency": "state agency (not individually modelled)",
+        "agency_note": "This state is not one of the eight modelled in detail. Timeline is the federal default with no state-specific adjustment. Treat the range as wider than shown.",
+        "lookup_facts": [
+          {
+            "key": "county_fips",
+            "value": "10001",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county",
+            "value": "Kent County",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "state",
+            "value": "Delaware",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "state_fips",
+            "value": "10",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "tract_geoid",
+            "value": "10001040100",
+            "unit": null,
+            "source": "US Census Geocoder (2020 vintage)",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "block_group_geoid",
+            "value": "100010401002",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "block_geoid",
+            "value": "100010401002002",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "congressional_district",
+            "value": "DE-00",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "cbsa_name",
+            "value": "Dover, DE Metro Area",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "cbsa_code",
+            "value": "20100",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "fema_flood_zone",
+            "value": "X",
+            "unit": null,
+            "source": "FEMA NFHL",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "within_floodplain",
+            "value": false,
+            "unit": null,
+            "source": "FEMA NFHL",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "coastal_high_hazard",
+            "value": false,
+            "unit": null,
+            "source": "FEMA NFHL",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "in_opportunity_zone",
+            "value": false,
+            "unit": null,
+            "source": "US Treasury Qualified Opportunity Zones",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "timezone",
+            "value": "America/New_York",
+            "unit": null,
+            "source": "IANA tz database",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "elevation_m",
+            "value": 15.475613594055176,
+            "unit": "meters",
+            "source": "USGS 3DEP/EPQS",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.population",
+            "value": 194786,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.population_growth_1yr_pct",
+            "value": 0.9903,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.net_domestic_migration",
+            "value": 1393,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.building_permits_total_annual",
+            "value": 1261,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.building_permits_sf_annual",
+            "value": 1030,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.building_permits_yoy_pct",
+            "value": 4.9958,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.hpi_yoy_pct",
+            "value": 5.58,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.employment_total",
+            "value": 70834,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.employment_yoy_pct",
+            "value": -0.3335,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.median_household_income_usd",
+            "value": 72872,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T10:39:08+00:00",
+            "confidence": null
+          }
+        ]
+      },
+      "conclusion": null,
+      "citation": null,
+      "credits": 2,
+      "elapsed_s": 296.46,
+      "at": "2026-08-05T10:39:08+00:00"
     },
     {
       "index": 55,
       "stage": "loop",
-      "kind": "note",
-      "title": "Loop closed",
-      "why": "14 turns, $0.638",
+      "kind": "thought",
+      "title": "Reasoning",
+      "why": "Delaware isn't modeled individually, so the 42-month timeline is based on the federal default with a broader range. Next, I need to test the fuel cell system at the Kent facility in Delaware.",
       "tool": null,
       "tool_input": null,
       "result": null,
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 329.65,
-      "at": "2026-08-05T10:12:36+00:00"
+      "elapsed_s": 301.3,
+      "at": "2026-08-05T10:39:13+00:00"
     },
     {
       "index": 56,
+      "stage": "stage 6 \u2014 act",
+      "kind": "tool",
+      "title": "test_config",
+      "why": null,
+      "tool": "test_config",
+      "tool_input": {
+        "label": "Fuel cell 400 MW at Kent County DE",
+        "config_changes": {
+          "prime_mover": "fuel_cell"
+        }
+      },
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 301.32,
+      "at": "2026-08-05T10:39:13+00:00"
+    },
+    {
+      "index": 57,
+      "stage": "stage 6 \u2014 act",
+      "kind": "observation",
+      "title": "test_config returned",
+      "why": null,
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "feasible": true,
+        "label": "Fuel cell 400 MW at Kent County DE",
+        "config": "400 MW fuel_cell on natural_gas (uncontrolled), no enforceable hour cap (PTE at 8760)",
+        "emissions": {
+          "config": "400 MW fuel_cell on natural_gas (uncontrolled), no enforceable hour cap (PTE at 8760)",
+          "heat_input_mmbtu_hr": 2960.0,
+          "tons_per_year": {
+            "NOx": 3.2,
+            "CO": 9.1,
+            "PM10": 0.3,
+            "PM2.5": 0.3,
+            "SO2": 0.0,
+            "VOC": 0.3,
+            "CO2e": 1426128.0,
+            "HCHO": 0.0
+          },
+          "largest_criteria_pollutant": "CO",
+          "largest_criteria_tpy": 9.1,
+          "above_significant_emission_rate": {
+            "CO2e": 1426128.0
+          },
+          "hap_tpy": 0.0,
+          "basis": {
+            "emission_factors": "Vendor-certified solid oxide fuel cell rates (CARB 2007 distributed generation certification basis). Non-combustion, so criteria pollutants are trivial; CO2 is not.",
+            "heat_rate": "7,400 Btu/kWh HHV (module default for this prime mover)",
+            "heat_input": "400 MW x 1000 kW/MW x 7,400 Btu/kWh / 1e6 = 2,960 MMBtu/hr",
+            "hours_basis": "8,760 hr/yr \u2014 no enforceable cap, so PTE is computed at full-time operation regardless of intended dispatch",
+            "controls": "none",
+            "method": "PTE (tpy) = EF (lb/MMBtu) x heat input (MMBtu/hr) x hours (hr/yr) / 2000"
+          }
+        },
+        "pathway": {
+          "pathway": "minor_nsr",
+          "label": "Minor NSR construction permit",
+          "rank": 1,
+          "months_low": 5.5,
+          "months_likely": 9.0,
+          "months_high": 14.5,
+          "controlling_pollutant": "CO",
+          "controlling_tpy": 9.1,
+          "applicable_threshold_tpy": 250.0,
+          "source_category": {
+            "on_list_of_28": false,
+            "category": null,
+            "threshold_tpy": 250.0,
+            "reasoning": "Non-combustion prime mover, not a listed category.",
+            "citation": "40 CFR 52.21(b)(1)(i)(a); the 'List of 28' named source categories"
+          },
+          "triggers_fired": [
+            {
+              "name": "minor_nsr",
+              "detail": "Largest criteria pollutant CO at 9 tpy, under the 250 tpy major threshold with room to spare. Minor NSR construction permit.",
+              "citation": "40 CFR 51.160; state minor NSR program",
+              "months_added": 0.0
+            },
+            {
+              "name": "ozone_transport_region",
+              "detail": "DE is in the Ozone Transport Region. NOx is subject to nonattainment-style requirements statewide regardless of local monitor data, and the major source threshold for VOC/NOx is 50 tpy.",
+              "citation": "CAA 184; 40 CFR 51.165",
+              "months_added": 3.0
+            }
+          ],
+          "triggers_clear": [
+            "nonattainment_designation",
+            "class_i_aqrv",
+            "title_v"
+          ],
+          "bact_pollutants": {},
+          "offsets_required_tons": null,
+          "hard_stops": [],
+          "narrative": [
+            "Config: 400 MW fuel_cell on natural_gas (uncontrolled), no enforceable hour cap (PTE at 8760).",
+            "Heat input 2,960 MMBtu/hr. PTE: CO 9 tpy, NOx 3 tpy, PM10 0 tpy, PM2.5 0 tpy, VOC 0 tpy, SO2 0 tpy, HCHO 0 tpy",
+            "Source category: Non-combustion prime mover, not a listed category.",
+            "Minor NSR: CO at 9 tpy, under 250 tpy.",
+            "state agency (not individually modelled) timeline multiplier 1.00x, plus 3 months from 1 triggers. This state is not one of the eight modelled in detail. Timeline is the federal default with no state-specific adjustment. Treat the range as wider than shown."
+          ]
+        },
+        "delta": {
+          "pathway_from": "major_nonattainment_nsr",
+          "pathway_to": "minor_nsr",
+          "rank_change": 3,
+          "months_saved": 57.0,
+          "hard_stops_cleared": [],
+          "hard_stops_added": []
+        },
+        "availability": 1.0
+      },
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 301.32,
+      "at": "2026-08-05T10:39:13+00:00"
+    },
+    {
+      "index": 58,
+      "stage": "loop",
+      "kind": "thought",
+      "title": "Reasoning",
+      "why": "I've used 11 tool calls to analyze the scenarios. The announced NNSR shows a major miss of about 50 months against the 16-month target, and the best turbine control approach doesn't improve this timeline. The fuel cell options show more promise\u2014Vineland comes in at 21.6 months (still missing but closer), while Kent DE at 9 months actually meets the deadline, though there's a dependency issue to consider.\n\nSeveral data gaps emerged during the analysis: the OBC designation won't be ready until August 2026, the gas pipeline distance is missing for Vineland which is critical for a gas configuration, and the NJ county zoning file doesn't contain the relevant county. I also found a Class I correction needed for Brigantine where an engine was incorrectly cleared at 50 km distance.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 309.86,
+      "at": "2026-08-05T10:39:22+00:00"
+    },
+    {
+      "index": 59,
+      "stage": "loop",
+      "kind": "reasoning",
+      "title": "Model states its plan",
+      "why": "## Closing assessment\n\n**The pathway.** Major nonattainment NSR. As announced \u2014 400 MW simple-cycle turbine, uncontrolled, no hour cap \u2014 this is not a close call. NOx potential to emit is 5,887 tpy against a 50 tpy threshold. That is 118\u00d7 over. Formaldehyde at 13.1 tpy also crosses the 10 tpy single-HAP line, so Title V and major-source MACT come with it.\n\n**The timeline.** 66 months likely, 41 to 104 months range, under NJ DEP's 1.6\u00d7 multiplier. Announced energization is 16 months out. The gap is about four years, and it is not a scheduling problem you can compress.\n\n**The three things that actually decide it.**\n\nFirst, the 50 tpy threshold, and the fact that it does not move. New Jersey is entirely in the Ozone Transport Region, and Cumberland County is separately designated serious nonattainment for the 2015 ozone standard (Philadelphia-Atlantic City PA-NJ; EPA Green Book, fetched 2026-07-31). I tested the full LAER-grade control stack \u2014 dry low-NOx plus SCR plus oxidation catalyst. It cuts NOx from 5,887 to 182 tpy, a 97% reduction, and saves exactly zero months. Still major. Combined cycle at 6,400 Btu/kWh gets to 111 tpy and is also still major, and it makes one thing worse: adding the HRSG turns the plant into a fossil fuel-fired steam electric plant over 250 MMBtu/hr, which drops the PSD threshold from 250 to 100 tpy. No gas turbine at any size or control level clears this bar. Combustion is the problem, not the controls.\n\nSecond, the EJ denial authority. N.J.S.A. 13:",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 335.0,
+      "at": "2026-08-05T10:39:47+00:00"
+    },
+    {
+      "index": 60,
+      "stage": "loop",
+      "kind": "note",
+      "title": "Loop closed",
+      "why": "15 turns, $0.830",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 335.02,
+      "at": "2026-08-05T10:39:47+00:00"
+    },
+    {
+      "index": 61,
       "stage": "stage 6 \u2014 act",
       "kind": "plan",
       "title": "Config search at this parcel",
@@ -2246,11 +3038,11 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 329.85,
-      "at": "2026-08-05T10:12:36+00:00"
+      "elapsed_s": 335.41,
+      "at": "2026-08-05T10:39:47+00:00"
     },
     {
-      "index": 57,
+      "index": 62,
       "stage": "stage 6 \u2014 act",
       "kind": "conclusion",
       "title": "Switch to solid oxide fuel cells",
@@ -2264,19 +3056,23 @@
             "config": "400 MW fuel_cell on natural_gas (uncontrolled), no enforceable hour cap (PTE at 8760)",
             "pathway": "minor_nsr",
             "pathway_label": "Minor NSR construction permit",
-            "months_low": 12.4,
-            "months_likely": 21.6,
-            "months_high": 34.0,
+            "months_low": 5.5,
+            "months_likely": 9.0,
+            "months_high": 14.5,
             "rank_delta": 3,
-            "months_saved": 44.4,
+            "months_saved": 57.0,
             "controlling_pollutant": "CO",
             "controlling_tpy": 9.1,
             "availability": 1.0,
             "cost_note": "Solid oxide fuel cells emit almost no criteria pollutants, which usually takes the air permit off the critical path entirely. CO2 is not solved \u2014 they still burn gas. Much higher capital cost per MW, a supplier list you can count on one hand, and lead times that are themselves the constraint at data center scale.",
             "hard_stops": [],
             "triggers_cleared": [
+              "ej_denial_authority",
+              "litigation",
               "major_nonattainment_nsr",
+              "nonattainment_designation",
               "nsps_turbine",
+              "state_toxics",
               "title_v"
             ],
             "warnings": [],
@@ -2296,17 +3092,22 @@
             "config": "400 MW simple_cycle_turbine on natural_gas (scr), no enforceable hour cap (PTE at 8760)",
             "pathway": "major_nonattainment_nsr",
             "pathway_label": "Major nonattainment NSR",
-            "months_low": 41.0,
-            "months_likely": 66.0,
-            "months_high": 103.8,
+            "months_low": 24.5,
+            "months_likely": 39.0,
+            "months_high": 61.5,
             "rank_delta": 0,
-            "months_saved": 0.0,
+            "months_saved": 27.0,
             "controlling_pollutant": "NOx",
             "controlling_tpy": 588.7,
             "availability": 1.0,
             "cost_note": "SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO.",
             "hard_stops": [],
-            "triggers_cleared": [],
+            "triggers_cleared": [
+              "ej_denial_authority",
+              "litigation",
+              "nonattainment_designation",
+              "state_toxics"
+            ],
             "warnings": [],
             "tons_per_year": {
               "NOx": 588.7,
@@ -2324,17 +3125,22 @@
             "config": "400 MW simple_cycle_turbine on natural_gas (oxidation_catalyst), no enforceable hour cap (PTE at 8760)",
             "pathway": "major_nonattainment_nsr",
             "pathway_label": "Major nonattainment NSR",
-            "months_low": 41.0,
-            "months_likely": 66.0,
-            "months_high": 103.8,
+            "months_low": 24.5,
+            "months_likely": 39.0,
+            "months_high": 61.5,
             "rank_delta": 0,
-            "months_saved": 0.0,
+            "months_saved": 27.0,
             "controlling_pollutant": "NOx",
             "controlling_tpy": 5886.7,
             "availability": 1.0,
             "cost_note": "An oxidation catalyst cuts CO by about 90% and VOC by about half. No reagent, no storage tank, small pressure drop, and it is cheap next to SCR. Worth checking first whenever CO is the pollutant sitting over the threshold \u2014 on an uncontrolled turbine that is more often the case than people expect.",
             "hard_stops": [],
-            "triggers_cleared": [],
+            "triggers_cleared": [
+              "ej_denial_authority",
+              "litigation",
+              "nonattainment_designation",
+              "state_toxics"
+            ],
             "warnings": [],
             "tons_per_year": {
               "NOx": 5886.7,
@@ -2352,17 +3158,22 @@
             "config": "400 MW simple_cycle_turbine on natural_gas (scr, oxidation_catalyst), no enforceable hour cap (PTE at 8760)",
             "pathway": "major_nonattainment_nsr",
             "pathway_label": "Major nonattainment NSR",
-            "months_low": 41.0,
-            "months_likely": 66.0,
-            "months_high": 103.8,
+            "months_low": 24.5,
+            "months_likely": 39.0,
+            "months_high": 61.5,
             "rank_delta": 0,
-            "months_saved": 0.0,
+            "months_saved": 27.0,
             "controlling_pollutant": "NOx",
             "controlling_tpy": 588.7,
             "availability": 1.0,
             "cost_note": "SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO. An oxidation catalyst cuts CO by about 90% and VOC by about half. No reagent, no storage tank, small pressure drop, and it is cheap next to SCR. Worth checking first whenever CO is the pollutant sitting over the threshold \u2014 on an uncontrolled turbine that is more often the case than people expect.",
             "hard_stops": [],
-            "triggers_cleared": [],
+            "triggers_cleared": [
+              "ej_denial_authority",
+              "litigation",
+              "nonattainment_designation",
+              "state_toxics"
+            ],
             "warnings": [],
             "tons_per_year": {
               "NOx": 588.7,
@@ -2377,14 +3188,14 @@
           }
         ]
       },
-      "conclusion": "Switch to solid oxide fuel cells: Major nonattainment NSR -> Minor NSR construction permit, ~44 months, 100% availability.",
+      "conclusion": "Switch to solid oxide fuel cells: Major nonattainment NSR -> Minor NSR construction permit, ~57 months, 100% availability.",
       "citation": null,
       "credits": 0,
-      "elapsed_s": 329.85,
-      "at": "2026-08-05T10:12:36+00:00"
+      "elapsed_s": 335.41,
+      "at": "2026-08-05T10:39:47+00:00"
     },
     {
-      "index": 58,
+      "index": 63,
       "stage": "stage 7 \u2014 output",
       "kind": "conclusion",
       "title": "2% on the announced schedule",
@@ -2395,8 +3206,8 @@
       "conclusion": null,
       "citation": null,
       "credits": 0,
-      "elapsed_s": 329.85,
-      "at": "2026-08-05T10:12:36+00:00"
+      "elapsed_s": 335.41,
+      "at": "2026-08-05T10:39:47+00:00"
     }
   ]
 }

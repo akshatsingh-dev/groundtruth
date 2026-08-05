@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deliverable — air permit screen</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="rail">
+  <div class="rail-left">
+    <span class="wordmark">DELIVERABLE</span>
+    <span class="rail-sub">air permit deliverability screen &middot; local client over the agent</span>
+  </div>
+  <div class="rail-right" id="rail-meters">
+    <div class="meter" title="Auth path resolved at startup">
+      <span class="meter-label">loop</span>
+      <span class="meter-value" id="m-auth">—</span>
+    </div>
+    <div class="meter" title="Physical-facts provider">
+      <span class="meter-label">provider</span>
+      <span class="meter-value" id="m-provider">—</span>
+    </div>
+    <div class="meter" title="Mireye credits billed by this run">
+      <span class="meter-label">run</span>
+      <span class="meter-value num" id="m-run">0</span>
+    </div>
+    <div class="meter" title="Mireye credits billed since this server started">
+      <span class="meter-label">session</span>
+      <span class="meter-value num" id="m-session">0</span>
+    </div>
+    <div class="meter" title="Provider responses served from data/cache.sqlite">
+      <span class="meter-label">cached</span>
+      <span class="meter-value num" id="m-cache">0</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="sec-input">
+    <div class="section-head">
+      <h2>Project</h2>
+      <p class="section-note">Address or coordinate, the machine, and the date they announced.</p>
+    </div>
+
+    <div id="key-warnings"></div>
+
+    <div class="presets" id="presets"></div>
+
+    <form id="run-form" autocomplete="off">
+      <div class="field-grid">
+        <label class="field span-3">
+          <span class="field-label">Address or coordinate</span>
+          <input type="text" id="f-address" name="address" required placeholder="39.4862,-75.0257">
+        </label>
+        <label class="field span-2">
+          <span class="field-label">Declared county <span class="hint">used only if the geocode refuses</span></span>
+          <input type="text" id="f-county" name="county" placeholder="Cumberland">
+        </label>
+        <label class="field span-1">
+          <span class="field-label">State</span>
+          <input type="text" id="f-state" name="state" maxlength="2" placeholder="NJ">
+        </label>
+
+        <label class="field span-1">
+          <span class="field-label">MW</span>
+          <input type="number" id="f-mw" name="mw" min="1" step="1" value="400" required>
+        </label>
+        <label class="field span-2">
+          <span class="field-label">Prime mover</span>
+          <select id="f-prime" name="prime_mover"></select>
+        </label>
+        <label class="field span-1">
+          <span class="field-label">Fuel</span>
+          <select id="f-fuel" name="fuel"></select>
+        </label>
+        <label class="field span-2 field-tall">
+          <span class="field-label">Controls <span class="hint">multi-select</span></span>
+          <select id="f-controls" name="controls" multiple size="5"></select>
+        </label>
+
+        <label class="field span-2">
+          <span class="field-label">Target energization</span>
+          <input type="date" id="f-target" name="target" value="2027-12-01">
+        </label>
+        <label class="field span-2">
+          <span class="field-label">Credit ceiling <span class="hint">this run</span></span>
+          <input type="number" id="f-ceiling" name="ceiling" min="0" step="50" value="400">
+        </label>
+        <label class="field span-2">
+          <span class="field-label">Reasoning</span>
+          <select id="f-loop">
+            <option value="llm">Model tool-calling loop</option>
+            <option value="none">Deterministic, no LLM</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="run-bar">
+        <button type="submit" class="btn btn-primary" id="btn-run">Run the screen</button>
+        <button type="button" class="btn" id="btn-replay">Replay the recorded run</button>
+        <span class="run-cost" id="run-cost"></span>
+      </div>
+    </form>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="sec-trace">
+    <div class="section-head">
+      <h2>Trace</h2>
+      <p class="section-note">Every step as it happens. Tool calls carry their payload and what they billed.</p>
+      <div class="trace-controls">
+        <div class="filters" id="trace-filters"></div>
+        <label class="check"><input type="checkbox" id="f-follow" checked> follow</label>
+      </div>
+    </div>
+    <div class="log" id="log" tabindex="0">
+      <p class="log-empty">Idle. Pick a preset, or replay the recorded run.</p>
+    </div>
+    <div class="log-foot">
+      <span id="log-status">idle</span>
+      <button type="button" class="btn btn-ghost" id="btn-live" hidden>Jump to live</button>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="sec-verdict" hidden>
+    <div class="section-head">
+      <h2>Verdict</h2>
+      <p class="section-note" id="verdict-note"></p>
+    </div>
+    <div id="refusal" hidden></div>
+    <div id="verdict"></div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="sec-triggers" hidden>
+    <div class="section-head">
+      <h2>Triggers that fired</h2>
+      <p class="section-note">Each one with the rule it comes from and the months it adds.</p>
+    </div>
+    <div id="triggers"></div>
+    <div id="emissions"></div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="sec-act" hidden>
+    <div class="section-head">
+      <h2>Act</h2>
+      <p class="section-note">Two searches: move the plant, or change the plant.</p>
+    </div>
+    <div id="alternate"></div>
+    <div id="configs"></div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <section id="sec-appendix" hidden>
+    <div class="section-head">
+      <h2>Appendix</h2>
+      <p class="section-note">What the run does not know, and where every fact came from.</p>
+    </div>
+    <div id="narrative"></div>
+    <div id="caveats"></div>
+    <details id="provenance-wrap">
+      <summary><span class="summary-title">Provenance</span><span class="summary-meta" id="prov-count"></span></summary>
+      <div class="table-scroll">
+        <table id="provenance">
+          <thead>
+            <tr>
+              <th data-sort="field" class="sortable">Field</th>
+              <th data-sort="value" class="sortable">Value</th>
+              <th data-sort="source" class="sortable">Source</th>
+              <th data-sort="fetched" class="sortable">Fetched</th>
+              <th data-sort="confidence" class="sortable num-col">Conf.</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer>
+  <span id="foot-run"></span>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
