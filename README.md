@@ -1,40 +1,40 @@
 # Deliverable
 
-**Announced ≠ deliverable.** An agent that works out which air permit a data center
-power project needs at a specific parcel — and when the answer is bad, goes and finds
-a parcel or a design where it isn't.
+Works out which air permit a data center power project needs at a specific parcel.
+When the answer is bad, it goes and finds a parcel or a plant design where it isn't.
+
+Announced ≠ deliverable.
 
 Built on [Mireye](https://www.mireye.com) for the physical layer.
 
 ---
 
-## The one fact this is built on
+## The thing nobody prices
 
-> **Which permit you need is decided by where the land is, not by what you're building.**
+Which permit you need is decided by where the land is. Not by what you're building.
 
-Here is a real parcel in Ashburn, Virginia. Mireye says it is excellent: **120 m to a
-230 kV transmission line, 504 m to a substation.** By any siting deck, it is a yes.
+Take a real parcel in Ashburn, Virginia. Mireye says it's excellent. 120 m to a
+230 kV line, 504 m to a substation. Every siting metric says yes.
 
-Then you ask the next question.
+Now ask the next question.
 
 | | |
 |---|---|
-| County ozone status | **Nonattainment, Moderate** |
-| Nearest Class I area | **Shenandoah NP, 63 km** — inside the 100 km Federal Land Manager radius |
-| 500 MW combined cycle here | Major nonattainment NSR, **~57 months** |
-| Same plant, Ellis County TX | Major PSD, **~20 months** |
+| County ozone status | Nonattainment, Moderate |
+| Nearest Class I area | Shenandoah NP, 63 km. Inside the 100 km FLM radius. |
+| 500 MW combined cycle here | Major nonattainment NSR, ~57 months |
+| Same plant, Ellis County TX | Major PSD, ~20 months |
 
-Same machine. Same fuel. **37 months of difference, decided entirely by the dirt.**
+Same machine. Same fuel. 37 months apart, decided by the dirt.
 
-Their API tells you the site is good. This tells you whether they'll let you switch
-it on.
+Developers buy for power, fiber and price. They find this out at month nine.
 
 ---
 
 ## The decision tree
 
-This is the part people get wrong. It is not "big plant = hard permit." It is a
-sequence of legal tests where a single design choice moves a threshold by 150 tons.
+It isn't "big plant, hard permit." It's a sequence of legal tests, and one design
+choice moves a threshold by 150 tons.
 
 ```mermaid
 flowchart TD
@@ -43,81 +43,88 @@ flowchart TD
     C --> D["PTE = AP-42 factor x heat input x 8,760 hr<br/>tons/year"]
 
     D --> E{"On the List of 28?<br/>40 CFR 52.21"}
-    E -->|"Combined cycle, >250 MMBtu/hr<br/>= steam electric plant"| F["Major at 100 tpy"]
+    E -->|"Combined cycle >250 MMBtu/hr<br/>= steam electric plant"| F["Major at 100 tpy"]
     E -->|"Simple cycle: no steam cycle<br/>Engines: not listed"| G["Major at 250 tpy"]
 
     F --> H{"County attainment status<br/>EPA Green Book"}
     G --> H
 
-    H -->|"Nonattainment"| I["Threshold scales with severity<br/>moderate 100 - serious 50<br/>severe 25 - extreme 10"]
+    H -->|"Nonattainment"| I["Threshold scales with severity<br/>moderate 100, serious 50<br/>severe 25, extreme 10"]
     H -->|"Attainment"| J["PSD threshold applies"]
-    H -->|"In the Ozone Transport Region<br/>CAA 184"| K["50 tpy statewide,<br/>monitors irrelevant"]
+    H -->|"Ozone Transport Region<br/>CAA 184"| K["50 tpy statewide.<br/>Local monitors irrelevant."]
 
     I --> L{"PTE vs threshold"}
     J --> L
     K --> L
 
-    L -->|"Over"| M["Major review<br/>BACT or LAER + offsets<br/>AERMOD - public comment"]
+    L -->|"Over"| M["Major review<br/>BACT or LAER, offsets<br/>AERMOD, public comment"]
     L -->|"Under, only via<br/>enforceable hour cap"| N["Synthetic minor"]
     L -->|"Under"| O["Minor NSR or permit by rule"]
 
-    M --> P["Overlays that add months regardless"]
+    M --> P["Overlays that cost months anyway"]
     N --> P
     O --> P
 
-    P --> Q["Class I within 100 km - PSD increment consumed<br/>Title V - NSPS/NESHAP - state toxics<br/>moratorium - zoning - litigation - gas reachability"]
-    Q --> R["Pathway + months range + probability<br/>every trigger carrying its citation"]
+    P --> Q["Class I within 100 km. PSD increment consumed.<br/>Title V. NSPS/NESHAP. State toxics.<br/>Moratorium. Zoning. Litigation. Gas reachability."]
+    Q --> R["Pathway, months range, probability.<br/>Every trigger carries its citation."]
 ```
 
-Three things in there that are worth knowing:
+**Potential to emit is computed at 8,760 hours.** Saying you'll only run 2,000 doesn't
+matter. Only a federally enforceable permit condition lowers it. That's what synthetic
+minor *is*. The code enforces it: `run_hours` below 8,760 gets ignored unless
+`enforceable_limit=True`. There's a test on it, because getting that backwards tells a
+developer they're minor when the agency will call them major.
 
-**Potential to emit is computed at 8,760 hours.** Telling the agency you only plan to
-run 2,000 hours changes nothing. Only a *federally enforceable* permit condition does.
-That is the entire synthetic-minor mechanism, and the code enforces it — `run_hours`
-below 8,760 is ignored unless `enforceable_limit=True`.
+**Combined cycle is on the List of 28. Simple cycle isn't.** The HRSG makes it a
+"fossil fuel-fired steam electric plant of more than 250 million Btu per hour." So the
+threshold drops from 250 tpy to 100. Data centers aren't a listed category. The power
+plant on the site is.
 
-**A combined-cycle plant is on the List of 28. A simple-cycle plant is not.** The HRSG
-makes it a "fossil fuel-fired steam electric plant." Threshold drops 250 → 100 tpy on
-that alone. Data centers themselves are not a listed category. The power plant on the
-site is.
+**Emissions track fuel burned, not megawatts.** Combined cycle runs ~6,800 Btu/kWh.
+Simple cycle ~10,500. Same 500 MW, a third less fuel, a third less NOx, before you
+install anything. Which is how a design change moves a project across a legal line
+without changing its size.
 
-**Emissions scale with fuel burned, not megawatts.** Combined cycle runs ~6,800 Btu/kWh
-against simple cycle's ~10,500. Same 500 MW, a third less fuel, a third less NOx —
-before a single control device. That is why a *design change* can move a project across
-a legal line without changing its size.
+One more, since it bit us in testing. On a 15 MW turbine with DLN and SCR fitted, the
+binding pollutant isn't NOx. It's **CO at 57 tpy**, because neither control touches CO.
+Screen on NOx alone and you miss it. An oxidation catalyst drops it under 10.
 
 ---
 
 ## What "agent" means here
 
-The contest rule is: reason, decide, **act**. Not a website with a map on it.
+Contest rule: reason, decide, act. Not a website with a map on it.
 
 ```mermaid
 flowchart LR
     subgraph REASON
-    A["Mireye<br/>geocode - lookup - fetch<br/>proximity - ask"] --> B["PTE<br/>estimator"]
+    A["Mireye<br/>geocode, lookup, fetch<br/>proximity, ask"] --> B["PTE<br/>estimator"]
     C["Green Book<br/>CourtListener<br/>county file"] --> D["Pathway<br/>engine"]
     B --> D
     end
     D --> E{"Bad answer?"}
     subgraph ACT
-    E -->|yes| F["Alternate-site search<br/>expanding rings 15-120 km<br/>crosses county + state lines"]
-    E -->|yes| G["Config search<br/>controls - cycle - fuel<br/>hour caps"]
+    E -->|yes| F["Alternate-site search<br/>rings 15 to 120 km<br/>crosses county + state lines"]
+    E -->|yes| G["Config search<br/>controls, cycle, fuel<br/>hour caps"]
     end
     F --> H["Report<br/>one probability<br/>every fact cited"]
     G --> H
     E -->|no| H
 ```
 
-The loop is a real Anthropic tool-calling loop over ten tools, not a chain of
-`if` statements. **The model decides which Mireye calls to make; the engines decide
-what is true.** No number in the output was written by the model in prose.
+Real tool-calling loop over ten tools. Not a chain of `if` statements. The model picks
+which Mireye calls to make. The engines decide what's true. Nothing in the output is a
+number the model wrote in prose.
 
-It picks calls adaptively. PTE is computed first because it is free arithmetic and it
-tells you whether AERMOD is coming — which is what decides whether terrain is worth
-buying. A fuel-cell config never buys receptor data. Any gas config always buys pipeline
-distance. The trace records what it **declined** to fetch and why, because that is part
-of the reasoning too.
+It plans adaptively. PTE gets computed first because it's free arithmetic and it tells
+you whether AERMOD is coming, which is what decides whether terrain is worth buying.
+Fuel cell config? Never buys receptor data. Any gas config? Always buys pipeline
+distance. The trace logs what it **declined** to fetch and why. A screen that can't
+justify what it skipped isn't a screen.
+
+Three auth paths, resolved at startup: Claude Agent SDK via OAuth token, Anthropic
+Messages API via key, or a deterministic no-LLM fallback that walks the same functions
+in the same order. Same trace shape on all three. The repo stays runnable with zero keys.
 
 ---
 
@@ -129,73 +136,69 @@ $ python -m agent.planner "39.4862,-75.0257" --county Cumberland --state NJ
   Auth path: claude-agent-sdk · claude-opus-5 · 13 tool calls · 94 Mireye credits
 
   400 MW simple cycle, uncontrolled
-  Heat input 4,200 MMBtu/hr → NOx 5,887 tpy
+  Heat input 4,200 MMBtu/hr -> NOx 5,887 tpy
 
-  Cumberland County, NJ — ozone nonattainment (serious), Philadelphia-Atlantic City
-  New Jersey is in the Ozone Transport Region     → threshold 50 tpy, not 100
-  NJ DEP may deny on environmental justice grounds → discretionary, not schedule
+  Cumberland County, NJ. Ozone nonattainment (serious), Philadelphia-Atlantic City.
+  New Jersey sits in the Ozone Transport Region     -> threshold 50 tpy, not 100
+  NJ DEP can deny on environmental justice grounds  -> discretionary, not schedule
   CourtListener: MONTGOMERY v. DATAONE USA LLC, D.N.J., filed 2026-05-26
 
-  → MAJOR NONATTAINMENT NSR
-    41–104 months, likely 66.  7,064 tons of offsets at 1.20:1.
-    2% probability of energizing on the announced 16-month schedule.
+  -> MAJOR NONATTAINMENT NSR
+     41-104 months, likely 66.  7,064 tons of offsets at 1.20:1.
+     2% probability of energizing on the announced 16-month schedule.
 
-  ACT ─ alternate site
-    New Castle County, DE — 37 miles W — 24 months saved
-    clears: ej_denial_authority, state_toxics
-    note: DE is in the same Ozone Transport Region. This escapes New Jersey's
-          state stack, not the transport region. DE is not modelled in detail,
-          so some of the gain may be that gap.
+  ACT / alternate site
+     New Castle County, DE. 37 miles W. 24 months saved.
+     clears: ej_denial_authority, state_toxics
+     note: DE is in the same Ozone Transport Region. This escapes New Jersey's
+           state stack, not the OTR. DE isn't modelled in detail, so some of
+           the gain may be that gap.
 
-  ACT ─ config search
-    Solid oxide fuel cells → MINOR NSR, 21.6 months. 44 months saved.
+  ACT / config search
+     Solid oxide fuel cells -> MINOR NSR, 21.6 months. 44 months saved.
 ```
 
-That last line is the one to sit with. The config search recommends going
-non-combustion. **Nebius did exactly that at this site on 20 May 2026** — 328 MW of
-Bloom fuel cells — 80 days after the date we froze the inputs at.
+That last line. The config search says go non-combustion. Nebius did exactly that at
+this site on 20 May 2026, 328 MW of Bloom fuel cells, 80 days after the date we froze
+the inputs at.
 
 ---
 
-## The national result
+## Every county in the country
 
-Every US county scored on days-until-legal-power for one reference plant
-(500 MW combined cycle, DLN + SCR + oxidation catalyst).
+One reference plant, 500 MW combined cycle with DLN, SCR and an oxidation catalyst,
+scored against all 3,222 counties and county equivalents.
 
 | | |
 |---|---:|
-| Counties scored | **3,222** |
 | Major PSD | 2,843 |
 | Major nonattainment NSR | 379 |
-| **Minor** | **0** |
+| Minor | **0** |
 | Spread, identical equipment | **1,309 days** |
 
-**There is no county in the United States where a 500 MW onsite gas plant is a minor
-source.** At that size NOx clears 100 tpy everywhere. The question is never "can I
-avoid major review" — it is "which flavour, and how many months."
+There is no county in the United States where a 500 MW onsite gas plant is a minor
+source. NOx clears 100 tpy everywhere. The question is never whether you avoid major
+review. It's which flavour and how many months.
 
-All 21 New Jersey counties tie for slowest at 1,918 days, on the Ozone Transport
-Region plus EJ-denial stack. Nobody hand-coded that. The engine derived it, and it is
-the same mechanism that stopped Nebius.
+All 21 New Jersey counties tie for slowest at 1,918 days on the OTR plus EJ-denial
+stack. Nobody hand-coded that. The engine derived it, and it's the same mechanism that
+stopped Nebius.
 
-Map: `outputs/county_map.html` — 708 KB, self-contained, zero external requests,
-renders with JavaScript disabled.
+`outputs/county_map.html`. 708 KB, self-contained, zero external requests, renders with
+JavaScript off.
 
 ---
 
-## What we combined Mireye with
+## What sits next to Mireye
 
-The judging criterion asks what sits next to their API. Their own first two examples:
-
-| Source | What it answers | Result |
+| Source | Answers | Result |
 |---|---|---|
-| **EPA Green Book** | Is this county nonattainment, for which pollutant, at what severity | 463 designations across 245 counties, parsed from EPA's dBASE files. 171 partial-county areas flagged rather than silently applied. |
-| **CourtListener / RECAP** | Has this developer, county or facility been sued | Live. Pulls *NAACP v. X.AI Corp.*, 3:26-cv-00074, N.D. Miss. |
+| **EPA Green Book** | Is this county nonattainment, for what, how badly | 463 designations across 245 counties, parsed out of EPA's dBASE files. There's no CSV. 171 partial-county areas flagged instead of silently applied countywide. |
+| **CourtListener / RECAP** | Has this developer or county been sued | Live. Pulls *NAACP v. X.AI Corp.*, 3:26-cv-00074, N.D. Miss. |
 
-Everything physical comes from Mireye. We did not build EIA pipeline ingest, routing,
-or a FERC queue scraper. `docs/mireye-api-notes.md` has the full engineering note,
-including a credit cost model that reproduces their meter exactly — 884 modelled
-against 884 billed.
+Everything physical is Mireye. No EIA ingest, no routing layer, no FERC scraper.
+`docs/mireye-api-notes.md` has the engineering note, including a credit cost model
+that reproduces their meter exactly. 884 modelled against 884 billed.
 
 ---
 
@@ -206,7 +209,7 @@ git clone https://github.com/akshatsingh-dev/deliverable
 cd deliverable
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-python -m pytest -q                    # 52 tests, no API keys needed
+python -m pytest -q                    # 52 tests, no keys needed
 ```
 
 Live:
@@ -214,8 +217,7 @@ Live:
 ```bash
 cp .env.example .env
 # MIREYE_API_KEY            mireye.com/account, code BUILD
-# CLAUDE_CODE_OAUTH_TOKEN   run `claude setup-token` — uses a Claude subscription
-#   (or ANTHROPIC_API_KEY)
+# CLAUDE_CODE_OAUTH_TOKEN   `claude setup-token`, or ANTHROPIC_API_KEY
 # COURTLISTENER_TOKEN       free, courtlistener.com/profile/api-token/
 
 python -m agent.planner "39.4862,-75.0257" --county Cumberland --state NJ
@@ -223,46 +225,52 @@ python -m sweep.counties --fresh && python -m sweep.map
 python -m backtest.cases
 ```
 
-The repo runs with **no keys at all**. `NullProvider` refuses every physical lookup
-rather than returning plausible defaults, so a keyless run is obviously incomplete
-rather than quietly wrong. The planner falls back to a deterministic no-LLM path that
-calls the same functions in the same order, and labels itself as such in the trace.
+`NullProvider` refuses every physical lookup rather than returning plausible defaults,
+so a keyless run comes out obviously incomplete instead of quietly wrong.
 
 ---
 
 ## What's real and what isn't
 
-Written before the rest, so it doesn't get softened.
+Wrote this section first, before I could talk myself out of any of it.
 
-- **Backtest is 3 cases and one is a miss.** Vineland NJ and Project Jupiter NM both
-  hit on the mechanism that actually bound. xAI Colossus 1 is a miss — the engine says
-  major PSD and ~2 years, and xAI energised in weeks by asserting the turbines were
-  nonroad engines. **This tool prices the compliant path. It has no variable for a
-  developer who runs it anyway and litigates.** Three cases is a demonstration, not an
-  out-of-sample test. A real one needs a point-in-time panel across hundreds of
-  projects, which is a multi-year data engineering problem.
-- **8 states modelled in detail** (VA TX GA OH AZ NJ NM IL). The other 42 get federal
-  defaults and the output says so rather than hiding it. The statutory Ozone Transport
-  Region is applied to all 12 OTR states regardless, because a search that recommended
-  "move from NJ to PA" without it was selling a saving that does not exist.
-- **27 counties hand-entered** for moratoria and zoning posture. Deliberately not a
-  scraper. Every record carries its source URL.
-- **The county map is a screening layer.** County-level facts only. It cannot see
-  parcel increment, terrain, or pipeline distance. The parcel run is the answer.
-- **Timelines are calibrated on public permit records and agency guidance**, not a
-  validated statistical model. They are ranges, presented as ranges.
-- **This is a screen, not an applicability determination.** A licensed professional
-  signs that and carries the liability. We are the engine underneath, sold to them.
-- **Incumbents exist.** Sightline Climate, Data Center Watch, BNEF and JLL sell
-  pipeline intelligence. They *track*. They do not compute the pathway and they do not
-  search for a better parcel. That is the wedge, and it is a narrow one.
+**Backtest is 3 cases and one is a miss.** Vineland NJ and Project Jupiter NM both hit
+on the mechanism that actually bound. xAI Colossus 1 is a miss. The engine says major
+PSD, ~2 years. xAI energised in weeks by asserting the turbines were nonroad engines.
+This tool prices the compliant path. It has no variable for a developer who runs it
+anyway and litigates. Three cases is a demonstration. A real backtest needs a
+point-in-time panel across hundreds of projects, which is a multi-year data engineering
+problem and the usual reason alt-data startups die.
 
-Every factual claim in this repo is checked source-by-source in **`docs/evidence.md`** —
-13 confirmed, 5 reworded, 1 removed as unsupported. Including one we got backwards
-ourselves and fixed: the January 2026 EPA turbine rule did **not** close the nonroad
-loophole. It finalised a *conditional exclusion* that is not operative, because EPA
-hasn't done the Title II rulemaking it depends on. The trailer-mounted fast path is
-unsettled, not closed — with a federal injunction hearing this month.
+**8 states modelled in detail.** VA, TX, GA, OH, AZ, NJ, NM, IL. The other 42 get
+federal defaults and the output says so. The Ozone Transport Region is applied to all
+12 OTR states regardless, because without it the search happily recommended "move from
+NJ to PA" and booked a saving that doesn't exist. Both states are in the OTR.
+
+**27 counties hand-entered** for moratoria and zoning posture. Not a scraper. Every
+record carries a source URL you can click.
+
+**The county map is a screening layer.** County-level facts only. It can't see parcel
+increment, terrain or pipeline distance. The parcel run is the answer.
+
+**Timelines come from public permit records and agency guidance**, not a fitted model.
+They're ranges and they're presented as ranges.
+
+**This is a screen, not an applicability determination.** A licensed professional signs
+those and carries the liability. We're the engine underneath, sold to the people who
+sign.
+
+**Incumbents exist.** Sightline Climate, Data Center Watch, BNEF, JLL all sell pipeline
+intelligence. They track. They don't compute the pathway and they don't search for a
+better parcel. Narrow wedge, but it's a real one.
+
+Every factual claim in this repo got checked source by source in `docs/evidence.md`.
+13 confirmed, 5 reworded, 1 deleted as unsupported. Including one I had backwards: the
+January 2026 EPA turbine rule did **not** close the nonroad-engine loophole. It
+finalised a conditional exclusion that isn't operative, because EPA hasn't done the
+Title II rulemaking it depends on. The trailer-mounted path is unsettled, not closed,
+with a federal injunction hearing this month. Most coverage of that rule has it
+backwards too.
 
 ---
 
@@ -270,24 +278,24 @@ unsettled, not closed — with a federal injunction hearing this month.
 
 ```
 agent/
-  emissions.py   PTE estimator — AP-42 factors, heat-rate based, pure math
-  pathway.py     the decision engine — List of 28, NSR, overlays, timelines
-  planner.py     the tool-calling loop — 3 auth paths incl. a keyless fallback
-  search.py      alternate-site + config search — this is the "act"
-  tools.py       10 tool schemas, shared across model backends
-  report.py      terminal / markdown / JSON, with a provenance appendix
+  emissions.py   PTE estimator. AP-42 factors, heat-rate based, pure math.
+  pathway.py     decision engine. List of 28, NSR, overlays, timelines.
+  planner.py     the tool-calling loop. 3 auth paths, one keyless.
+  search.py      alternate-site + config search. This is the "act".
+  tools.py       10 tool schemas, shared across backends.
+  report.py      terminal / markdown / JSON, with a provenance appendix.
 providers/
-  base.py        PhysicalFactsProvider — makes going international a data problem
-  mireye.py      the US implementation, with a verified credit cost model
-  cache.py       SQLite response cache, so re-runs are free
+  base.py        PhysicalFactsProvider. Going international is a data problem.
+  mireye.py      US implementation, with a verified credit cost model.
+  cache.py       SQLite response cache, so re-runs are free.
 ingest/
-  greenbook.py   EPA nonattainment, parsed from dBASE
-  dockets.py     CourtListener
-  counties.json  27 hand-verified county records
-sweep/           3,222-county scoring + the self-contained map
-backtest/        Vineland NJ, Project Jupiter NM, xAI Memphis
-docs/            evidence ledger, API notes, plain-English explainer, glossary
+  greenbook.py   EPA nonattainment, out of dBASE.
+  dockets.py     CourtListener.
+  counties.json  27 hand-verified county records.
+sweep/           3,222-county scoring and the map.
+backtest/        Vineland NJ, Project Jupiter NM, xAI Memphis.
+docs/            evidence ledger, API notes, plain-English explainer, glossary.
 ```
 
-`BUILD-LOG.md` explains the whole thing end to end, including every correction made
-along the way.
+`BUILD-LOG.md` walks the whole thing end to end, including everything that turned out
+to be wrong along the way.

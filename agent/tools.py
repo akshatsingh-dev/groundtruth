@@ -469,7 +469,12 @@ TOOL_SCHEMAS: list[dict] = [
             "Use it for the facts this analysis needs that no preset covers — distance to "
             "the nearest Class I area, background ambient PM2.5 or NO2 at the coordinate, "
             "count and permitted emissions of major stationary sources within a radius. Do "
-            "not go build an ingest pipeline for those; request them and record the gap."
+            "not go build an ingest pipeline for those; request them and record the gap. "
+            "Every request needs at least one example location — a real place where you "
+            "needed this value and could not get it. It is what the provider verifies the "
+            "new field against and where it samples any near miss, so it decides whether "
+            "the answer you get back is about your site or someone else's. If you omit it, "
+            "the site already resolved by resolve_site is used."
         ),
         "input_schema": {
             "type": "object",
@@ -478,6 +483,43 @@ TOOL_SCHEMAS: list[dict] = [
                 "description": {
                     "type": "string",
                     "description": "What the field is, its unit, and why it is a physical-world fact.",
+                },
+                "example_locations": {
+                    "type": "array",
+                    "maxItems": 10,
+                    "description": (
+                        "1-10 real places where this value was needed. Each entry supplies "
+                        "exactly one of `address` or `lat`+`lng`. Defaults to the resolved "
+                        "site if omitted."
+                    ),
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "address": {"type": "string"},
+                            "lat": {"type": "number"},
+                            "lng": {"type": "number"},
+                            "claimed_value": {
+                                "type": "string",
+                                "description": (
+                                    "What you believe the answer is here, if you know. It "
+                                    "becomes a frozen eval case for the build. Leave it out "
+                                    "rather than guessing."
+                                ),
+                            },
+                            "note": {
+                                "type": "string",
+                                "description": "Why this location matters.",
+                            },
+                        },
+                    },
+                },
+                "use_case": {
+                    "type": "string",
+                    "description": "What decision this value feeds, and what changes at different values.",
+                },
+                "decision_threshold": {
+                    "type": "string",
+                    "description": "The value at which the decision flips, if there is one.",
                 },
             },
             "required": ["field_name", "description"],
@@ -1381,11 +1423,47 @@ def _exec_request_field(ctx: ToolContext, args: dict) -> dict:
     description = args.get("description", "").strip()
     if not name:
         raise ToolError("field_name is required.")
-    record = {"field_name": name, "description": description, "requested_at": now_iso()}
+
+    # The provider requires at least one example location and the model rarely
+    # thinks to supply one — the ask reads like a catalog question, not a
+    # question about a place. The site we already resolved is the honest
+    # default: it is where the gap was actually hit. Nothing is fabricated; if
+    # there is no resolved site and the model named none, we refuse.
+    supplied = args.get("example_locations") or []
+    if not isinstance(supplied, list):
+        raise ToolError("example_locations must be a list of {address} or {lat, lng} objects.")
+    if not supplied and ctx.location is None:
+        raise ToolError(
+            "request_field needs at least one example location. Call resolve_site first, "
+            "or pass example_locations=[{'address': '...'}] naming a real place where this "
+            "value was needed."
+        )
+
+    record = {
+        "field_name": name,
+        "description": description,
+        "requested_at": now_iso(),
+        "example_locations": supplied or None,
+    }
     try:
         ctx.spend("field_request")
-        response = ctx.provider.field_request(name, description)
-        record.update({"supported": True, "response": response})
+        response = ctx.provider.field_request(
+            name,
+            description,
+            example_locations=supplied,
+            default_location=ctx.location,
+            use_case=(args.get("use_case") or "").strip() or None,
+            decision_threshold=(args.get("decision_threshold") or "").strip() or None,
+        )
+        record.update(
+            {
+                "supported": True,
+                "response": response,
+                "outcome": response.get("outcome"),
+                "request_id": response.get("request_id"),
+                "status": response.get("status"),
+            }
+        )
     except NotImplementedError as exc:
         record.update(
             {

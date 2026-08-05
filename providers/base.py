@@ -189,11 +189,24 @@ class PhysicalFactsProvider(ABC):
         """Open-ended query for the edges we have not scripted. Providers that
         support it should return the plan they ran so it can be replayed."""
 
-    def field_request(self, field_name: str, description: str) -> dict:
+    def field_request(
+        self,
+        field_name: str,
+        description: str,
+        example_locations: list[Any] | None = None,
+        default_location: "Location | None" = None,
+        **kwargs: Any,
+    ) -> dict:
         """Ask the provider to add a field it does not have yet.
 
         Optional. Providers without this should leave it unimplemented — the
         agent treats it as "genuine gap, go find it elsewhere."
+
+        `example_locations` is part of the interface rather than a Mireye
+        detail: a request for a physical-world fact with no place attached is
+        not answerable, and it is what the provider verifies the new field
+        against. Callers that have a resolved site and no particular opinion
+        should pass it as `default_location` and let the provider shape it.
         """
         raise NotImplementedError(f"{self.name} does not support field requests")
 

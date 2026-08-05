@@ -1558,7 +1558,8 @@ class MireyeProvider(PhysicalFactsProvider):
         self,
         field_name: str,
         description: str,
-        example_locations: list[dict] | None = None,
+        example_locations: list[Any] | None = None,
+        default_location: Location | None = None,
         use_case: str | None = None,
         decision_threshold: str | None = None,
         area_of_interest: dict | None = None,
@@ -1587,12 +1588,25 @@ class MireyeProvider(PhysicalFactsProvider):
         supports webhook and email notification and this build does not send
         anything to anyone. Poll `field_request_status()` instead. See the
         guardrails section of the build brief.
+
+        `example_locations` is required by the API (`minItems: 1`) and it is the
+        single easiest way to get this call wrong, because nothing about the ask
+        itself hints that a coordinate is needed. It is not paperwork: the
+        screener resolves each entry and runs the near-miss samples *at your
+        location*, and a location carrying a `claimed_value` becomes a frozen
+        eval case for the build. Entries are normalised here, so a caller may
+        pass a `Location`, a `"lat,lng"` string, a plain address string, or the
+        raw dict shape. `default_location` is the fallback for a caller that has
+        a resolved site and no opinion about which point to cite — which is the
+        common case, and is why an omitted list is no longer a hard failure.
         """
-        locations = example_locations or []
+        locations = _normalise_example_locations(example_locations, default_location)
         if not locations:
             raise ValueError(
                 "field_request needs at least one example location — it is what seeds "
-                "the build's eval cases and where the field is verified on prod"
+                "the build's eval cases and where the field is verified on prod. "
+                "Pass example_locations=[{'address': ...}] or {'lat': .., 'lng': ..}, "
+                "or default_location=<a resolved Location>."
             )
         if len(locations) > 10:
             raise ValueError("/v1/field-requests takes at most 10 example locations")
@@ -1739,6 +1753,96 @@ def _check_envelope(lat: float, lng: float, query: str) -> None:
             f"lat[{US_ENVELOPE['lat_min']}, {US_ENVELOPE['lat_max']}] "
             f"lng[{US_ENVELOPE['lng_min']}, {US_ENVELOPE['lng_max']}]{hint}",
         )
+
+
+#: The only keys `/v1/field-requests` accepts inside an `example_locations`
+#: entry. Unknown keys are `422 invalid_payload`, never ignored, so a typo here
+#: kills the whole filing rather than dropping one hint.
+_EXAMPLE_LOCATION_KEYS = frozenset(
+    {"address", "lat", "lng", "polygon", "claimed_value", "note"}
+)
+
+
+def _example_location(item: Any) -> dict | None:
+    """Coerce one caller-supplied example location into the API's shape.
+
+    Accepts a `Location`, a `"lat,lng"` string, a plain address string, or the
+    raw dict. Returns None for anything that carries no location basis at all —
+    an entry with only a `note` resolves to nothing and would be rejected.
+
+    Each entry must supply **exactly one** of `address`, `lat`+`lng`, or
+    `polygon`. Where a caller supplies both a coordinate and an address, the
+    coordinate wins: it skips Mireye's geocoder entirely, so the point the
+    screener samples is the point we meant, and the address is demoted to the
+    `note` so the context is not lost.
+    """
+    if item is None:
+        return None
+
+    if isinstance(item, Location):
+        entry: dict[str, Any] = {"lat": item.latitude, "lng": item.longitude}
+        if item.formatted_address:
+            entry["note"] = item.formatted_address[:1000]
+        return entry
+
+    if isinstance(item, str):
+        text = item.strip()
+        if not text:
+            return None
+        coord = _parse_coordinate(text)
+        if coord is not None:
+            return {"lat": coord[0], "lng": coord[1]}
+        return {"address": text[:500]}
+
+    if not isinstance(item, dict):
+        return None
+
+    entry = {k: v for k, v in item.items() if k in _EXAMPLE_LOCATION_KEYS and v is not None}
+    unknown = sorted(set(item) - _EXAMPLE_LOCATION_KEYS)
+    if unknown:
+        # 422 invalid_payload otherwise, and the whole filing is lost.
+        raise ValueError(
+            f"example location has key(s) {unknown} that /v1/field-requests rejects; "
+            f"allowed: {sorted(_EXAMPLE_LOCATION_KEYS)}"
+        )
+
+    has_coord = entry.get("lat") is not None and entry.get("lng") is not None
+    if has_coord:
+        _check_envelope(float(entry["lat"]), float(entry["lng"]), str(item))
+        if entry.pop("address", None) and not entry.get("note"):
+            entry["note"] = str(item["address"])[:1000]
+        entry.pop("polygon", None)
+        return entry
+    # A half-coordinate is a caller mistake, not a basis.
+    entry.pop("lat", None)
+    entry.pop("lng", None)
+    if entry.get("polygon"):
+        entry.pop("address", None)
+        return entry
+    if entry.get("address"):
+        entry["address"] = str(entry["address"])[:500]
+        return entry
+    return None
+
+
+def _normalise_example_locations(
+    items: Iterable[Any] | None, default: Location | None
+) -> list[dict]:
+    """Every usable example location, with the caller's default as a fallback.
+
+    The default is only consulted when the caller supplied nothing usable — it
+    never silently joins a list the caller curated.
+    """
+    entries: list[dict] = []
+    for item in items or ():
+        entry = _example_location(item)
+        if entry is not None:
+            entries.append(entry)
+    if not entries:
+        entry = _example_location(default)
+        if entry is not None:
+            entries.append(entry)
+    return entries
 
 
 def _count_address_locators(payload: dict) -> int:
