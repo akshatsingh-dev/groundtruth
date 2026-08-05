@@ -431,49 +431,7 @@ so a keyless run comes out obviously incomplete instead of quietly wrong.
 
 ---
 
-## What's real and what isn't
 
-Wrote this section first, before I could talk myself out of any of it.
-
-**Backtest is 3 cases and one is a miss.** Vineland NJ and Project Jupiter NM both hit
-on the mechanism that actually bound. xAI Colossus 1 is a miss. The engine says major
-PSD, ~2 years. xAI energised in weeks by asserting the turbines were nonroad engines.
-This tool prices the compliant path. It has no variable for a developer who runs it
-anyway and litigates. Three cases is a demonstration. A real backtest needs a
-point-in-time panel across hundreds of projects, which is a multi-year data engineering
-problem and the usual reason alt-data startups die.
-
-**8 states modelled in detail.** VA, TX, GA, OH, AZ, NJ, NM, IL. The other 42 get
-federal defaults and the output says so. The Ozone Transport Region is applied to all
-12 OTR states regardless, because without it the search happily recommended "move from
-NJ to PA" and booked a saving that doesn't exist. Both states are in the OTR.
-
-**27 counties hand-entered** for moratoria and zoning posture. Not a scraper. Every
-record carries a source URL you can click.
-
-**The county map is a screening layer.** County-level facts only. It can't see parcel
-increment, terrain or pipeline distance. The parcel run is the answer.
-
-**Timelines come from public permit records and agency guidance**, not a fitted model.
-They're ranges and they're presented as ranges.
-
-**This is a screen, not an applicability determination.** A licensed professional signs
-those and carries the liability. We're the engine underneath, sold to the people who
-sign.
-
-**Incumbents exist.** Sightline Climate, Data Center Watch, BNEF, JLL all sell pipeline
-intelligence. They track. They don't compute the pathway and they don't search for a
-better parcel. Narrow wedge, but it's a real one.
-
-Every factual claim in this repo got checked source by source in `docs/evidence.md`.
-13 confirmed, 5 reworded, 1 deleted as unsupported. Including one I had backwards: the
-January 2026 EPA turbine rule did **not** close the nonroad-engine loophole. It
-finalised a conditional exclusion that isn't operative, because EPA hasn't done the
-Title II rulemaking it depends on. The trailer-mounted path is unsettled, not closed,
-with a federal injunction hearing this month. Most coverage of that rule has it
-backwards too.
-
----
 
 ## Layout
 
