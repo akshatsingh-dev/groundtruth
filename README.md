@@ -77,16 +77,7 @@ The whole repo runs with no keys at all. `NullProvider` refuses every physical
 lookup rather than returning plausible-looking defaults, so a keyless run produces
 an obviously incomplete answer rather than a quietly wrong one.
 
-## The agent never acts on the world
 
-There is no email client in this codebase. No HTTP POST to a third party. No form
-automation. The agent reasons, decides, searches, and drafts. Drafts land in
-`outputs/drafts/` as plain files for a human to send.
-
-That is deliberate. "Acts" in the challenge criterion means acts on the analysis —
-searching parcels, testing generation configs, re-planning which Mireye calls to
-make. It does not mean acts on the world without supervision. An agent that emails
-a county planning office on its own is a liability, not a feature.
 
 ## What's real and what isn't
 
