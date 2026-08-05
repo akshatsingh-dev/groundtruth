@@ -463,8 +463,8 @@ def render_markdown(assessment: ProjectAssessment) -> str:
     add(f"*Generated {assessment.generated_at} · {assessment.trace.mode} · "
         f"{assessment.tool_calls} tool calls · {assessment.credits_spent} credits.*")
     add("")
-    add("*Screen, not an applicability determination. The agent does not contact agencies, "
-        "file anything, or send anything.*")
+    add("*Screen, not an applicability determination. A licensed professional signs that "
+        "opinion and carries the liability.*")
     return "\n".join(out)
 
 

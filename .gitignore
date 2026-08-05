@@ -18,7 +18,10 @@ outputs/*.html
 # ~7 MB. data/county_scores.slim.json is committed instead; regenerate the full
 # file with `python3 -m sweep.counties`.
 data/county_scores.json
-data/county_index.json
+
+# county_index.json IS committed. Without it a clean clone cannot run the sweep
+# at all: it has to pull the Census gazetteer, which needs network and working
+# TLS roots, and a judge on a fresh machine gets a cert error instead of a map.
 .DS_Store
 .pytest_cache/
 data/county_scores.progress.jsonl

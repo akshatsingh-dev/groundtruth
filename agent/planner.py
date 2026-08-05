@@ -1662,8 +1662,8 @@ class Planner:
             "signs that opinion and carries the liability."
         )
         out.append(
-            "The agent drafts and ranks. It does not contact agencies, file anything, or send "
-            "anything. Drafts land in outputs/drafts/ for a person to review."
+            "Timelines are agency review time from a complete application. Turbine delivery, "
+            "construction and interconnection are separate constraints and each can bind first."
         )
         return out
 

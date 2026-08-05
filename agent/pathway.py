@@ -496,7 +496,6 @@ OTR_VA_COUNTIES = frozenset(
         "Stafford",
         "Alexandria",
         "Falls Church",
-        "Fairfax City",
         "Manassas",
         "Manassas Park",
     }
@@ -827,8 +826,9 @@ def determine_pathway(est: EmissionsEstimate, site: SiteContext) -> PathwayResul
                     f"({max_criteria:,.0f} tpy criteria, {hap:,.1f} tpy HAP).", "40 CFR Part 70")
         )
 
-    # NSPS / NESHAP. Not pathway-deciding but they set the control floor, and the
-    # January 2026 turbine rule is the reason the trailer-mounted fast path closed.
+    # NSPS / NESHAP. Not pathway-deciding but they set the control floor. The
+    # January 2026 turbine rule left the trailer-mounted question open rather than
+    # settling it; see the trigger detail and docs/evidence.md claim E1.
     if config.prime_mover in (PrimeMover.SIMPLE_CYCLE_TURBINE, PrimeMover.COMBINED_CYCLE_TURBINE):
         triggers.append(
             Trigger(
