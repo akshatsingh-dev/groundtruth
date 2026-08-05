@@ -519,3 +519,81 @@ and has no variable for a developer who runs it anyway and litigates. **Keep the
 miss in the video.** It is what makes the other two credible.
 
 Still running: the agent loop and both search loops.
+
+### Wed 5 Aug 2026 — session 2
+
+Renamed to **Groundtruth**. The name is the thesis: in ML, ground truth is the verified
+reality you check a prediction against. Announced capacity is the prediction. The dirt is
+the ground truth.
+
+Repo is public at `github.com/akshatsingh-dev/groundtruth`, 15.5 MB tracked, runs from a
+clean clone with zero API keys.
+
+**Three more sources landed, so the answer to "what did you combine us with" is now six.**
+
+*Satellite, Sentinel-2.* L2A off AWS Open Data via Element 84 Earth Search. No
+credential, no signing, no new dependencies, because Copernicus and Planetary Computer
+both want tokens and this way anyone cloning the repo reproduces the numbers.
+
+Mireye was the first call and it does carry Sentinel-2 fields. They cannot answer this,
+and that is measured rather than argued: `ndvi_change_5y` reads **+0.038 at the fastest
+data center buildout on record**, because the 10 m cell is a tree. Filed as a field
+request. Validated on xAI Memphis as a positive control at 23.8% excess disturbance, with
+the change mask landing on the buildout and correctly ignoring the pre-existing factory
+roof. The control ring is what makes it work: two thirds of the raw Memphis signal is
+autumn senescence, and a Vineland crop rotation nets out to nothing.
+
+It also caught two wrong coordinates in our own backtest. Memphis was 7.31 km off.
+Jupiter's published point is empty desert, and a disturbance scan found the construction
+6.21 km SSE next to an EIA generator marked "more than 50 percent complete". **Project
+Jupiter has a very large hole in the ground. What it lost was the gas, not the dirt.**
+That is the sharper version of the thesis.
+
+*Spot GPU pricing.* Four venues, all keyless: Vast.ai's offer book, SF Compute's cleared
+price index, RunPod, Lambda. Spot and list reported separately, never averaged. Cumberland
+NJ: 300 MW blocked for 53 months is **$17.5B of foregone compute, $329M a month**, against
+a $10-25k screen. The sanity check is in code rather than prose: the Microsoft contract
+implies $11.6M per MW-year and the counterfactual implies $13.2M, so 1.14x. The high case
+**fails** that band at 1.9x and is labelled as failing.
+
+*Local news.* Opposition signal, reconciled against the 27 hand-entered county records.
+
+**Four more bugs found and fixed, three of them in code I wrote.**
+
+1. **A hard-stopped parcel could win the alternate-site search.** The sort put pathway
+   rank ahead of hard stops, so a candidate that improved the pathway while carrying a
+   county moratorium became the recommendation. "Move 30 miles, minor NSR, save 58 months"
+   about a county that had banned data centers. Hard stops now dominate both sorts.
+2. **Virginia's independent cities fell out of the Ozone Transport Region.** Census names
+   them "Alexandria city" and the matcher stripped only " County". Those projects got the
+   100 tpy threshold instead of 50. Wrong in the direction that tells a developer the
+   easier answer.
+3. **Jurisdiction drift in the report.** The model calls `resolve_site` on candidate
+   coordinates while exploring, and that overwrote the origin. The demo report described
+   Cumberland County NJ's pathway under Kent County DE's name. Right answer, wrong
+   jurisdiction, which is exactly the failure this product exists to catch.
+4. **The county index and boundary files were gitignored**, so a clean clone could not run
+   the sweep at all. It fell back to downloading the Census gazetteer and died on a TLS
+   error. Both are committed now.
+
+**73 tests.**
+
+**Written material.** The README leads with the Ashburn parcel and carries two mermaid
+diagrams that GitHub renders inline. `docs/LAUNCH.md` has the launch post and thread
+follow-ups, with four corrections to the earlier draft including a fund-manager quote that
+turned out to be fabricated. `outputs/drafts/mireye-region-request.md` is the India
+feature request, written for someone who knows geodata and nothing about air permitting.
+Every public file is at zero em-dashes and zero signposting phrases.
+
+**India is now the stated direction rather than a footnote**, including the part that
+matters most: the first customer there is probably a state pollution control board or a
+district planning office, not a developer. The agencies are the bottleneck, they procure,
+and a faster review is a public good rather than a private edge.
+
+**Still yours to do:**
+
+1. Record the 2-minute video. Script is `docs/DEMO-SCRIPT.md`.
+2. Paste the India feature request into the Mireye form.
+3. Send the founders credits email from `outputs/drafts/`.
+4. Fill in and submit the Google Form. Repo link, one-pager link, video link, and the
+   feedback field from `outputs/drafts/mireye_feedback.md`.
