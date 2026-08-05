@@ -1,0 +1,41 @@
+{
+ "note": "fr2 resume call, run live on 5 Aug 2026 to confirm the matched_existing sample is still real and not a stored screening artefact.",
+ "request": {
+  "method": "POST",
+  "path": "/v1/fetch",
+  "body": {
+   "lat": 39.022183,
+   "lng": -77.453578,
+   "fields": [
+    "nearest_class_i_area_distance_m",
+    "nearest_class_i_area_name",
+    "nearest_class_i_area_agency"
+   ]
+  }
+ },
+ "http_status": 200,
+ "credits_charged": 3,
+ "fields": {
+  "nearest_class_i_area_distance_m": {
+   "value": 63478.439179638815,
+   "unit": "meters",
+   "source": "EPA_CLASS_I_AREAS",
+   "fetched_at": "2026-08-05T09:21:18.354199+00:00",
+   "note": "confidence=high; https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+  },
+  "nearest_class_i_area_name": {
+   "value": "Shenandoah NP",
+   "unit": null,
+   "source": "EPA_CLASS_I_AREAS",
+   "fetched_at": "2026-08-05T09:21:18.354110+00:00",
+   "note": "confidence=high; https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+  },
+  "nearest_class_i_area_agency": {
+   "value": "USDI-NPS",
+   "unit": null,
+   "source": "EPA_CLASS_I_AREAS",
+   "fetched_at": "2026-08-05T09:21:18.354182+00:00",
+   "note": "confidence=high; https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+  }
+ }
+}

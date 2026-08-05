@@ -1,0 +1,70 @@
+{
+ "note": "Attempt to CONFIRM the fr1 near miss. /v1/field-requests has no confirm, accept or reject affordance: the only mutating route is POST /v1/field-requests, and re-sending the same idempotency key with an added constraints block is a 409. POST/PATCH/PUT on /v1/field-requests/{request_id} and POST .../{request_id}/confirm and /accept are all 404. So awaiting_confirm + waiting_on: requester is a state the requester cannot clear.",
+ "request": {
+  "method": "POST",
+  "path": "/v1/field-requests",
+  "body": {
+   "description": "County-level EPA NAAQS attainment / nonattainment / maintenance status at a coordinate, broken out per pollutant (ozone, PM2.5, PM10, CO, SO2, NO2, lead) with the area's classification (Marginal / Moderate / Serious / Severe / Extreme). I need to know, per pollutant, whether a point is in nonattainment and how severe, because that single fact decides whether a new combustion source needs major nonattainment NSR (LAER plus emission offsets, 2-3 years) or minor NSR (4-6 months).",
+   "example_locations": [
+    {
+     "address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+     "note": "Loudoun County VA — ozone nonattainment (2015 8-hr, Moderate), the densest data center market in the world"
+    }
+   ],
+   "use_case": "Air permit pathway screening for onsite gas generation at data centers. Nonattainment for a pollutant my plant emits drops the major-source threshold from 250 tpy to as low as 10 tpy and adds an offset requirement, which can be a hard stop rather than a delay.",
+   "decision_threshold": "Binary per pollutant: in nonattainment or not. If yes, the classification decides the threshold (Marginal/Moderate 100 tpy, Serious 50, Severe 25, Extreme 10) and the offset ratio.",
+   "area_of_interest": {
+    "level": "national",
+    "names": [
+     "United States"
+    ]
+   },
+   "expected_volume": {
+    "locations": 3140,
+    "geography": "every US county centroid plus ~3000 tracked project sites",
+    "cadence": "recurring"
+   },
+   "freshness": {
+    "max_staleness": "P3M",
+    "changes_how_often": "EPA redesignates a few areas per year"
+   },
+   "known_sources": {
+    "suggested": [
+     {
+      "name": "EPA Green Book",
+      "url": "https://www.epa.gov/green-book",
+      "why": "the authoritative NAAQS designation source"
+     }
+    ]
+   },
+   "output_preference": {
+    "value_kind": "category",
+    "buckets_ok": false
+   },
+   "idempotency_key": "deliverable-fr1-nonattainment-20260805",
+   "constraints": {
+    "acceptable_substitutes": [
+     "air_quality_nonattainment_pollutants",
+     "air_quality_worst_classification",
+     "air_quality_maintenance_pollutants"
+    ]
+   }
+  }
+ },
+ "http_status": 409,
+ "credits_charged": 0,
+ "seconds": 0.55,
+ "response": {
+  "detail": {
+   "error": "idempotency_key_reused",
+   "message": "idempotency_key 'deliverable-fr1-nonattainment-20260805' was already used for a different request (fr_72ffcf9048684a17860be106e8590aa2). Use a new key, or re-send the identical payload."
+  }
+ },
+ "also_probed": {
+  "POST /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2": 404,
+  "PATCH /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2": 404,
+  "PUT /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2": 404,
+  "POST /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2/confirm": 404,
+  "POST /v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2/accept": 404
+ }
+}

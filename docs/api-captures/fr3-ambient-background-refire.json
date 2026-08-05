@@ -1,0 +1,282 @@
+{
+ "note": "Re-fired 5 Aug 2026 through the fixed provider path (MireyeProvider.field_request with example_locations). Same idempotency key as the original filing, so this is an idempotent replay: HTTP 200 rather than 201, and updated_at is unchanged from the first screening.",
+ "request": {
+  "method": "POST",
+  "path": "/v1/field-requests",
+  "body": {
+   "description": "Background ambient air concentration at a coordinate for PM2.5 (annual and 24-hour) and NO2 (annual and 1-hour), as the EPA design value from the nearest representative regulatory monitor, with the monitor's AQS site id and distance. This is the measured concentration already in the air before my project adds anything.",
+   "example_locations": [
+    {
+     "address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+     "note": "Loudoun County VA — ozone nonattainment (2015 8-hr, Moderate), the densest data center market in the world"
+    }
+   ],
+   "use_case": "A PSD or minor NSR permit needs a NAAQS compliance demonstration: modeled impact from the new source PLUS existing background must stay under the standard. Today I have to hand-pull design values from EPA AQS per site, which is the slowest manual step in the whole screen. Background is what decides whether a 500 MW gas plant's modeled increment fits under the 1-hour NO2 NAAQS or not.",
+   "decision_threshold": "Annual PM2.5 NAAQS is 9.0 ug/m3 and 1-hour NO2 is 100 ppb. If background already consumes most of the standard the project needs tighter controls, a taller stack, or a different parcel. The decision flips somewhere around 70 percent of the standard consumed.",
+   "area_of_interest": {
+    "level": "national",
+    "names": [
+     "United States"
+    ]
+   },
+   "expected_volume": {
+    "locations": 3140,
+    "geography": "every US county centroid plus ~3000 tracked project sites",
+    "cadence": "recurring"
+   },
+   "freshness": {
+    "max_staleness": "P1Y",
+    "changes_how_often": "EPA publishes design values annually"
+   },
+   "known_sources": {
+    "suggested": [
+     {
+      "name": "EPA AQS design values",
+      "url": "https://www.epa.gov/air-trends/air-quality-design-values",
+      "why": "the values regulators actually accept in a permit application"
+     },
+     {
+      "name": "EPA AQS monitor network",
+      "url": "https://www.epa.gov/aqs",
+      "why": "monitor locations for the nearest-representative-monitor join"
+     }
+    ]
+   },
+   "output_preference": {
+    "value_kind": "number",
+    "units": "ug/m3 for PM2.5, ppb for NO2",
+    "buckets_ok": false
+   },
+   "idempotency_key": "deliverable-fr3-ambient-background-20260805"
+  }
+ },
+ "http_status": 200,
+ "credits_charged": 0,
+ "seconds": 0.92,
+ "response": {
+  "request_id": "fr_42c2a7c653c84f30be9584644ce0c752",
+  "status": "queued",
+  "waiting_on": null,
+  "phase": null,
+  "queue_position": 2,
+  "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00",
+  "resolved_locations": [
+   {
+    "index": 0,
+    "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+    "resolved_location": {
+     "lat": 39.022183,
+     "lng": -77.453578,
+     "source": "address"
+    }
+   }
+  ],
+  "disposition": [
+   {
+    "ask": "Background ambient air concentration at a coordinate for PM2.5 annual design value from the nearest representative regulatory monitor, with monitor AQS site id and distance",
+    "reason": "No candidate field addresses EPA AQS design values, PM2.5 background concentration, or regulatory monitor data. The hazard/utility layers offered do not include air-quality monitoring or NAAQS compliance fields.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "background_ambient_air_concentration_at_a_coordinate_for_pm2"
+      ]
+     },
+     "method": "POST"
+    },
+    "field_id": "background_ambient_air_concentration_at_a_coordinate_for_pm2",
+    "disposition": "accepted_new",
+    "feasibility_class": "source_uncertain",
+    "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00"
+   },
+   {
+    "ask": "Background ambient air concentration at a coordinate for PM2.5 24-hour design value from the nearest representative regulatory monitor, with monitor AQS site id and distance",
+    "reason": "No candidate field addresses EPA AQS design values, PM2.5 background concentration, or regulatory monitor data. The hazard/utility layers offered do not include air-quality monitoring or NAAQS compliance fields.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "background_ambient_air_concentration_at_a_coordinate_for_pm2"
+      ]
+     },
+     "method": "POST"
+    },
+    "field_id": "background_ambient_air_concentration_at_a_coordinate_for_pm2",
+    "disposition": "accepted_new",
+    "feasibility_class": "source_uncertain",
+    "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00"
+   },
+   {
+    "ask": "Background ambient air concentration at a coordinate for NO2 annual design value from the nearest representative regulatory monitor, with monitor AQS site id and distance",
+    "reason": "No candidate field addresses EPA AQS design values, NO2 background concentration, or regulatory monitor data. The hazard/utility layers offered do not include air-quality monitoring or NAAQS compliance fields.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "background_ambient_air_concentration_at_a_coordinate_for_no2"
+      ]
+     },
+     "method": "POST"
+    },
+    "field_id": "background_ambient_air_concentration_at_a_coordinate_for_no2",
+    "disposition": "accepted_new",
+    "feasibility_class": "source_uncertain",
+    "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00"
+   },
+   {
+    "ask": "Background ambient air concentration at a coordinate for NO2 1-hour design value from the nearest representative regulatory monitor, with monitor AQS site id and distance",
+    "reason": "No candidate field addresses EPA AQS design values, NO2 background concentration, or regulatory monitor data. The hazard/utility layers offered do not include air-quality monitoring or NAAQS compliance fields.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "background_ambient_air_concentration_at_a_coordinate_for_no2"
+      ]
+     },
+     "method": "POST"
+    },
+    "field_id": "background_ambient_air_concentration_at_a_coordinate_for_no2",
+    "disposition": "accepted_new",
+    "feasibility_class": "source_uncertain",
+    "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00"
+   }
+  ],
+  "resume": {
+   "url": "https://api.mireye.com/v1/fetch",
+   "body": {
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "fields": [
+     "background_ambient_air_concentration_at_a_coordinate_for_pm2"
+    ]
+   },
+   "method": "POST"
+  },
+  "context_blob": null,
+  "created_at": "2026-08-05T09:24:48.836870+00:00",
+  "updated_at": "2026-08-05T09:24:52.976972+00:00"
+ },
+ "poll": {
+  "method": "GET",
+  "path": "/v1/field-requests/fr_42c2a7c653c84f30be9584644ce0c752",
+  "response": {
+   "request_id": "fr_42c2a7c653c84f30be9584644ce0c752",
+   "status": "queued",
+   "waiting_on": null,
+   "phase": null,
+   "queue_position": 2,
+   "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00",
+   "resolved_locations": [
+    {
+     "index": 0,
+     "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+     "resolved_location": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "source": "address"
+     }
+    }
+   ],
+   "disposition": [
+    {
+     "ask": "Background ambient air concentration at a coordinate for PM2.5 annual design value from the nearest representative regulatory monitor, with monitor AQS site id and distance",
+     "reason": "No candidate field addresses EPA AQS design values, PM2.5 background concentration, or regulatory monitor data. The hazard/utility layers offered do not include air-quality monitoring or NAAQS compliance fields.",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "background_ambient_air_concentration_at_a_coordinate_for_pm2"
+       ]
+      },
+      "method": "POST"
+     },
+     "field_id": "background_ambient_air_concentration_at_a_coordinate_for_pm2",
+     "disposition": "accepted_new",
+     "feasibility_class": "source_uncertain",
+     "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00"
+    },
+    {
+     "ask": "Background ambient air concentration at a coordinate for PM2.5 24-hour design value from the nearest representative regulatory monitor, with monitor AQS site id and distance",
+     "reason": "No candidate field addresses EPA AQS design values, PM2.5 background concentration, or regulatory monitor data. The hazard/utility layers offered do not include air-quality monitoring or NAAQS compliance fields.",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "background_ambient_air_concentration_at_a_coordinate_for_pm2"
+       ]
+      },
+      "method": "POST"
+     },
+     "field_id": "background_ambient_air_concentration_at_a_coordinate_for_pm2",
+     "disposition": "accepted_new",
+     "feasibility_class": "source_uncertain",
+     "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00"
+    },
+    {
+     "ask": "Background ambient air concentration at a coordinate for NO2 annual design value from the nearest representative regulatory monitor, with monitor AQS site id and distance",
+     "reason": "No candidate field addresses EPA AQS design values, NO2 background concentration, or regulatory monitor data. The hazard/utility layers offered do not include air-quality monitoring or NAAQS compliance fields.",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "background_ambient_air_concentration_at_a_coordinate_for_no2"
+       ]
+      },
+      "method": "POST"
+     },
+     "field_id": "background_ambient_air_concentration_at_a_coordinate_for_no2",
+     "disposition": "accepted_new",
+     "feasibility_class": "source_uncertain",
+     "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00"
+    },
+    {
+     "ask": "Background ambient air concentration at a coordinate for NO2 1-hour design value from the nearest representative regulatory monitor, with monitor AQS site id and distance",
+     "reason": "No candidate field addresses EPA AQS design values, NO2 background concentration, or regulatory monitor data. The hazard/utility layers offered do not include air-quality monitoring or NAAQS compliance fields.",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "background_ambient_air_concentration_at_a_coordinate_for_no2"
+       ]
+      },
+      "method": "POST"
+     },
+     "field_id": "background_ambient_air_concentration_at_a_coordinate_for_no2",
+     "disposition": "accepted_new",
+     "feasibility_class": "source_uncertain",
+     "estimated_ready_at": "2026-08-06T09:24:52.962142+00:00"
+    }
+   ],
+   "resume": {
+    "url": "https://api.mireye.com/v1/fetch",
+    "body": {
+     "lat": 39.022183,
+     "lng": -77.453578,
+     "fields": [
+      "background_ambient_air_concentration_at_a_coordinate_for_pm2"
+     ]
+    },
+    "method": "POST"
+   },
+   "context_blob": null,
+   "created_at": "2026-08-05T09:24:48.836870+00:00",
+   "updated_at": "2026-08-05T09:24:52.976972+00:00"
+  }
+ }
+}

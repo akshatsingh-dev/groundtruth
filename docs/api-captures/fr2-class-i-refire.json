@@ -1,0 +1,287 @@
+{
+ "note": "Re-fired 5 Aug 2026 through the fixed provider path (MireyeProvider.field_request with example_locations). Same idempotency key as the original filing, so this is an idempotent replay: HTTP 200 rather than 201, and updated_at is unchanged from the first screening.",
+ "request": {
+  "method": "POST",
+  "path": "/v1/field-requests",
+  "body": {
+   "description": "Geodesic distance in meters from a coordinate to the nearest EPA mandatory Class I federal area (national parks and wilderness areas over 6000 acres), plus the area's name and managing federal agency.",
+   "example_locations": [
+    {
+     "address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+     "note": "Loudoun County VA — ozone nonattainment (2015 8-hr, Moderate), the densest data center market in the world"
+    }
+   ],
+   "use_case": "PSD permitting. A Class I area within 100 km triggers Federal Land Manager notification and an air quality related values analysis (visibility and deposition). The FLM can object on AQRV grounds even when the NAAQS modeling passes, which adds roughly six months and real denial risk.",
+   "decision_threshold": "100 km is the notification radius in 40 CFR 52.21(p). 300 km is where FLMs have still asked for long-range visibility modeling on large sources.",
+   "area_of_interest": {
+    "level": "national",
+    "names": [
+     "United States"
+    ]
+   },
+   "expected_volume": {
+    "locations": 3140,
+    "geography": "every US county centroid plus ~3000 tracked project sites",
+    "cadence": "recurring"
+   },
+   "freshness": {
+    "max_staleness": "P1Y",
+    "changes_how_often": "essentially static; Congress designates new areas rarely"
+   },
+   "known_sources": {
+    "suggested": [
+     {
+      "name": "EPA Class I Areas",
+      "url": "https://www.epa.gov/visibility/class-i-area-designations",
+      "why": "pure geometry over published federal boundaries"
+     }
+    ]
+   },
+   "output_preference": {
+    "value_kind": "distance",
+    "units": "meters",
+    "buckets_ok": false
+   },
+   "idempotency_key": "deliverable-fr2-class-i-20260805"
+  }
+ },
+ "http_status": 200,
+ "credits_charged": 0,
+ "seconds": 0.74,
+ "response": {
+  "request_id": "fr_bf22e9def8294b34b427c7862b33828e",
+  "status": "matched",
+  "waiting_on": null,
+  "phase": null,
+  "queue_position": null,
+  "estimated_ready_at": null,
+  "resolved_locations": [
+   {
+    "index": 0,
+    "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+    "resolved_location": {
+     "lat": 39.022183,
+     "lng": -77.453578,
+     "source": "address"
+    }
+   }
+  ],
+  "disposition": [
+   {
+    "ask": "geodesic distance in meters from a coordinate to the nearest EPA mandatory Class I federal area",
+    "units": "meters",
+    "reason": "Field directly measures geodesic distance in meters to the nearest Class I federal area (national parks / wilderness > 6000 acres).",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "nearest_class_i_area_distance_m"
+      ]
+     },
+     "method": "POST"
+    },
+    "sample": {
+     "unit": "meters",
+     "value": 63478.439179638815,
+     "source": "EPA_CLASS_I_AREAS",
+     "fetched_at": "2026-08-05T09:21:18.354199+00:00",
+     "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+    },
+    "field_id": "nearest_class_i_area_distance_m",
+    "description": "Geodesic distance to the nearest EPA mandatory Class I federal area (national park / wilderness > 6000 acres); 0 when the point lies inside one.",
+    "disposition": "matched_existing",
+    "interpretation_hints": "A BTM gas plant clearing PSD major-source thresholds near a Class I area triggers mandatory Federal-Land-Manager consultation + visibility / air-quality-related-values modeling (customary screening ~300 km) — a lead-time and cost escalator distinct from nonattainment NNSR. Large or null far from any Class I area."
+   },
+   {
+    "ask": "name of the nearest Class I federal area",
+    "units": null,
+    "reason": "Field directly provides the name of the nearest Class I federal area.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "nearest_class_i_area_name"
+      ]
+     },
+     "method": "POST"
+    },
+    "sample": {
+     "unit": null,
+     "value": "Shenandoah NP",
+     "source": "EPA_CLASS_I_AREAS",
+     "fetched_at": "2026-08-05T09:21:18.354110+00:00",
+     "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+    },
+    "field_id": "nearest_class_i_area_name",
+    "description": "Name of the nearest Class I federal area (e.g. \"Yosemite NP\", \"Sequoia NP\").",
+    "disposition": "matched_existing",
+    "interpretation_hints": "The specific national park / wilderness whose Federal Land Manager would be consulted in PSD permitting. Null when no area is within the search radius."
+   },
+   {
+    "ask": "managing federal agency of the nearest Class I federal area",
+    "units": null,
+    "reason": "Field directly identifies the Federal Land Manager (NPS, Forest Service, Fish & Wildlife Service, or BIA) for the nearest Class I area.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "nearest_class_i_area_agency"
+      ]
+     },
+     "method": "POST"
+    },
+    "sample": {
+     "unit": null,
+     "value": "USDI-NPS",
+     "source": "EPA_CLASS_I_AREAS",
+     "fetched_at": "2026-08-05T09:21:18.354182+00:00",
+     "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+    },
+    "field_id": "nearest_class_i_area_agency",
+    "description": "Managing federal agency of the nearest Class I area (USDI-NPS / USDA-FS / USDI-FWS / BIA).",
+    "disposition": "matched_existing",
+    "interpretation_hints": "Identifies which Federal Land Manager (National Park Service, Forest Service, Fish & Wildlife Service, or Bureau of Indian Affairs) governs the consultation. Null when no area is within the search radius."
+   }
+  ],
+  "resume": {
+   "url": "https://api.mireye.com/v1/fetch",
+   "body": {
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "fields": [
+     "nearest_class_i_area_distance_m"
+    ]
+   },
+   "method": "POST"
+  },
+  "context_blob": null,
+  "created_at": "2026-08-05T09:24:44.320957+00:00",
+  "updated_at": "2026-08-05T09:24:47.262653+00:00"
+ },
+ "poll": {
+  "method": "GET",
+  "path": "/v1/field-requests/fr_bf22e9def8294b34b427c7862b33828e",
+  "response": {
+   "request_id": "fr_bf22e9def8294b34b427c7862b33828e",
+   "status": "matched",
+   "waiting_on": null,
+   "phase": null,
+   "queue_position": null,
+   "estimated_ready_at": null,
+   "resolved_locations": [
+    {
+     "index": 0,
+     "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+     "resolved_location": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "source": "address"
+     }
+    }
+   ],
+   "disposition": [
+    {
+     "ask": "geodesic distance in meters from a coordinate to the nearest EPA mandatory Class I federal area",
+     "units": "meters",
+     "reason": "Field directly measures geodesic distance in meters to the nearest Class I federal area (national parks / wilderness > 6000 acres).",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "nearest_class_i_area_distance_m"
+       ]
+      },
+      "method": "POST"
+     },
+     "sample": {
+      "unit": "meters",
+      "value": 63478.439179638815,
+      "source": "EPA_CLASS_I_AREAS",
+      "fetched_at": "2026-08-05T09:21:18.354199+00:00",
+      "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+     },
+     "field_id": "nearest_class_i_area_distance_m",
+     "description": "Geodesic distance to the nearest EPA mandatory Class I federal area (national park / wilderness > 6000 acres); 0 when the point lies inside one.",
+     "disposition": "matched_existing",
+     "interpretation_hints": "A BTM gas plant clearing PSD major-source thresholds near a Class I area triggers mandatory Federal-Land-Manager consultation + visibility / air-quality-related-values modeling (customary screening ~300 km) — a lead-time and cost escalator distinct from nonattainment NNSR. Large or null far from any Class I area."
+    },
+    {
+     "ask": "name of the nearest Class I federal area",
+     "units": null,
+     "reason": "Field directly provides the name of the nearest Class I federal area.",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "nearest_class_i_area_name"
+       ]
+      },
+      "method": "POST"
+     },
+     "sample": {
+      "unit": null,
+      "value": "Shenandoah NP",
+      "source": "EPA_CLASS_I_AREAS",
+      "fetched_at": "2026-08-05T09:21:18.354110+00:00",
+      "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+     },
+     "field_id": "nearest_class_i_area_name",
+     "description": "Name of the nearest Class I federal area (e.g. \"Yosemite NP\", \"Sequoia NP\").",
+     "disposition": "matched_existing",
+     "interpretation_hints": "The specific national park / wilderness whose Federal Land Manager would be consulted in PSD permitting. Null when no area is within the search radius."
+    },
+    {
+     "ask": "managing federal agency of the nearest Class I federal area",
+     "units": null,
+     "reason": "Field directly identifies the Federal Land Manager (NPS, Forest Service, Fish & Wildlife Service, or BIA) for the nearest Class I area.",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "nearest_class_i_area_agency"
+       ]
+      },
+      "method": "POST"
+     },
+     "sample": {
+      "unit": null,
+      "value": "USDI-NPS",
+      "source": "EPA_CLASS_I_AREAS",
+      "fetched_at": "2026-08-05T09:21:18.354182+00:00",
+      "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas"
+     },
+     "field_id": "nearest_class_i_area_agency",
+     "description": "Managing federal agency of the nearest Class I area (USDI-NPS / USDA-FS / USDI-FWS / BIA).",
+     "disposition": "matched_existing",
+     "interpretation_hints": "Identifies which Federal Land Manager (National Park Service, Forest Service, Fish & Wildlife Service, or Bureau of Indian Affairs) governs the consultation. Null when no area is within the search radius."
+    }
+   ],
+   "resume": {
+    "url": "https://api.mireye.com/v1/fetch",
+    "body": {
+     "lat": 39.022183,
+     "lng": -77.453578,
+     "fields": [
+      "nearest_class_i_area_distance_m"
+     ]
+    },
+    "method": "POST"
+   },
+   "context_blob": null,
+   "created_at": "2026-08-05T09:24:44.320957+00:00",
+   "updated_at": "2026-08-05T09:24:47.262653+00:00"
+  }
+ }
+}

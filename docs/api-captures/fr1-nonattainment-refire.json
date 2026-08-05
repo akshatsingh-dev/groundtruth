@@ -1,0 +1,292 @@
+{
+ "note": "Re-fired 5 Aug 2026 through the fixed provider path (MireyeProvider.field_request with example_locations). Same idempotency key as the original filing, so this is an idempotent replay: HTTP 200 rather than 201, and updated_at is unchanged from the first screening.",
+ "request": {
+  "method": "POST",
+  "path": "/v1/field-requests",
+  "body": {
+   "description": "County-level EPA NAAQS attainment / nonattainment / maintenance status at a coordinate, broken out per pollutant (ozone, PM2.5, PM10, CO, SO2, NO2, lead) with the area's classification (Marginal / Moderate / Serious / Severe / Extreme). I need to know, per pollutant, whether a point is in nonattainment and how severe, because that single fact decides whether a new combustion source needs major nonattainment NSR (LAER plus emission offsets, 2-3 years) or minor NSR (4-6 months).",
+   "example_locations": [
+    {
+     "address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+     "note": "Loudoun County VA — ozone nonattainment (2015 8-hr, Moderate), the densest data center market in the world"
+    }
+   ],
+   "use_case": "Air permit pathway screening for onsite gas generation at data centers. Nonattainment for a pollutant my plant emits drops the major-source threshold from 250 tpy to as low as 10 tpy and adds an offset requirement, which can be a hard stop rather than a delay.",
+   "decision_threshold": "Binary per pollutant: in nonattainment or not. If yes, the classification decides the threshold (Marginal/Moderate 100 tpy, Serious 50, Severe 25, Extreme 10) and the offset ratio.",
+   "area_of_interest": {
+    "level": "national",
+    "names": [
+     "United States"
+    ]
+   },
+   "expected_volume": {
+    "locations": 3140,
+    "geography": "every US county centroid plus ~3000 tracked project sites",
+    "cadence": "recurring"
+   },
+   "freshness": {
+    "max_staleness": "P3M",
+    "changes_how_often": "EPA redesignates a few areas per year"
+   },
+   "known_sources": {
+    "suggested": [
+     {
+      "name": "EPA Green Book",
+      "url": "https://www.epa.gov/green-book",
+      "why": "the authoritative NAAQS designation source"
+     }
+    ]
+   },
+   "output_preference": {
+    "value_kind": "category",
+    "buckets_ok": false
+   },
+   "idempotency_key": "deliverable-fr1-nonattainment-20260805"
+  }
+ },
+ "http_status": 200,
+ "credits_charged": 0,
+ "seconds": 0.5,
+ "response": {
+  "request_id": "fr_72ffcf9048684a17860be106e8590aa2",
+  "status": "awaiting_confirm",
+  "waiting_on": "requester",
+  "phase": null,
+  "queue_position": null,
+  "estimated_ready_at": null,
+  "resolved_locations": [
+   {
+    "index": 0,
+    "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+    "resolved_location": {
+     "lat": 39.022183,
+     "lng": -77.453578,
+     "source": "address"
+    }
+   }
+  ],
+  "disposition": [
+   {
+    "ask": "Whether a point is in a nonattainment area and, if so, which pollutants (ozone, PM2.5, PM10, CO, SO2, NO2, lead) and the severity classification (Marginal/Moderate/Serious/Severe/Extreme)",
+    "units": null,
+    "reason": "This field identifies pollutants for which the point is in nonattainment, but does not break them out individually per pollutant or supply the severity classification separately — you must also pull air_quality_worst_classification for the classification tier, which applies only to ozone/CO, leaving PM/lead/SO2/NO2 unclassified.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "air_quality_nonattainment_pollutants"
+      ]
+     },
+     "method": "POST"
+    },
+    "sample": {
+     "unit": null,
+     "value": "8-Hour Ozone (2015 Standard)",
+     "source": "EPA_GREEN_BOOK",
+     "fetched_at": "2026-08-05T09:21:18.241261+00:00",
+     "source_url": "https://www.epa.gov/green-book"
+    },
+    "field_id": "air_quality_nonattainment_pollutants",
+    "description": "Comma-joined distinct pollutant names for which the point is in a nonattainment area (e.g. \"Ozone (2015),PM2.5 (2012)\").",
+    "disposition": "near_miss_confirm",
+    "confirm_required": true,
+    "interpretation_hints": "Identifies which criteria pollutants drive the permitting constraint — ozone nonattainment in particular gates NOx-emitting turbines and engines. Empty when the point is in no nonattainment area."
+   },
+   {
+    "ask": "The severity classification (Marginal/Moderate/Serious/Severe/Extreme) for ozone and CO nonattainment areas",
+    "units": null,
+    "reason": "This field supplies the worst classification among ozone/CO matches only; it is explicitly blank for PM2.5/PM10/lead/SO2/NO2 nonattainment areas, so it answers only half of the per-pollutant severity requirement.",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "air_quality_worst_classification"
+      ]
+     },
+     "method": "POST"
+    },
+    "sample": {
+     "unit": null,
+     "value": "Moderate",
+     "source": "EPA_GREEN_BOOK",
+     "fetched_at": "2026-08-05T09:21:18.241273+00:00",
+     "source_url": "https://www.epa.gov/green-book"
+    },
+    "field_id": "air_quality_worst_classification",
+    "description": "Worst ozone/CO nonattainment classification among matches (Extreme > Severe > Serious > Moderate > Marginal).",
+    "disposition": "near_miss_confirm",
+    "confirm_required": true,
+    "interpretation_hints": "Higher classifications carry progressively stricter offset ratios and lower major-source thresholds, escalating air-permit burden for on-site generation. Blank for PM/lead/SO2/NO2 areas (classification is meaningful only for ozone & CO)."
+   },
+   {
+    "ask": "Whether a point is in a maintenance area and which pollutants carry maintenance-plan constraints",
+    "units": null,
+    "reason": "Identifies maintenance-area pollutants but maintenance areas are distinct from nonattainment and do not directly answer the nonattainment classification decision (though they do signal anti-backsliding NSR obligations).",
+    "resume": {
+     "url": "https://api.mireye.com/v1/fetch",
+     "body": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "fields": [
+       "air_quality_maintenance_pollutants"
+      ]
+     },
+     "method": "POST"
+    },
+    "sample": {
+     "unit": null,
+     "value": "8-Hour Ozone (2008 Standard)",
+     "source": "EPA_GREEN_BOOK",
+     "fetched_at": "2026-08-05T09:21:18.241303+00:00",
+     "source_url": "https://www.epa.gov/green-book"
+    },
+    "field_id": "air_quality_maintenance_pollutants",
+    "description": "Comma-joined distinct pollutant names for which the point is in a maintenance area (e.g. \"Ozone (2008),CO\").",
+    "disposition": "near_miss_confirm",
+    "confirm_required": true,
+    "interpretation_hints": "Identifies which criteria pollutants carry anti-backsliding maintenance-plan constraints at the point. Empty when the point is in no maintenance area."
+   }
+  ],
+  "resume": {
+   "url": "https://api.mireye.com/v1/fetch",
+   "body": {
+    "lat": 39.022183,
+    "lng": -77.453578,
+    "fields": [
+     "air_quality_nonattainment_pollutants"
+    ]
+   },
+   "method": "POST"
+  },
+  "context_blob": null,
+  "created_at": "2026-08-05T09:24:37.636984+00:00",
+  "updated_at": "2026-08-05T09:24:43.028810+00:00"
+ },
+ "poll": {
+  "method": "GET",
+  "path": "/v1/field-requests/fr_72ffcf9048684a17860be106e8590aa2",
+  "response": {
+   "request_id": "fr_72ffcf9048684a17860be106e8590aa2",
+   "status": "awaiting_confirm",
+   "waiting_on": "requester",
+   "phase": null,
+   "queue_position": null,
+   "estimated_ready_at": null,
+   "resolved_locations": [
+    {
+     "index": 0,
+     "resolved_address": "21571 Beaumeade Cir, Ashburn, VA 20147",
+     "resolved_location": {
+      "lat": 39.022183,
+      "lng": -77.453578,
+      "source": "address"
+     }
+    }
+   ],
+   "disposition": [
+    {
+     "ask": "Whether a point is in a nonattainment area and, if so, which pollutants (ozone, PM2.5, PM10, CO, SO2, NO2, lead) and the severity classification (Marginal/Moderate/Serious/Severe/Extreme)",
+     "units": null,
+     "reason": "This field identifies pollutants for which the point is in nonattainment, but does not break them out individually per pollutant or supply the severity classification separately — you must also pull air_quality_worst_classification for the classification tier, which applies only to ozone/CO, leaving PM/lead/SO2/NO2 unclassified.",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "air_quality_nonattainment_pollutants"
+       ]
+      },
+      "method": "POST"
+     },
+     "sample": {
+      "unit": null,
+      "value": "8-Hour Ozone (2015 Standard)",
+      "source": "EPA_GREEN_BOOK",
+      "fetched_at": "2026-08-05T09:21:18.241261+00:00",
+      "source_url": "https://www.epa.gov/green-book"
+     },
+     "field_id": "air_quality_nonattainment_pollutants",
+     "description": "Comma-joined distinct pollutant names for which the point is in a nonattainment area (e.g. \"Ozone (2015),PM2.5 (2012)\").",
+     "disposition": "near_miss_confirm",
+     "confirm_required": true,
+     "interpretation_hints": "Identifies which criteria pollutants drive the permitting constraint — ozone nonattainment in particular gates NOx-emitting turbines and engines. Empty when the point is in no nonattainment area."
+    },
+    {
+     "ask": "The severity classification (Marginal/Moderate/Serious/Severe/Extreme) for ozone and CO nonattainment areas",
+     "units": null,
+     "reason": "This field supplies the worst classification among ozone/CO matches only; it is explicitly blank for PM2.5/PM10/lead/SO2/NO2 nonattainment areas, so it answers only half of the per-pollutant severity requirement.",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "air_quality_worst_classification"
+       ]
+      },
+      "method": "POST"
+     },
+     "sample": {
+      "unit": null,
+      "value": "Moderate",
+      "source": "EPA_GREEN_BOOK",
+      "fetched_at": "2026-08-05T09:21:18.241273+00:00",
+      "source_url": "https://www.epa.gov/green-book"
+     },
+     "field_id": "air_quality_worst_classification",
+     "description": "Worst ozone/CO nonattainment classification among matches (Extreme > Severe > Serious > Moderate > Marginal).",
+     "disposition": "near_miss_confirm",
+     "confirm_required": true,
+     "interpretation_hints": "Higher classifications carry progressively stricter offset ratios and lower major-source thresholds, escalating air-permit burden for on-site generation. Blank for PM/lead/SO2/NO2 areas (classification is meaningful only for ozone & CO)."
+    },
+    {
+     "ask": "Whether a point is in a maintenance area and which pollutants carry maintenance-plan constraints",
+     "units": null,
+     "reason": "Identifies maintenance-area pollutants but maintenance areas are distinct from nonattainment and do not directly answer the nonattainment classification decision (though they do signal anti-backsliding NSR obligations).",
+     "resume": {
+      "url": "https://api.mireye.com/v1/fetch",
+      "body": {
+       "lat": 39.022183,
+       "lng": -77.453578,
+       "fields": [
+        "air_quality_maintenance_pollutants"
+       ]
+      },
+      "method": "POST"
+     },
+     "sample": {
+      "unit": null,
+      "value": "8-Hour Ozone (2008 Standard)",
+      "source": "EPA_GREEN_BOOK",
+      "fetched_at": "2026-08-05T09:21:18.241303+00:00",
+      "source_url": "https://www.epa.gov/green-book"
+     },
+     "field_id": "air_quality_maintenance_pollutants",
+     "description": "Comma-joined distinct pollutant names for which the point is in a maintenance area (e.g. \"Ozone (2008),CO\").",
+     "disposition": "near_miss_confirm",
+     "confirm_required": true,
+     "interpretation_hints": "Identifies which criteria pollutants carry anti-backsliding maintenance-plan constraints at the point. Empty when the point is in no maintenance area."
+    }
+   ],
+   "resume": {
+    "url": "https://api.mireye.com/v1/fetch",
+    "body": {
+     "lat": 39.022183,
+     "lng": -77.453578,
+     "fields": [
+      "air_quality_nonattainment_pollutants"
+     ]
+    },
+    "method": "POST"
+   },
+   "context_blob": null,
+   "created_at": "2026-08-05T09:24:37.636984+00:00",
+   "updated_at": "2026-08-05T09:24:43.028810+00:00"
+  }
+ }
+}

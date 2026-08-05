@@ -1,0 +1,119 @@
+{
+ "note": "Evidence for the fr1 decision. Does air_quality_worst_classification let us pick a nonattainment major-source threshold for a non-ozone pollutant? No. Four coordinates via POST /v1/fetch/batch (12 credits) plus one via POST /v1/fetch (3 credits).",
+ "request": {
+  "method": "POST",
+  "path": "/v1/fetch/batch",
+  "body": {
+   "locations": [
+    {
+     "lat": 39.022183,
+     "lng": -77.453578
+    },
+    {
+     "lat": 40.5423,
+     "lng": -79.162
+    },
+    {
+     "lat": 29.9427,
+     "lng": -89.9634
+    },
+    {
+     "lat": 64.8378,
+     "lng": -147.7164
+    }
+   ],
+   "fields": [
+    "in_air_quality_nonattainment",
+    "air_quality_nonattainment_pollutants",
+    "air_quality_worst_classification"
+   ]
+  }
+ },
+ "results": [
+  {
+   "label": "Ashburn, VA (Loudoun 51107) — ozone NAA, control",
+   "lat": 39.022183,
+   "lng": -77.453578,
+   "in_air_quality_nonattainment": {
+    "value": true,
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); True if the point intersects any CURRENT-NAAQS nonattainment area (ozone/PM2.5/PM10/CO/SO2/NO2/lead combined layer); Maintenance/Attainment areas do not set it; https://www.epa.gov/green-book"
+   },
+   "air_quality_nonattainment_pollutants": {
+    "value": "8-Hour Ozone (2015 Standard)",
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); comma-joined distinct nonattainment pollutant_name values; https://www.epa.gov/green-book"
+   },
+   "air_quality_worst_classification": {
+    "value": "Moderate",
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); worst ozone/CO classification among matches (Extreme>Severe>Serious>Moderate>Marginal); blank for PM/lead/SO2/NO2; https://www.epa.gov/green-book"
+   }
+  },
+  {
+   "label": "Homer City, PA (Indiana County 42063) — SO2 NAA",
+   "lat": 40.5423,
+   "lng": -79.162,
+   "in_air_quality_nonattainment": {
+    "value": true,
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); True if the point intersects any CURRENT-NAAQS nonattainment area (ozone/PM2.5/PM10/CO/SO2/NO2/lead combined layer); Maintenance/Attainment areas do not set it; https://www.epa.gov/green-book"
+   },
+   "air_quality_nonattainment_pollutants": {
+    "value": "Sulfur Dioxide (2010 Standard)",
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); comma-joined distinct nonattainment pollutant_name values; https://www.epa.gov/green-book"
+   },
+   "air_quality_worst_classification": {
+    "value": null,
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; status=absent; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); worst ozone/CO classification among matches (Extreme>Severe>Serious>Moderate>Marginal); blank for PM/lead/SO2/NO2; https://www.epa.gov/green-book"
+   }
+  },
+  {
+   "label": "Chalmette, LA (St. Bernard Parish 22087) — SO2 NAA",
+   "lat": 29.9427,
+   "lng": -89.9634,
+   "in_air_quality_nonattainment": {
+    "value": true,
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); True if the point intersects any CURRENT-NAAQS nonattainment area (ozone/PM2.5/PM10/CO/SO2/NO2/lead combined layer); Maintenance/Attainment areas do not set it; https://www.epa.gov/green-book"
+   },
+   "air_quality_nonattainment_pollutants": {
+    "value": "Sulfur Dioxide (2010 Standard)",
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); comma-joined distinct nonattainment pollutant_name values; https://www.epa.gov/green-book"
+   },
+   "air_quality_worst_classification": {
+    "value": null,
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; status=absent; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); worst ozone/CO classification among matches (Extreme>Severe>Serious>Moderate>Marginal); blank for PM/lead/SO2/NO2; https://www.epa.gov/green-book"
+   }
+  },
+  {
+   "label": "Fairbanks, AK (FNSB 02090) — PM2.5 NAA (Serious)",
+   "lat": 64.8378,
+   "lng": -147.7164,
+   "in_air_quality_nonattainment": {
+    "value": false,
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); True if the point intersects any CURRENT-NAAQS nonattainment area (ozone/PM2.5/PM10/CO/SO2/NO2/lead combined layer); Maintenance/Attainment areas do not set it; https://www.epa.gov/green-book"
+   },
+   "air_quality_nonattainment_pollutants": {
+    "value": null,
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; status=absent; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); comma-joined distinct nonattainment pollutant_name values; https://www.epa.gov/green-book"
+   },
+   "air_quality_worst_classification": {
+    "value": null,
+    "source": "EPA_GREEN_BOOK",
+    "note": "confidence=high; status=absent; vintage=EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer); worst ozone/CO classification among matches (Extreme>Severe>Serious>Moderate>Marginal); blank for PM/lead/SO2/NO2; https://www.epa.gov/green-book"
+   }
+  }
+ ],
+ "fresno_ca_36.7378_-119.7871": {
+  "in_air_quality_nonattainment": true,
+  "air_quality_nonattainment_pollutants": "8-Hour Ozone (2008 Standard),8-Hour Ozone (2015 Standard),PM-2.5 (2012 Standard)",
+  "air_quality_worst_classification": "Extreme"
+ }
+}

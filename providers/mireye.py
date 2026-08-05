@@ -40,6 +40,7 @@ import os
 import threading
 import time
 import uuid
+from dataclasses import replace
 from typing import Any, Iterable
 
 import httpx
@@ -836,7 +837,7 @@ class MireyeProvider(PhysicalFactsProvider):
             # Nothing was resolved, so there is nothing to score. Confidence
             # stays None rather than being set to 1.0 — the caller supplied this
             # point and owns its correctness.
-            return Location(
+            location = Location(
                 latitude=lat,
                 longitude=lng,
                 formatted_address=None,
@@ -844,6 +845,23 @@ class MireyeProvider(PhysicalFactsProvider):
                 source="caller-supplied coordinate",
                 fetched=now_iso(),
                 raw={"input": query},
+            )
+            # Backfill jurisdiction. A coordinate with no county is useless to the
+            # pathway engine, which keys everything off county attainment status
+            # and the state agency. /v1/lookup costs 1 credit, is cached, and
+            # returns Census-sourced county, FIPS, state and tract. Without this
+            # the caller has to hand-pass --county and --state, which is both
+            # tedious and a place to introduce a wrong answer by typo.
+            try:
+                facts = self.lookup(location)
+            except Exception:
+                return location
+            return replace(
+                location,
+                county=facts.get("county") or None,
+                county_fips=facts.get("county_fips") or None,
+                state=_STATE_ABBREV.get((facts.get("state") or "").strip().lower(), facts.get("state")) or None,
+                tract=facts.get("tract_geoid") or None,
             )
         return self.resolve(query, min_confidence=min_confidence)
 
