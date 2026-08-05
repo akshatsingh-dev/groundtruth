@@ -303,8 +303,15 @@ _JUPITER_FACTS = {
         "2025-09",
         "BorderPlex Digital Assets / Baxtel project record",
     ),
-    "latitude": Fact(31.870, "2025-09", "Santa Teresa, approximate", "not a Mireye geocode"),
-    "longitude": Fact(-106.690, "2025-09", "Santa Teresa, approximate"),
+    # No Jupiter coordinate is public. 31.870, -106.690 was an approximate Santa
+    # Teresa point and reads as empty desert. The satellite module scanned a 15 km
+    # window and ranked 300 m blocks by disturbance; the top cluster sits 6.21 km
+    # SSE, 1.6 km off the Pete V. Domenici Highway, 1.1 km from a substation and
+    # 3.3 km from an EIA-860M generator marked "UNDER CONSTRUCTION, MORE THAN 50
+    # PERCENT COMPLETE". Jupiter has a very large hole in the ground. What it lost
+    # was the gas, not the dirt, which is the sharper version of the thesis.
+    "latitude": Fact(31.8175, "2025-09", "Santa Teresa, disturbance-ranked", "satellite-located, not a published coordinate"),
+    "longitude": Fact(-106.6675, "2025-09", "Santa Teresa, disturbance-ranked", "satellite-located, not a published coordinate"),
     "generation_mw": Fact(
         2800.0,
         "2025-12-09",
@@ -410,8 +417,8 @@ JUPITER = Case(
     site=SiteContext(
         state="NM",
         county="Doña Ana",
-        latitude=31.870,
-        longitude=-106.690,
+        latitude=31.8175,
+        longitude=-106.6675,
         nonattainment=[
             NonattainmentStatus(
                 pollutant="ozone",
@@ -517,8 +524,14 @@ _MEMPHIS_FACTS = {
         "2024-06",
         "widely reported at site announcement",
     ),
-    "latitude": Fact(35.065, "2024-06", "South Memphis, approximate", "not a Mireye geocode"),
-    "longitude": Fact(-90.075, "2024-06", "South Memphis, approximate"),
+    # 35.065, -90.075 was a hand-picked "South Memphis" point and it is 7.31 km off
+    # the actual site. Satellite verification read it as empty ground, correctly,
+    # because it is empty ground. Mireye geocodes 3231 Paul R Lowry Rd at 0.95
+    # rooftop confidence to the point below. The lesson is the product's own:
+    # an approximate coordinate is a different parcel, and a different parcel is a
+    # different answer.
+    "latitude": Fact(35.060553, "2024-06", "3231 Paul R Lowry Rd, Memphis TN", "Mireye geocode, confidence 0.95"),
+    "longitude": Fact(-90.155133, "2024-06", "3231 Paul R Lowry Rd, Memphis TN", "Mireye geocode, confidence 0.95"),
     "generation_mw": Fact(
         420.0,
         "2025-04",
@@ -584,8 +597,8 @@ MEMPHIS = Case(
     site=SiteContext(
         state="TN",
         county="Shelby",
-        latitude=35.065,
-        longitude=-90.075,
+        latitude=35.060553,
+        longitude=-90.155133,
         nonattainment=[],  # attainment/unclassifiable for 2015 ozone
         class_i_areas=[("Mingo Wilderness", 213.0)],
         gas_pipeline_km=None,

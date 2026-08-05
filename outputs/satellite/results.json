@@ -107,7 +107,8 @@
    "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
    "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
    "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
-   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run.",
+   "The `structures_present` gate uses an absolute visible-reflectance threshold (0.22) and that number does not travel. Desert ground is above it before anyone builds anything; the dark metal roofs at xAI Colossus 1 measure 0.11 and never reach it. Treat the top rung as 'bright and paved', reachable mainly on arid sites, and read the disturbed fraction rather than the label where the two disagree."
   ],
   "citation": "S2C_13SCR_20250825_0_L2A acquired 2025-08-25, cloud 0.0% over the footprint; S2C_13SCR_20260731_0_L2A acquired 2026-07-31, cloud 0.0% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
  },
@@ -219,7 +220,8 @@
    "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
    "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
    "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
-   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run.",
+   "The `structures_present` gate uses an absolute visible-reflectance threshold (0.22) and that number does not travel. Desert ground is above it before anyone builds anything; the dark metal roofs at xAI Colossus 1 measure 0.11 and never reach it. Treat the top rung as 'bright and paved', reachable mainly on arid sites, and read the disturbed fraction rather than the label where the two disagree."
   ],
   "citation": "S2C_13SCR_20250825_0_L2A acquired 2025-08-25, cloud 0.0% over the footprint; S2C_13SCR_20260731_0_L2A acquired 2026-07-31, cloud 0.0% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
  },
@@ -331,7 +333,8 @@
    "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
    "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
    "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
-   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run.",
+   "The `structures_present` gate uses an absolute visible-reflectance threshold (0.22) and that number does not travel. Desert ground is above it before anyone builds anything; the dark metal roofs at xAI Colossus 1 measure 0.11 and never reach it. Treat the top rung as 'bright and paved', reachable mainly on arid sites, and read the disturbed fraction rather than the label where the two disagree."
   ],
   "citation": "S2A_18SVJ_20240615_0_L2A acquired 2024-06-15, cloud 0.4% over the footprint; S2C_18SVJ_20260804_0_L2A acquired 2026-08-04, cloud 0.0% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
  },
@@ -443,7 +446,8 @@
    "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
    "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
    "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
-   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run.",
+   "The `structures_present` gate uses an absolute visible-reflectance threshold (0.22) and that number does not travel. Desert ground is above it before anyone builds anything; the dark metal roofs at xAI Colossus 1 measure 0.11 and never reach it. Treat the top rung as 'bright and paved', reachable mainly on arid sites, and read the disturbed fraction rather than the label where the two disagree."
   ],
   "citation": "S2A_15SYU_20240613_0_L2A acquired 2024-06-13, cloud 0.0% over the footprint; S2B_15SYU_20260728_0_L2A acquired 2026-07-28, cloud 0.0% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
  },
@@ -556,7 +560,8 @@
    "The footprint is a circle around a published coordinate, not a parcel boundary. Where the coordinate is approximate, the circle is approximate with it.",
    "Cloud, snow, drought and crop cycles all move NDVI. The control ring removes what is regional; it does not remove a change that happens to be confined to this parcel for some other reason.",
    "A brownfield retrofit inside an existing building produces little surface change and will read low here even when the buildout is real.",
-   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run."
+   "The thresholds are screening thresholds, not a calibrated classifier. They are in one block at the top of ingest/satellite.py and are meant to be moved and re-run.",
+   "The `structures_present` gate uses an absolute visible-reflectance threshold (0.22) and that number does not travel. Desert ground is above it before anyone builds anything; the dark metal roofs at xAI Colossus 1 measure 0.11 and never reach it. Treat the top rung as 'bright and paved', reachable mainly on arid sites, and read the disturbed fraction rather than the label where the two disagree."
   ],
   "citation": "S2A_15SYU_20240613_0_L2A acquired 2024-06-13, cloud 0.0% over the footprint; S2B_15SYU_20260718_0_L2A acquired 2026-07-18, cloud 0.1% over the footprint. Source: Copernicus Sentinel-2 L2A via AWS Open Data (sentinel-cogs), searched through the Element 84 Earth Search STAC API. No credential. Resolution 10 m."
  }

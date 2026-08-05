@@ -575,6 +575,20 @@ def _bing_query(county: str, state: str) -> str:
 # --------------------------------------------------------------------------
 
 
+def _window(since_days: int) -> tuple[datetime, datetime]:
+    """The query window, snapped to whole UTC days.
+
+    Snapped because the cache key is the parameter dict. A window built from
+    `datetime.now()` to the second changes on every call, so every lookup missed
+    and a re-run paid the full twenty minutes at the GDELT rate limiter again.
+    Day granularity is right for a 180-day window and makes a run reproducible
+    for the rest of the day.
+    """
+    end = datetime.now(timezone.utc).replace(hour=23, minute=59, second=59, microsecond=0)
+    start = (end - timedelta(days=since_days)).replace(hour=0, minute=0, second=0)
+    return start, end
+
+
 def _throttle() -> None:
     global _last_gdelt_call
     if _last_gdelt_call == 0.0:
@@ -1073,8 +1087,7 @@ def signals_for_county(
     state = state.strip().upper()
     fips = str(fips).zfill(5) if fips else None
     since_days = max(14, int(since_days))
-    end = datetime.now(timezone.utc)
-    start = end - timedelta(days=since_days)
+    start, end = _window(since_days)
     window = {
         "startdatetime": start.strftime("%Y%m%d%H%M%S"),
         "enddatetime": end.strftime("%Y%m%d%H%M%S"),
@@ -1215,8 +1228,7 @@ def tone_for_county(
     it. It is here because it is cheap context on a page a human is already
     looking at, not because it is a measurement of opposition.
     """
-    end = datetime.now(timezone.utc)
-    start = end - timedelta(days=max(14, int(since_days)))
+    start, end = _window(max(14, int(since_days)))
     body = _gdelt(
         {
             "query": _signal_query(county, state, fips),
