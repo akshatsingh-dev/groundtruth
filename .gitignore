@@ -32,3 +32,8 @@ data/county_scores.json
 data/county_scores.progress.jsonl
 .venv/
 .gstack/
+# The published-coordinate chips are negative controls: at the coordinates that were
+# in backtest/cases.py, both sites read as empty ground. The finding is preserved
+# numerically in outputs/satellite/results.json and explained in docs/satellite-notes.md.
+# The 4 MB of images are regenerable with `python -m ingest.satellite`.
+outputs/satellite/*published-coord*
