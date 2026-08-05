@@ -90,6 +90,9 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Several things here are display:grid, which beats the hidden attribute. */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {

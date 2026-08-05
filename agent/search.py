@@ -510,13 +510,41 @@ def search_alternate_sites(
             )
             break
 
-    # Rank: pathway first, then timeline, then distance. A closer site only
-    # wins as a tiebreak — a category change is worth more than 10 miles.
-    result.ranked.sort(key=lambda c: (c.pathway.rank, len(c.hard_stops), c.months_likely, c.distance_km))
+    # Rank: hard stops first, then pathway, then timeline, then distance.
+    #
+    # Hard stops dominate everything, including a better pathway. A county
+    # moratorium or a pipeline 60 km away is not a slower permit, it is a
+    # different outcome, and a search that answers "move here, minor NSR, save
+    # 52 months" about a county that has banned data centers outright is worse
+    # than no search at all. A closer site only wins as a tiebreak: a category
+    # change is worth more than 10 miles.
+    result.ranked.sort(
+        key=lambda c: (bool(c.hard_stops), c.pathway.rank, c.months_likely, c.distance_km)
+    )
 
-    improved = [
-        c for c in result.ranked if c.rank_delta > 0 or (c.months_saved > 1 and not c.hard_stops)
+    # A candidate that improves the pathway but carries a hard stop is not an
+    # improvement. Unlike the origin parcel, which the developer may already own,
+    # a candidate is a free choice — so there is no reason to recommend one that
+    # cannot be built on.
+    clean = [c for c in result.ranked if not c.hard_stops]
+    improved = [c for c in clean if c.rank_delta > 0 or c.months_saved > 1]
+
+    blocked_but_better = [
+        c for c in result.ranked if c.hard_stops and (c.rank_delta > 0 or c.months_saved > 1)
     ]
+    if blocked_but_better and not improved:
+        result.notes.append(
+            f"{len(blocked_but_better)} parcel(s) screened to a better pathway but carry a hard "
+            f"stop, so none is recommended. Closest was "
+            f"{blocked_but_better[0].county} County, {blocked_but_better[0].state}: "
+            f"{blocked_but_better[0].hard_stops[0]}"
+        )
+    elif blocked_but_better:
+        result.notes.append(
+            f"{len(blocked_but_better)} other parcel(s) scored a better pathway but were dropped "
+            f"for hard stops (moratorium, unreachable gas, or an unavailable offset market)."
+        )
+
     if improved:
         best = improved[0]
         result.best = best
@@ -900,10 +928,23 @@ def search_configs(
             )
         result.options.append(option)
 
-    result.options.sort(key=lambda o: (-o.rank_delta, len(o.hard_stops), -o.months_saved, -o.availability))
+    # Hard stops sort ahead of pathway rank here too. Unlike the parcel search we
+    # do not drop hard-stopped options outright: a site-level hard stop such as a
+    # county moratorium applies to every config equally, so excluding them would
+    # leave nothing. Prefer a clean option when one exists, and say so when the
+    # only improvement still carries the stop.
+    result.options.sort(
+        key=lambda o: (bool(o.hard_stops), -o.rank_delta, -o.months_saved, -o.availability)
+    )
     improving = [o for o in result.options if o.rank_delta > 0 or o.months_saved > 1]
     if improving:
         result.best = improving[0]
+        if result.best.hard_stops:
+            result.notes.append(
+                "The best config still carries a hard stop that no design change clears: "
+                + result.best.hard_stops[0]
+                + " Equipment is not the lever here."
+            )
     else:
         result.notes.append(
             f"No design change at this parcel moves the project off {base_result.pathway.label}. "

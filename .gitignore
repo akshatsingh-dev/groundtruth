@@ -31,3 +31,4 @@ data/county_scores.json
 .pytest_cache/
 data/county_scores.progress.jsonl
 .venv/
+.gstack/
