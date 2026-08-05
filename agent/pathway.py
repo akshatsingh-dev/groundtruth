@@ -473,8 +473,54 @@ FEDERAL_DEFAULT_OVERLAY = {
 }
 
 
-def overlay_for(state: str) -> dict:
-    return STATE_OVERLAYS.get(state.upper(), FEDERAL_DEFAULT_OVERLAY)
+#: The Ozone Transport Region, CAA 184(a). These states must apply moderate
+#: nonattainment requirements for NOx and VOC across their whole territory,
+#: regardless of what the local monitors say.
+#:
+#: This is separate from STATE_OVERLAYS on purpose. Only eight states are modelled
+#: in detail, but the OTR is a statutory fact about twelve, and leaving it attached
+#: to the modelled ones made the alternate-site search recommend moves that looked
+#: better than they are. A move from New Jersey to Pennsylvania does not escape the
+#: OTR — both are in it — and a screen that says otherwise is selling a saving that
+#: does not exist.
+OTR_STATES = frozenset({"CT", "DE", "ME", "MD", "MA", "NH", "NJ", "NY", "PA", "RI", "VT", "DC"})
+
+#: Virginia is in the OTR only for the Washington DC metro portion, so it is
+#: handled at county level rather than statewide. 40 CFR 81.347.
+OTR_VA_COUNTIES = frozenset(
+    {
+        "Arlington",
+        "Fairfax",
+        "Loudoun",
+        "Prince William",
+        "Stafford",
+        "Alexandria",
+        "Falls Church",
+        "Fairfax City",
+        "Manassas",
+        "Manassas Park",
+    }
+)
+
+
+def in_otr(state: str, county: str | None = None) -> bool:
+    state = state.upper()
+    if state in OTR_STATES:
+        return True
+    if state == "VA" and county:
+        return county.replace(" County", "").strip() in OTR_VA_COUNTIES
+    return False
+
+
+def overlay_for(state: str, county: str | None = None) -> dict:
+    """The state agency's behaviour, plus any statutory overlay that applies
+    whether or not we modelled that state in detail."""
+    overlay = STATE_OVERLAYS.get(state.upper(), FEDERAL_DEFAULT_OVERLAY)
+    if in_otr(state, county) and not overlay.get("otr"):
+        overlay = dict(overlay)
+        overlay["otr"] = True
+        overlay["source"] = f"{overlay['source']}; CAA 184(a) Ozone Transport Region"
+    return overlay
 
 
 # --------------------------------------------------------------------------
@@ -488,7 +534,7 @@ def determine_pathway(est: EmissionsEstimate, site: SiteContext) -> PathwayResul
 
     config = est.config
     category = classify_source_category(config)
-    overlay = overlay_for(site.state)
+    overlay = overlay_for(site.state, site.county)
     triggers: list[Trigger] = []
     narrative: list[str] = []
     hard_stops: list[str] = []

@@ -282,6 +282,48 @@ def test_otr_threshold_is_applied_not_just_announced():
     assert ga.pathway is not Pathway.MAJOR_NA_NSR
 
 
+def test_otr_applies_to_unmodelled_states_too():
+    """Moving from New Jersey to Pennsylvania does not escape the Ozone Transport
+    Region. Both are in it.
+
+    The OTR flag used to live only on the eight states with full overlays, so an
+    alternate-site search could recommend a move to Pennsylvania and book the
+    saving as real. It is not real, and a screen that sells it is worse than no
+    screen.
+    """
+    est = estimate(
+        GenerationConfig(
+            mw=150,
+            prime_mover=PrimeMover.SIMPLE_CYCLE_TURBINE,
+            controls=(Control.DLN, Control.SCR, Control.OXIDATION_CATALYST),
+        )
+    )
+    for state in ("PA", "DE", "NY", "MD", "CT"):
+        result = determine_pathway(est, SiteContext(state=state, county="Somewhere"))
+        assert result.pathway is Pathway.MAJOR_NA_NSR, f"{state} is in the OTR"
+        assert result.applicable_threshold == 50.0
+
+    outside = determine_pathway(est, SiteContext(state="OH", county="Wood"))
+    assert outside.pathway is not Pathway.MAJOR_NA_NSR
+
+
+def test_virginia_is_in_the_otr_only_around_washington():
+    """Virginia's OTR membership is the DC metro portion, not the whole state.
+    Applying it statewide would wrongly penalise the rural counties that are
+    genuinely the fast ones."""
+    est = estimate(
+        GenerationConfig(
+            mw=150,
+            prime_mover=PrimeMover.SIMPLE_CYCLE_TURBINE,
+            controls=(Control.DLN, Control.SCR, Control.OXIDATION_CATALYST),
+        )
+    )
+    northern = determine_pathway(est, SiteContext(state="VA", county="Loudoun"))
+    southern = determine_pathway(est, SiteContext(state="VA", county="Mecklenburg"))
+    assert northern.applicable_threshold == 50.0
+    assert southern.pathway is not Pathway.MAJOR_NA_NSR
+
+
 def test_consumed_increment_costs_time_in_nonattainment_too():
     """Increment is consumed regardless of which review programme applies. The
     months were only being added under PSD, so a nonattainment site with a full

@@ -25,8 +25,8 @@ disclosed rather than hidden behind alphabetical order.
 | Days | County | Pathway | Why |
 |---:|---|---|---|
 | 1,918 | Sussex, NJ (+20 tied in NJ) | Major nonattainment NSR | Nonattainment: OZONE severe-15; State can deny on environmental justice grounds (+4 mo) |
-| 1,568 | Prince William, VA | Major nonattainment NSR | Nonattainment: OZONE moderate; County has denied recent data center applications (+6 mo) |
+| 1,659 | Prince William, VA | Major nonattainment NSR | Nonattainment: OZONE moderate; Ozone Transport Region — NOx regulated statewide (+3 mo) |
+| 1,476 | Loudoun, VA (+8 tied in VA) | Major nonattainment NSR | Nonattainment: OZONE moderate; Ozone Transport Region — NOx regulated statewide (+3 mo) |
 | 1,415 | Doña Ana, NM | Major nonattainment NSR | Nonattainment: OZONE marginal, PM10 moderate; Title V operating permit |
-| 1,385 | Loudoun, VA (+7 tied in VA) | Major nonattainment NSR | Nonattainment: OZONE moderate; State air toxics program on top of federal HAP (+2 mo) |
-| 1,278 | Broomfield, CO | Major nonattainment NSR | Nonattainment: OZONE severe-15; County data center moratorium |
+| 1,370 | Montgomery, MD (+1 tied in MD) | Major nonattainment NSR | Nonattainment: OZONE moderate; County data center moratorium |
 

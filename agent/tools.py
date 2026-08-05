@@ -952,9 +952,12 @@ def build_config(base: GenerationConfig, changes: dict | None) -> GenerationConf
         if "prime_mover" in changes
         else base.prime_mover,
         "fuel": Fuel(changes["fuel"]) if "fuel" in changes else base.fuel,
-        "controls": tuple(Control(c) for c in changes["controls"])
+        # Control.NONE is a legitimate enum value and a natural thing for a
+        # caller to send for "uncontrolled", but it carries no efficiency
+        # entry, so it is dropped rather than passed through to the estimator.
+        "controls": tuple(c for c in (Control(x) for x in changes["controls"]) if c is not Control.NONE)
         if "controls" in changes
-        else base.controls,
+        else tuple(c for c in base.controls if c is not Control.NONE),
         "run_hours": float(changes.get("run_hours", base.run_hours)),
         "enforceable_limit": bool(changes.get("enforceable_limit", base.enforceable_limit)),
         "heat_rate_btu_kwh": changes.get("heat_rate_btu_kwh", base.heat_rate_btu_kwh),
