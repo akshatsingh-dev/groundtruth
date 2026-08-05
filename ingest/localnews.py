@@ -89,15 +89,27 @@ BING_URL = "https://www.bing.com/news/search"
 _ROOT = Path(__file__).resolve().parent.parent
 CACHE_PATH = str(_ROOT / "data" / "cache.sqlite")
 CACHE_MAX_AGE_DAYS = 3.0
+#: The media-market denominator is how much a county gets written about at all.
+#: That moves on the timescale of a newspaper closing, not a news cycle.
+BASELINE_CACHE_DAYS = 30.0
 
-#: GDELT asks for one request every five seconds. Five is not enough in practice:
-#: a burst that respects it still gets refused, and once refused the IP stays in
-#: a penalty box for a while. 8 s between calls plus a linear backoff on retry is
-#: what got a clean 27-county run. This is the reason the response cache is not
-#: optional — a cold reconciliation takes about twenty minutes and a warm one
-#: takes two seconds.
-GDELT_MIN_INTERVAL = 10.0
-GDELT_RETRIES = 6
+#: GDELT asks for one request every five seconds. Five is not enough. There is a
+#: second, longer quota underneath it: a process making a well-spaced request
+#: every ten seconds runs clean for about fifteen minutes and is then refused
+#: continuously, and no interval recovers it inside the same hour. So the design
+#: is not "back off harder", it is "ask for less".
+#:
+#: The refusal is stochastic once you are near the quota — at a 12 s interval
+#: roughly a third of calls are answered and the rest are refused, with no
+#: pattern. So the tuning that matters is patience per attempt, not length of
+#: backoff. A 45 s backoff was tried first and it was the bottleneck: three
+#: retries at 45 s meant a call took three minutes to fail, and the process
+#: managed two successful requests in ten minutes. At 15 s the same success rate
+#: costs about a minute per call. Flat backoff, not exponential, for the same
+#: reason: the refusal does not get more likely the longer you have been asking.
+GDELT_MIN_INTERVAL = 12.0
+GDELT_BACKOFF = 15.0
+GDELT_RETRIES = 8
 
 USER_AGENT = "deliverable/0.1 (permit pathway screen)"
 
@@ -118,6 +130,12 @@ class Posture(str, Enum):
     version.
     """
 
+    #: The source could not be read at all. This is not a finding and it is not
+    #: on the scale: "we could not look" is not "nobody is opposing". It exists
+    #: as its own member because downstream code reads the enum, not the prose,
+    #: and a failed fetch that renders as QUIET is the most dangerous shape this
+    #: module could take.
+    UNKNOWN = "unknown"
     QUIET = "quiet"
     ACTIVE_INTEREST = "active_interest"
     ORGANISED_OPPOSITION = "organised_opposition"
@@ -125,11 +143,16 @@ class Posture(str, Enum):
 
     @property
     def rank(self) -> int:
-        return list(Posture).index(self)
+        """Position on the constrained scale. UNKNOWN is -1 because it is not on
+        the scale, and any comparison that involves it is a bug."""
+        if self is Posture.UNKNOWN:
+            return -1
+        return list(Posture).index(self) - 1
 
     @property
     def label(self) -> str:
         return {
+            Posture.UNKNOWN: "source unreachable, nothing was read",
             Posture.QUIET: "no data center coverage found",
             Posture.ACTIVE_INTEREST: "covered, no opposition or action language",
             Posture.ORGANISED_OPPOSITION: "repeated coverage carrying opposition language",
@@ -173,6 +196,16 @@ POSTURE_RULES: dict[str, dict] = {
 #: Below this many articles mentioning the county at all in the window, the
 #: county's media market is too thin for absence to mean anything.
 THIN_MEDIA_BASELINE = 30
+
+#: Dedup thresholds, named so the notes and the code cannot drift.
+#: 0.6 Jaccard on stemmed headline tokens, and 14 days apart at most. 14 rather
+#: than 5 because weeklies run the wire item late: the Afro carried the Prince
+#: George's moratorium vote eleven days after NBC4 did, under a headline that
+#: differs from it by two words. Merging two genuinely separate votes is the
+#: opposite error and it understates rather than overstates, which is the side
+#: to be wrong on.
+SAME_STORY_JACCARD = 0.6
+SAME_STORY_DAYS = 14
 
 #: Trend needs a floor too. Four articles split 1/3 is noise.
 TREND_MIN_ARTICLES = 4
@@ -270,6 +303,37 @@ _INFRA_TERMS = (
     "groundwater",
     "water use",
 )
+
+#: Postal code to state name. Every query carries the state name as a required
+#: term, because county names repeat. "Montgomery County" exists in eighteen
+#: states and a bare query for it over 180 days returned 275 data-center articles
+#: against 60 once "Maryland" was required. Same shape on Marshall: 35 down to 9
+#: with "Indiana". Measured 5 Aug 2026; the numbers are in docs/localnews-notes.md.
+#:
+#: It costs recall on counties whose name is already unique — Loudoun went 259 to
+#: 228, and the 31 lost are local stories that never say the word Virginia. The
+#: clause is applied uniformly anyway, to the baseline query as well as the
+#: signal query, so the loss is in both halves of `coverage_share` and mostly
+#: cancels. Applying it selectively would make the counts non-comparable across
+#: counties, which is worse than a known uniform bias.
+#:
+#: Two-letter abbreviations were tried and rejected: GDELT answers "The specified
+#: phrase is too short" for a quoted two- or three-character phrase.
+STATE_NAMES = {
+    "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas",
+    "CA": "California", "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware",
+    "DC": "District of Columbia", "FL": "Florida", "GA": "Georgia", "HI": "Hawaii",
+    "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas",
+    "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
+    "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi",
+    "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada",
+    "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York",
+    "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma",
+    "OR": "Oregon", "PA": "Pennsylvania", "PR": "Puerto Rico", "RI": "Rhode Island",
+    "SC": "South Carolina", "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas",
+    "UT": "Utah", "VT": "Vermont", "VA": "Virginia", "VI": "Virgin Islands",
+    "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming",
+}
 
 #: Consolidated city-counties, where the bare place name is the county and a
 #: query for "X County" finds nothing. Keyed on FIPS to avoid name collisions.
@@ -561,17 +625,30 @@ def _signal_query(county: str, state: str, fips: str | None = None) -> str:
     """
     counties = _or_group(_county_phrases(county, state, fips))
     terms = _or_group(_DATA_CENTER_TERMS)
-    return f"{counties} {terms} sourcecountry:US"
+    return f"{counties} {_state_clause(state)} {terms} sourcecountry:US".replace("  ", " ")
 
 
 def _baseline_query(county: str, state: str, fips: str | None = None) -> str:
-    """County name alone. The denominator for the media-market problem."""
-    return f"{_or_group(_county_phrases(county, state, fips))} sourcecountry:US"
+    """County name and state, nothing else. The denominator for the media-market
+    problem, and it carries the same state clause as the signal query so the two
+    are divisible."""
+    counties = _or_group(_county_phrases(county, state, fips))
+    return f"{counties} {_state_clause(state)} sourcecountry:US".replace("  ", " ")
 
 
-def _bing_query(county: str, state: str) -> str:
-    label = _county_label(county, state)
-    return f'"{label}" "data center"'
+def _state_clause(state: str) -> str:
+    name = STATE_NAMES.get(state.strip().upper(), "")
+    return f'"{name}"' if " " in name else name
+
+
+def _bing_query(county: str, state: str, fips: str | None = None) -> str:
+    """Bing takes one phrase, not an OR list, so the consolidated city-counties
+    get their real name here rather than the "X County" form that appears
+    nowhere."""
+    key = str(fips).zfill(5) if fips else ""
+    label = _CONSOLIDATED.get(key) or _county_label(county, state)
+    name = STATE_NAMES.get(state.strip().upper(), "")
+    return f'"{label}" {name} "data center"'.replace("  ", " ").strip()
 
 
 # --------------------------------------------------------------------------
@@ -606,7 +683,14 @@ def _throttle() -> None:
     _last_gdelt_call = time.monotonic()
 
 
-def _gdelt(params: dict, *, use_cache: bool = True, timeout: float = 60.0) -> dict | None:
+def _gdelt(
+    params: dict,
+    *,
+    use_cache: bool = True,
+    timeout: float = 60.0,
+    retries: int = GDELT_RETRIES,
+    max_age_days: float = CACHE_MAX_AGE_DAYS,
+) -> dict | None:
     """One GDELT call. Returns the parsed body or None. Never raises.
 
     Caches through providers/cache.py keyed on the full parameter dict, which is
@@ -619,16 +703,16 @@ def _gdelt(params: dict, *, use_cache: bool = True, timeout: float = 60.0) -> di
     global _status
     cache = _cache_handle()
     if use_cache and cache is not None:
-        hit = cache.get("gdelt/doc", params, max_age_days=CACHE_MAX_AGE_DAYS)
+        hit = cache.get("gdelt/doc", params, max_age_days=max_age_days)
         if hit is not None and hit.ok:
             _status.gdelt_from_cache += 1
             return hit.body
 
     last = ""
-    for attempt in range(GDELT_RETRIES):
-        _throttle()
+    for attempt in range(max(1, retries)):
         if attempt:
-            time.sleep(GDELT_MIN_INTERVAL * attempt)
+            time.sleep(GDELT_BACKOFF)
+        _throttle()
         try:
             response = httpx.get(
                 GDELT_URL, params=params, headers={"User-Agent": USER_AGENT}, timeout=timeout
@@ -813,7 +897,11 @@ _STOPWORDS = frozenset(
     "with was were will would county new news says said after over into".split()
 )
 _LOCATION_PREFIX = re.compile(r"^\s*\[?[A-Z][A-Za-z.\s]{2,30},\s*[A-Za-z.\s]{2,20}\]?\s*[-—–]\s*")
-_MASTHEAD_SUFFIX = re.compile(r"\s*[-|–—]\s*[^-|–—]{2,40}$")
+#: Whitespace on both sides of the separator is required. Without it this ate
+#: "two-year moratorium on data centers" off the end of a Prince George's
+#: headline, because "two-year" carries a hyphen and the pattern does not know
+#: the difference between a compound adjective and a masthead.
+_MASTHEAD_SUFFIX = re.compile(r"\s+[-|–—]\s+[^-|–—]{2,40}$")
 
 
 def _normalise_title(title: str) -> str:
@@ -824,8 +912,24 @@ def _normalise_title(title: str) -> str:
     return " ".join(text.split())
 
 
+def _stem(word: str) -> str:
+    """Crude suffix stripping, and crude is enough.
+
+    Syndication rewrites tense and number: one masthead runs "Council passes
+    two-year moratorium on data centers", another runs "moratorium passed by
+    Council" with "data center". Without stemming those two score 0.55 on
+    Jaccard and stay separate, which is one board vote counted twice.
+    """
+    for suffix in ("ing", "ies", "ed", "es", "s"):
+        if len(word) > len(suffix) + 3 and word.endswith(suffix):
+            return word[: -len(suffix)] + ("y" if suffix == "ies" else "")
+    return word
+
+
 def _tokens(title: str) -> frozenset[str]:
-    return frozenset(w for w in _normalise_title(title).split() if w not in _STOPWORDS and len(w) > 2)
+    return frozenset(
+        _stem(w) for w in _normalise_title(title).split() if w not in _STOPWORDS and len(w) > 2
+    )
 
 
 def _canonical_url(url: str) -> str:
@@ -839,22 +943,27 @@ def _same_story(a: NewsItem, b: NewsItem) -> bool:
     """Two items are one story if the URL is the same page, or the headlines
     overlap heavily and the dates are close.
 
-    Jaccard on content tokens rather than an edit distance, because syndication
-    rewrites the top and tail of a headline — a dateline goes on, a masthead
-    comes off — while the middle survives. 0.6 was set by eye against the
-    Prince George's cluster, where a Patch item ran under four MSN mastheads.
+    Jaccard on stemmed content tokens rather than an edit distance, because
+    syndication rewrites the top and tail of a headline — a dateline goes on, a
+    masthead comes off — while the middle survives. The thresholds were set
+    against the Prince George's moratorium cluster, where one board vote on
+    7 July 2026 ran under four mastheads across eleven days.
     """
     if _canonical_url(a.url) == _canonical_url(b.url):
+        return True
+    # An identical headline is the same story whenever it ran. The date window
+    # below exists to stop two different votes sharing a phrasing; it must not
+    # split one wire item that a weekly picked up eleven days late.
+    if _normalise_title(a.headline) == _normalise_title(b.headline):
         return True
     ta, tb = _tokens(a.headline), _tokens(b.headline)
     if not ta or not tb:
         return False
-    jaccard = len(ta & tb) / len(ta | tb)
-    if jaccard < 0.6:
+    if len(ta & tb) / len(ta | tb) < SAME_STORY_JACCARD:
         return False
     if a.published and b.published:
         gap = abs(date.fromisoformat(a.published) - date.fromisoformat(b.published)).days
-        return gap <= 5
+        return gap <= SAME_STORY_DAYS
     return True
 
 
@@ -1100,7 +1209,7 @@ def signals_for_county(
 
     signal_q = _signal_query(county, state, fips)
     baseline_q = _baseline_query(county, state, fips)
-    bing_q = _bing_query(county, state)
+    bing_q = _bing_query(county, state, fips)
 
     signal = LocalSignal(
         county=county,
@@ -1126,16 +1235,36 @@ def signals_for_county(
     signal.article_count = sum(v for _, v in daily)
     signal.trend = _trend(daily, since_days)
 
-    baseline = _gdelt({**window, "query": baseline_q, "mode": "timelinevolraw"}, use_cache=use_cache)
-    signal.baseline_articles = sum(v for _, v in _daily_counts(baseline))
-    if signal.baseline_articles:
-        signal.coverage_share = signal.article_count / signal.baseline_articles
-        signal.thin_media = signal.baseline_articles < THIN_MEDIA_BASELINE
+    # The media-market denominator. Cached for a month rather than three days:
+    # how much a county gets written about at all moves on the timescale of a
+    # newspaper closing, and re-buying it every run is what exhausts the quota
+    # the signal query needs.
+    baseline = _gdelt(
+        {**window, "query": baseline_q, "mode": "timelinevolraw"},
+        use_cache=use_cache,
+        max_age_days=BASELINE_CACHE_DAYS,
+    )
+    if baseline is None:
+        # Not fetched is not zero. A failed denominator must not be read as
+        # "nobody covers this county", which is the exact false conclusion the
+        # normaliser exists to prevent.
+        signal.baseline_articles = 0
+        signal.coverage_share = None
+        signal.thin_media = False
     else:
-        signal.thin_media = True
+        signal.baseline_articles = sum(v for _, v in _daily_counts(baseline))
+        signal.thin_media = signal.baseline_articles < THIN_MEDIA_BASELINE
+        if signal.baseline_articles:
+            signal.coverage_share = signal.article_count / signal.baseline_articles
 
     items: list[NewsItem] = []
     if with_items:
+        # Best effort, one attempt. The two volume calls above are what the
+        # posture and the trend are built from and they get the full retry
+        # budget; the article list is the one call that has a substitute, and
+        # spending retries on it is what exhausts the hourly quota and starves
+        # the next county of its baseline. If it is refused, Bing carries the
+        # items and the degradation is recorded on the signal.
         artlist = _gdelt(
             {
                 **window,
@@ -1145,6 +1274,7 @@ def signals_for_county(
                 "sort": "datedesc",
             },
             use_cache=use_cache,
+            retries=1,
         )
         items.extend(_gdelt_items(artlist, county, state))
         items.extend(_bing_items(_bing(bing_q, use_cache=use_cache), county, state, start.date()))
@@ -1167,16 +1297,28 @@ def signals_for_county(
     signal.headline_named = sum(1 for s in stories if s.county_in_headline)
 
     if signal.article_count == 0 and not stories:
-        signal.posture = Posture.QUIET
+        # A failed fetch is not a quiet county. When nothing was read, that has
+        # to show up in the posture and not only in the evidence string, because
+        # every consumer downstream reads the enum.
+        signal.posture = Posture.QUIET if _status.ok else Posture.UNKNOWN
         signal.fetch_problems = list(_status.failures)
-        signal.evidence = [
-            f"quiet: zero articles in {since_days} days matching {signal_q}. "
-            f"{signal.baseline_articles} articles mentioned this county at all, so the "
-            + (
-                "county is covered and data centers are not the subject."
-                if not signal.thin_media
-                else "county is barely covered at all and absence proves nothing."
+        if baseline is None:
+            tail = (
+                "The media-market denominator could not be fetched, so there is no way "
+                "to tell a quiet county from an uncovered one here."
             )
+        elif signal.thin_media:
+            tail = (
+                f"Only {signal.baseline_articles} articles mentioned this county at all, "
+                f"so it is barely covered and absence proves nothing."
+            )
+        else:
+            tail = (
+                f"{signal.baseline_articles} articles mentioned this county at all, so it "
+                f"is covered and data centers are not the subject."
+            )
+        signal.evidence = [
+            f"quiet: zero articles in {since_days} days matching {signal_q}. {tail}"
         ]
         signal.confidence = _confidence(signal)
         return signal
@@ -1184,7 +1326,13 @@ def signals_for_county(
     signal.posture, signal.evidence = _classify(stories)
     signal.confidence = _confidence(signal)
 
-    if signal.thin_media:
+    if baseline is None:
+        signal.evidence.append(
+            "media-market denominator not fetched, so this county's volume cannot be "
+            "compared with another county's. Raw article counts are not comparable "
+            "across counties on their own."
+        )
+    elif signal.thin_media:
         signal.evidence.append(
             f"media-market caveat: only {signal.baseline_articles} articles mentioned "
             f"{county} County at all in {since_days} days, below the "

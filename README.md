@@ -350,11 +350,36 @@ complete."
 the dirt. Which is the sharper version of the whole thesis: the ground was never the
 constraint.
 
-### In progress
+### Local news → opposition as a leading indicator
 
-- **Local news signal.** Opposition shows up in a county newspaper months before it shows
-  up in a permit denial. Being reconciled against the 27 hand-entered records to see
-  whether it reproduces postures that were verified by hand.
+GDELT DOC 2.0 for volume, trend and a media-market baseline, Bing News RSS for the
+summaries and publication names. Both keyless. Google News RSS was rejected: its
+description field is the headline in an anchor tag rather than a summary, and using it
+would have meant writing summaries, which is fabrication.
+
+**What it changes:** opposition appears in a county newspaper and on a board agenda
+months before it appears in a permit denial. The 27 hand-entered county records are
+accurate and static. This is the moving part.
+
+**Honest status: per-county queries work, the 27-county reconciliation has not run.**
+GDELT stopped answering from this machine partway through the build. One county query
+ran 4,820 seconds before failing on a TLS handshake timeout, which is a reachability
+problem rather than the documented rate limit. So the module is validated on individual
+counties and unvalidated in aggregate, and `docs/localnews-notes.md` says so.
+
+That outage was worth it, because it surfaced the worst bug in the module. On a failed
+fetch it returned `Posture.QUIET`, with the reason set in a prose field. `QUIET` means
+"no coverage found". A failed fetch means "we could not look". Downstream code reads the
+enum, not the prose, so a county whose source timed out looked identical to a county with
+no opposition, and sorted to the permissive end of the scale. There is now a
+`Posture.UNKNOWN` with `rank == -1`, deliberately off the scale, so any comparison
+involving it is visibly a bug.
+
+GDELT tone is computed and deliberately **not** used in the posture rules. It counts
+emotion-dictionary words across the whole article body and doesn't know what the article
+is about. A tone query for Linn County put *"Man cited after driver injured in rear-end
+crash in rural Cedar Rapids"* in the −5 bin. That article is negative because a car crash
+is negative. It says nothing about a data center.
 
 ---
 
