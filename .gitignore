@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+data/cache.sqlite
+data/cache.sqlite-*
+data/raw/
+outputs/*.json
+outputs/*.html
+!outputs/drafts/
+.DS_Store
+.pytest_cache/
