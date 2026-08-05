@@ -1,7 +1,7 @@
 # Demo script
 
 Two minutes, word for word, matched to §7 of the build brief. Speaking rate
-assumed 150 words per minute. Total spoken: about 300 words.
+assumed 150 words per minute. Total spoken: about 345 words.
 
 Read the whole thing once before recording. There are two places you must say a
 caveat out loud. They are marked **CAVEAT**. Do not cut them for time. A judge who
@@ -161,6 +161,12 @@ through the provider, rebuilds a `SiteContext`, and re-runs `determine_pathway`.
 **Fallback if the planner still cannot drive them:** call the two functions from a
 prepared script. They work standalone. Do not claim the loop chose the candidates
 if you hand-fed them.
+
+**One thing to be careful about.** `search_alternate_sites` defaults to a 15 km
+radius. Mecklenburg County is roughly 180 miles from Loudoun, and Ellis County is
+in another state, so neither comes out of a default-radius ring search. Either set
+the radius wide enough that they are genuinely in scope, or present those two as a
+comparison you ran rather than as something the loop discovered. Do not blur it.
 
 **What appears:**
 

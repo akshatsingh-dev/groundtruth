@@ -255,6 +255,64 @@ def test_new_jersey_stacks_otr_ej_and_toxics():
     assert any("EJ" in stop for stop in nj.hard_stops)
 
 
+def test_otr_threshold_is_applied_not_just_announced():
+    """New Jersey has no Green Book ozone listing at many parcels, but CAA 184
+    makes the whole state behave like a moderate nonattainment area for NOx.
+
+    The trigger text used to claim a 50 tpy threshold that the engine never
+    applied, so a clean-on-paper NJ parcel scored major PSD at 100 tpy instead of
+    nonattainment NSR at 50. That is the Vineland failure mode, and getting it
+    wrong tells a developer the easier of two answers.
+    """
+    est = estimate(
+        GenerationConfig(
+            mw=150,
+            prime_mover=PrimeMover.SIMPLE_CYCLE_TURBINE,
+            controls=(Control.DLN, Control.SCR, Control.OXIDATION_CATALYST),
+        )
+    )
+    nox = est.tons_per_year["NOx"]
+    assert 50 < nox < 100, "config must sit between the OTR and PSD thresholds to test this"
+
+    nj = determine_pathway(est, SiteContext(state="NJ", county="Cumberland"))
+    ga = determine_pathway(est, SiteContext(state="GA", county="Bulloch"))
+
+    assert nj.pathway is Pathway.MAJOR_NA_NSR
+    assert nj.applicable_threshold == 50.0
+    assert ga.pathway is not Pathway.MAJOR_NA_NSR
+
+
+def test_consumed_increment_costs_time_in_nonattainment_too():
+    """Increment is consumed regardless of which review programme applies. The
+    months were only being added under PSD, so a nonattainment site with a full
+    increment looked cheaper than an attainment one."""
+    est = cc_500mw()
+    na = [NonattainmentStatus("ozone", "moderate", "Some Area")]
+    clean = determine_pathway(est, SiteContext(state="OH", county="Lake", nonattainment=na))
+    consumed = determine_pathway(
+        est,
+        SiteContext(
+            state="OH", county="Lake", nonattainment=na, increment_consumed={"NOx": 0.85}
+        ),
+    )
+    assert consumed.months_likely > clean.months_likely
+
+
+def test_permit_by_rule_is_not_available_to_a_large_plant():
+    """A tons-only gate handed a 75 MW combined-cycle plant a permit by rule in
+    Texas. Real PBRs carry equipment and heat-input limits."""
+    big = estimate(
+        GenerationConfig(
+            mw=75,
+            prime_mover=PrimeMover.COMBINED_CYCLE_TURBINE,
+            controls=(Control.DLN, Control.SCR, Control.OXIDATION_CATALYST),
+        )
+    )
+    assert big.heat_input_mmbtu_hr > 100
+    result = determine_pathway(big, SiteContext(state="TX", county="Ector", gas_pipeline_km=2))
+    assert result.pathway is not Pathway.PERMIT_BY_RULE
+
+
 def test_distant_gas_pipeline_is_a_hard_stop():
     """New Mexico. The plant was permittable. The pipeline was not."""
     est = cc_500mw()

@@ -3,10 +3,17 @@
 Tells you whether a data center power project can legally get built where it's
 announced, and if not, where nearby it could.
 
-Example, from a real run: a 500 MW combined-cycle gas plant in a county with
-85% of its NOx increment consumed and a Class I wilderness 60 km away needs a
-major PSD permit. Roughly 24 to 66 months at Virginia DEQ. The same plant 22 miles
-away is minor NSR, about 5 months.
+Example, from a real run on a real parcel in Ashburn, Virginia. Mireye says this
+site is excellent: 120 m to a 230 kV transmission line, 504 m to a substation. By
+any siting deck it is a yes.
+
+Then you ask the next question. The county is ozone nonattainment, Moderate.
+Shenandoah National Park is 63 km away, inside the 100 km radius that triggers
+Federal Land Manager review. A 500 MW combined-cycle plant here is major
+nonattainment NSR — roughly 57 months, plus offsets. The same plant in Ellis
+County, Texas is major PSD at about 20 months.
+
+Same machine. Same fuel. **37 months of difference, decided entirely by the dirt.**
 
 Built on [Mireye](https://www.mireye.com) for the physical layer.
 
@@ -22,9 +29,16 @@ The specific thing nobody screens for:
 
 > Which permit you need is decided by where the land is, not by what you're building.
 
-Same 500 MW plant, two counties 40 miles apart. One is a 4 to 6 month minor permit.
-The other is major PSD with full dispersion modeling and public comment — 2 to 3
-years, and it may fail. Developers buy land for power, fiber and price, then find out.
+Developers buy land for power, fiber and price, then find out.
+
+One finding worth stating plainly, because it surprised us and it is checkable:
+**we scored all 3,140-odd US counties and not one of them makes a 500 MW onsite gas
+plant a minor permit.** At that size, NOx clears the 100 tpy List-of-28 threshold
+everywhere in the country. The question is never "can I avoid major review at 500
+MW." It is "which flavour of major review, and how many months" — and that answer
+ranges from about 20 months to over 90 depending on the county and the state agency.
+Below roughly 150 MW the picture changes completely and minor pathways open up,
+which is itself a design finding.
 
 ## What it does
 

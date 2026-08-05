@@ -451,7 +451,7 @@ def profile_key(record: dict) -> tuple:
     )
 
 
-def build_profiles(records: list[dict]) -> tuple[list[dict], dict[str, int]]:
+def build_profiles(records: list[dict]) -> tuple[list[dict], dict[str, int]]:  # noqa: C901
     """Counties collapse onto a small number of distinct answers.
 
     That is not a compression trick, it is the honest shape of the model: at
@@ -483,9 +483,15 @@ def build_profiles(records: list[dict]) -> tuple[list[dict], dict[str, int]]:
                     "s": bool(record["hard_stops"]),
                     "q": record["data_quality"],
                     "b": bin_for(record["days_likely"]),
+                    "n": 0,
+                    "st": [],
                 }
             )
-        assignment[record["fips"]] = profiles[key]
+        index = profiles[key]
+        assignment[record["fips"]] = index
+        ordered[index]["n"] += 1
+        if record["state"] not in ordered[index]["st"]:
+            ordered[index]["st"].append(record["state"])
     return ordered, assignment
 
 
@@ -587,14 +593,15 @@ def render_html(payload: dict, svg_parts: tuple, generated: str) -> str:
 
     legend_items = "".join(
         f'<li><span class="sw b{i}"></span>'
-        f'<span class="lg-t">{label}<span class="lg-s"> days · {sub}</span></span>'
+        f'<span class="lg-t">{label} days</span>'
+        f'<span class="lg-s">{sub}</span>'
         f'<span class="lg-n">{bin_counts[i]:,}</span></li>'
         for i, (label, sub) in enumerate(BIN_LABELS)
     )
     if insufficient:
         legend_items += (
-            '<li><span class="sw q"></span><span class="lg-t">no attainment data'
-            '<span class="lg-s"> · timeline below is a floor</span></span>'
+            '<li><span class="sw q"></span><span class="lg-t">no attainment data</span>'
+            '<span class="lg-s">score below is a floor</span>'
             f'<span class="lg-n">{insufficient:,}</span></li>'
         )
 
@@ -613,6 +620,28 @@ def render_html(payload: dict, svg_parts: tuple, generated: str) -> str:
 
     data_blob = json.dumps({"p": profiles, "c": rows}, separators=(",", ":"))
     pte = config["pte_tpy"]
+
+    # Every distinct answer the model produces, as a table. This is the "reachable
+    # without hovering" path, and at 43 rows it is also the honest statement of how
+    # much resolution a county-level screen actually has.
+    answer_rows = []
+    for profile in sorted(profiles, key=lambda p: (p["d"], p["p"], -p["n"])):
+        css = "q" if profile["q"] != "ok" else f"b{profile['b']}"
+        states = sorted(profile["st"])
+        where = ", ".join(states) if len(states) <= 8 else f"{len(states)} states"
+        na = ", ".join(profile["na"]) if profile["na"] else "attainment"
+        if profile["q"] != "ok":
+            na = "no data"
+        answer_rows.append(
+            f'<tr><td class="num"><span class="sw {css}"></span>{profile["d"]:,}</td>'
+            f'<td class="num">{profile["dl"]:,}&ndash;{profile["dh"]:,}</td>'
+            f'<td>{_esc(profile["p"])}{" &middot; hard stop" if profile["s"] else ""}</td>'
+            f'<td class="why">{_esc(na)}</td>'
+            f'<td>{_esc(profile["a"])}</td>'
+            f'<td class="num">{profile["n"]:,}</td>'
+            f'<td class="why">{_esc(where)}</td></tr>'
+        )
+    answers_table = "".join(answer_rows)
 
     territories = ""
     if stats["undrawn_territory"]:
@@ -679,15 +708,27 @@ path.borders {{ fill:none; stroke:var(--state); stroke-width:0.9; stroke-linejoi
 path.hi {{ fill:none; stroke:var(--focus); stroke-width:2.4; stroke-linejoin:round;
   vector-effect:non-scaling-stroke; pointer-events:none; }}
 .legend {{ list-style:none; margin:14px 0 0; padding:0 4px 8px;
-  display:flex; flex-wrap:wrap; gap:4px 22px; font-size:12.5px; color:var(--ink-2); }}
-.legend li {{ display:flex; align-items:center; gap:7px; }}
-.sw {{ width:15px; height:15px; border-radius:3px; flex:none; border:1px solid var(--border); }}
+  display:flex; flex-wrap:wrap; gap:6px 26px; font-size:12.5px; color:var(--ink-2); }}
+.legend li {{ display:flex; align-items:baseline; gap:7px; }}
+.sw {{ width:13px; height:13px; border-radius:3px; flex:none; border:1px solid var(--border);
+  align-self:center; }}
 .sw.b0{{background:var(--b0)}} .sw.b1{{background:var(--b1)}} .sw.b2{{background:var(--b2)}}
 .sw.b3{{background:var(--b3)}} .sw.b4{{background:var(--b4)}}
 .sw.q {{ background:var(--nodata);
   background-image:repeating-linear-gradient(45deg,transparent 0 3px,var(--nodata-ink) 3px 4px); }}
+.lg-t {{ color:var(--ink); }}
 .lg-s {{ color:var(--muted); }}
+.lg-s::before {{ content:"\\00b7\\00a0"; }}
 .lg-n {{ color:var(--muted); font-variant-numeric:tabular-nums; }}
+.lg-n::before {{ content:"\\00b7\\00a0"; }}
+td .sw {{ display:inline-block; margin-right:7px; vertical-align:-1px; }}
+details {{ margin-top:18px; }}
+details > summary {{ cursor:pointer; font-size:13px; color:var(--ink-2); padding:6px 0;
+  list-style:none; }}
+details > summary::-webkit-details-marker {{ display:none; }}
+details > summary::before {{ content:"\\25b8\\00a0"; color:var(--muted); }}
+details[open] > summary::before {{ content:"\\25be\\00a0"; }}
+.scroll {{ overflow-x:auto; }}
 .tip {{
   position:absolute; pointer-events:none; opacity:0; transform:translateY(3px);
   transition:opacity .09s ease, transform .09s ease; z-index:5; max-width:330px;
@@ -752,10 +793,12 @@ to look, then run the parcel.</div>
   <svg class="map" viewBox="0 0 {view_w} {view_h}" role="group"
        aria-label="Choropleth of US counties by days until an air permit is issued for a 500 MW gas plant">
     <defs>
-      <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse"
+      <!-- Pattern units are viewBox units (10x the frame), so these numbers are
+           ten times what they look like on screen. -->
+      <pattern id="hatch" width="70" height="70" patternUnits="userSpaceOnUse"
                patternTransform="rotate(45)">
-        <rect width="8" height="8" fill="var(--nodata)"/>
-        <line x1="0" y1="0" x2="0" y2="8" stroke="var(--nodata-ink)" stroke-width="2.6"/>
+        <rect width="70" height="70" fill="var(--nodata)"/>
+        <line x1="0" y1="0" x2="0" y2="70" stroke="var(--nodata-ink)" stroke-width="24"/>
       </pattern>
     </defs>
     <g id="counties">{county_paths}</g>
@@ -798,6 +841,17 @@ to look, then run the parcel.</div>
   which major permit, and whose desk it sits on. {stats['profiles']} distinct answers across
   {counts['counties']:,} counties is the honest resolution of a county-level model, and it is
   why the parcel run exists.</p>
+
+  <details>
+    <summary>Every distinct answer, {stats['profiles']} rows &mdash; the whole map without hovering</summary>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Days</th><th>Range</th><th>Pathway</th><th>Nonattainment</th>
+        <th>Agency</th><th>Counties</th><th>Where</th></tr></thead>
+        <tbody>{answers_table}</tbody>
+      </table>
+    </div>
+  </details>
 </div>
 
 <footer>
@@ -890,28 +944,85 @@ signs those.</p>
 """
 
 
-def render_static_svg(svg_parts: tuple) -> str:
-    """The same map with no interaction, for PNG export.
+def render_static_svg(payload: dict, svg_parts: tuple) -> str:
+    """The same map with no interaction, titled and captioned, for PNG export.
 
     Colours are inlined rather than themed: a PNG has no theme. Light steps,
-    because that is what a slide or a thread image sits on.
+    because that is what a slide or a thread image sits on. It carries its own
+    title, legend and caveat so the image is safe to post on its own — an
+    unlabelled choropleth is a rumour.
     """
-    county_paths, borders, profiles, rows, _ = svg_parts
-    styles = "".join(
-        f".b{i}{{fill:{RAMP_LIGHT[i]}}}" for i in range(len(RAMP_LIGHT))
-    )
+    county_paths, borders, _profiles, _rows, _stats = svg_parts
+    counts = payload["counts"]
+    bin_counts = [0] * (len(BINS) + 1)
+    insufficient = 0
+    for record in payload["counties"]:
+        if record["data_quality"] != "ok":
+            insufficient += 1
+        else:
+            bin_counts[bin_for(record["days_likely"])] += 1
+
+    width = int(FRAME_W * GRID)
+    top = 940  # header band, in grid units
+    legend_y = top + int(FRAME_H * GRID) + 120
+
+    styles = "".join(f".b{i}{{fill:{RAMP_LIGHT[i]}}}" for i in range(len(RAMP_LIGHT)))
     body = county_paths.replace(' tabindex="0"', "")
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {int(FRAME_W * GRID)} {int(FRAME_H * GRID)}" width="{int(FRAME_W * 2)}" height="{int(FRAME_H * 2)}">
+
+    # No text metrics available here, so advance on a conservative per-character
+    # width and wrap before the right edge. An overflowing legend is the failure
+    # mode, so the estimate errs high.
+    char_w, row_h = 70, 190
+    swatches = []
+    x, row = 120, 0
+    items = [(f"b{i}", f"{label} days", bin_counts[i]) for i, (label, _sub) in enumerate(BIN_LABELS)]
+    if insufficient:
+        items.append(("q", "no attainment data", insufficient))
+    for css, label, count in items:
+        text = f"{label}  ({count:,})"
+        advance = 152 + len(text) * char_w + 150
+        if x > 120 and x + advance > width - 120:
+            x, row = 120, row + 1
+        y = legend_y + row * row_h
+        swatches.append(
+            f'<rect class="{css}" x="{x}" y="{y}" width="112" height="112" rx="24"/>'
+            f'<text class="lg" x="{x + 152}" y="{y + 92}">{_esc(text)}</text>'
+        )
+        x += advance
+    caption_y = legend_y + (row + 1) * row_h + 130
+    height = caption_y + 330
+
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{int(FRAME_W * 2)}" height="{int(height / GRID * 2)}" role="img" aria-label="US counties by days until legal power for a 500 MW gas plant">
 <style>
 rect.bg{{fill:#fcfcfb}}
 path.c{{stroke:#fcfcfb;stroke-width:4;stroke-linejoin:round}}
 {styles}
-.q{{fill:#d6d5cd}}
+.q{{fill:url(#hatch)}}
+rect.q{{fill:url(#hatch)}}
 path.borders{{fill:none;stroke:#52514e;stroke-width:9;stroke-linejoin:round;opacity:.5}}
+text{{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}}
+.h1{{font-size:290px;font-weight:680;fill:#0b0b0b;letter-spacing:-3}}
+.h2{{font-size:150px;fill:#52514e}}
+.lg{{font-size:130px;fill:#52514e}}
+.cap{{font-size:120px;fill:#898781}}
 </style>
-<rect class="bg" x="0" y="0" width="{int(FRAME_W * GRID)}" height="{int(FRAME_H * GRID)}"/>
-<g>{body}</g>
-<path class="borders" d="{borders}"/>
+<defs>
+  <pattern id="hatch" width="70" height="70" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="70" height="70" fill="#d6d5cd"/>
+    <line x1="0" y1="0" x2="0" y2="70" stroke="#898781" stroke-width="24"/>
+  </pattern>
+</defs>
+<rect class="bg" x="0" y="0" width="{width}" height="{height}"/>
+<text class="h1" x="120" y="360">Days until legal power</text>
+<text class="h2" x="120" y="600">{counts['counties']:,} US counties &#183; same 500 MW combined-cycle gas plant &#183; air permit, application to issued</text>
+<text class="h2" x="120" y="800">{counts['by_pathway'].get('major_psd', 0):,} major PSD &#183; {counts['by_pathway'].get('major_nonattainment_nsr', 0):,} major nonattainment NSR &#183; 0 minor sources anywhere in the country</text>
+<g transform="translate(0,{top})">
+  <g>{body}</g>
+  <path class="borders" d="{borders}"/>
+</g>
+{''.join(swatches)}
+<text class="cap" x="120" y="{caption_y}">Screening layer, county resolution. It cannot see parcel-level PSD increment, terrain, or pipeline distance &#8212; the parcel run is the real answer.</text>
+<text class="cap" x="120" y="{caption_y + 170}">Sources: EPA Green Book nonattainment designations, 2025 Census cartographic boundaries, AP-42 emission factors, 40 CFR 51/52. Built with Deliverable.</text>
 </svg>
 """
 
@@ -987,7 +1098,7 @@ def main(argv: list[str] | None = None) -> int:
     out.write_text(render_html(payload, parts, generated), encoding="utf-8")
 
     svg_path = out.with_suffix(".svg")
-    svg_path.write_text(render_static_svg(parts), encoding="utf-8")
+    svg_path.write_text(render_static_svg(payload, parts), encoding="utf-8")
 
     md_path = out.parent / "county_extremes.md"
     md_path.write_text(render_extremes_md(payload), encoding="utf-8")

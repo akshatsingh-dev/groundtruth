@@ -1,9 +1,16 @@
 # Mireye API — engineering notes
 
-Written 5 Aug 2026, before we had a key. Everything below marked **VERIFIED** came out
-of Mireye's own published docs or a live unauthenticated endpoint. Everything marked
-**ASSUMED** is a guess we have to confirm the moment the key lands. The code in
-`providers/mireye.py` carries a `# ASSUMPTION:` comment at every one of those points.
+Written 5 Aug 2026 from the docs, then **verified against the live API the same day**
+with a real Loudoun County, VA data center address. Nothing in this file is a guess any
+more. Where their docs contradicted themselves, measurement settled it.
+
+- Test site: **21571 Beaumeade Cir, Ashburn, VA 20147** — Loudoun County, the densest
+  data center market in the world, and (as it turns out) ozone nonattainment.
+- Raw request/response captures: **`docs/api-captures/`**, 27 files, one per call.
+- **Total verification spend: 884 credits of the 25,000 monthly Build allowance**
+  (~$0.88), across 25 billable calls. Zero 429s, zero 402s.
+- The credit model in `providers/mireye.py` reproduces the account's own
+  `credits.used` figure **exactly** — 884 modelled, 884 billed.
 
 Sources, all fetched 5 Aug 2026:
 
@@ -22,7 +29,7 @@ Sources, all fetched 5 Aug 2026:
 
 ---
 
-## 1. Base URL and auth — VERIFIED
+## 1. Base URL and auth — VERIFIED LIVE
 
 ```
 https://api.mireye.com
@@ -30,8 +37,35 @@ Authorization: Bearer <token>
 content-type: application/json
 ```
 
-One header. No API-key query params, no custom headers. `.env.example` already has
-`MIREYE_BASE_URL=https://api.mireye.com`, which is correct.
+One header. No API-key query params, no custom headers. **Tested, not assumed.** The
+key in `.env` is a JWT (291 chars, `eyJhbGci…`, two dots) and it goes in the standard
+`Authorization: Bearer` header — there is no custom header variant. `MIREYE_BASE_URL`
+in `.env` is `https://api.mireye.com`, which agrees with the docs.
+
+The cheapest possible auth check is `GET /v1/users/me/usage` — it needs the token,
+costs nothing, and tells you the plan and the credit balance in one shot:
+
+```json
+{
+  "period": {"start": "2026-08-01", "end": "2026-08-31", "resets_at": "2026-09-01T00:00:00+00:00"},
+  "plan": {"id": "build", "name": "Build", "price_usd_month": 19,
+           "credits_included": 25000, "rpm": 60, "field_requests_included": 1},
+  "credits": {"used": 884, "included": 25000, "remaining": 24116,
+              "overage": 0, "overage_rate_usd_per_1k": 1.0},
+  "refusals_24h": {"throttled_429s": 0, "blocked_402s": 0, "last_refusal_at": null,
+                   "window_hours": 24}
+}
+```
+
+**Our account is on the `build` plan**: 25,000 credits/month, **60 rpm**, and
+**1 included field request**. The `BUILD` signup code did what the challenge said.
+
+`GET /v1/users/me` also works and returns the account profile.
+
+**`credits.used` is eventually consistent, not a live meter.** It lagged reads by tens
+of seconds and at one point read *lower* than an earlier poll (160 then 115 then 536).
+Do not try to price a single call by polling before and after it. Reconcile at the end
+of a run — over the whole session it settled on exactly the right number.
 
 Tokens are JWTs with a 90-day default life, created in account settings at
 `https://www.mireye.com`. The plaintext is shown at creation and can be re-revealed
@@ -117,7 +151,7 @@ low; they are 106 and 72. Also the brief's `wildfire` is really `wildfire_underw
 and `boundaries` is a 4-field jurisdiction preset, not the parcel-boundary preset it
 sounds like — parcel geometry lives in `site_selection` / the `parcel_*` fields.
 
-### The 50-field cap, resolved
+### The 50-field cap, settled by measurement
 
 `/v1/fetch` returns `400 fields_too_many` when the "resolved field set
 (post-preset-expansion) exceeds 50" — which would make `data_center_siting` (106)
@@ -128,11 +162,24 @@ impossible. Two other pages say the opposite and are more specific:
 > "one request, capped at 50 explicitly-named fields (**preset members are exempt from
 > that cap**)" — the `land-read` starter skill
 
-**Reading: presets are exempt, explicit `fields` are capped at 50, and the errors page
-is stale.** `providers/mireye.py` codes to that reading but degrades: if a preset call
-comes back `400 fields_too_many` it re-issues the same request as chunked explicit
-field lists of ≤50, expanded from the public catalog. Costs the same credits either way
-(1 credit per field), so the fallback is free insurance.
+**Settled: presets are exempt. The errors page is stale.**
+`{"lat": 39.022183, "lng": -77.453578, "preset": "data_center_siting"}` returned
+**HTTP 200 with all 106 fields** in 8.9 s
+(`docs/api-captures/05-fetch-preset-data_center_siting.json`). `providers/mireye.py`
+keeps a chunking fallback on `400 fields_too_many` anyway — it costs nothing until it
+fires, and it is the same credits either way.
+
+The explicit-field cap is real. `fields_unknown` is also real and is a hard 400 that
+kills the whole request:
+
+```json
+{"detail": {"error": "fields_unknown",
+            "message": "Unknown field names: ['totally_not_a_field']",
+            "fields_unknown": ["totally_not_a_field"]}}
+```
+
+Note it names the offenders in a `fields_unknown` array, so a client could self-heal.
+Ours validates against the catalog first instead.
 
 `preset` + `fields` in one body is legal and shipped in two of their own starter skills.
 
@@ -412,9 +459,51 @@ and they say so explicitly. Our client refuses to retry it inside the backoff lo
 
 ---
 
-## 6. Credits and rate limits — VERIFIED, from `GET /v1/meta/plans`
+## 6. Credits and rate limits — MEASURED LIVE
 
 This is the part the brief was most wrong about, and it changes the sweep budget.
+
+### What each call type actually cost
+
+Measured by reconciling `credits.used` across the whole session. 25 billable calls,
+**884 credits**, and the model in `providers/mireye.py` predicts 884. Exact.
+
+| Call | Measured credits |
+|---|---|
+| `POST /v1/geocode` | **1** |
+| `POST /v1/lookup`, `include_parcel: false` | **1** |
+| `POST /v1/lookup`, `include_parcel: true` | **300** |
+| `POST /v1/fetch`, 1 field | **1** |
+| `POST /v1/fetch`, `preset: terrain` (6 fields) | **6** |
+| `POST /v1/fetch`, `preset: utilities` (27) | **27** |
+| `POST /v1/fetch`, `preset: data_center_siting` (106) | **106** |
+| `POST /v1/fetch`, `preset: terrain` + 2 extra fields (8) | **8** |
+| `POST /v1/fetch`, 2 parcel-group fields, by address | **300** |
+| `POST /v1/fetch/batch`, 2 fields × 2 valid locations | **4** |
+| `POST /v1/ask` | **10** |
+| `POST /v1/proximity` `nearest`, straightline | **2** |
+| `POST /v1/proximity` `nearest` `n:1`, driving | **60** |
+| `POST /v1/field-requests` (any disposition) | **0** — billed against the plan allowance |
+| Any 400 / 404 / 422 / 503 we triggered | **0** |
+
+Two corrections to what the docs implied:
+
+**`/v1/proximity` echoes `credits_charged` in the response body.** It is not documented
+in prose but it is there on every response, next to `paid_driving_calcs`. The straight-
+line call reported `"paid_driving_calcs": 0, "credits_charged": 2`; the driving call
+reported `"paid_driving_calcs": 5, "credits_charged": 60`. That confirms
+`max(floor, 12 × calcs)` and it means proximity spend can be read rather than modelled.
+No other endpoint reports a credit figure.
+
+**Parcel-group fields are not also billed per field.** A fetch of exactly
+`["parcel_id", "parcel_area_m2"]` — both parcel-group members — billed **300, not 302**.
+The rule is: `resolve_credits` once per location, plus 1 credit for each *non*-parcel
+field in the same request. So `site_selection` (72 fields, 9 of them parcel-group) is
+`63 + 300 = 363` credits per location — not 72, and not the 372 I first computed.
+`data_center_siting` has no parcel-group member and bills a flat 106.
+
+The address on a fetch-by-address call billed nothing on top, because the same address
+had already been geocoded in this session and geocode results cache for 30 days.
 
 ```json
 {"costs": {
@@ -487,24 +576,28 @@ screen can afford by-road.
 | 3,000 tracked projects, one pass | 3,000 × ~155 | **~465,000** |
 | One weekly re-sweep of both | | **~810,000** |
 
-Build tier is 25,000 credits/month. **The national sweep alone is ~14× a month's Build
-allowance, and one full weekly cycle is ~810k credits — roughly $810 at list.** That is
-the number for the founders email, and it is now a measured figure rather than a call
-count. Use `paid_driving_calcs` and `GET /v1/users/me/usage` to report actuals after
-the first sweep.
+Every per-call number above is now measured, not quoted. Build tier is 25,000
+credits/month. **The national sweep alone is ~14× a month's Build allowance, and one
+full weekly cycle is ~810k credits — roughly $810 at list.** That is the number for the
+founders email, and it is a measured figure rather than a call count.
 
-**Rate limits: 60 rpm on Build.** The brief's ThreadPoolExecutor at 8 workers will blow
-through that instantly. `MireyeProvider` has a shared token-bucket limiter defaulting to
-`MIREYE_RPM=60`, so 8 workers is safe: they queue on the limiter, not on 429s. The
-authentication page's claim that "V1 has no metered request quotas" is contradicted by
-the per-plan `rpm` in `/v1/meta/plans`; believe the machine-readable one.
+For the one-pager COGS line, the honest version: **a full project screen costs about
+155 Mireye credits, or 15.5 cents.** At 3,000 tracked projects re-swept weekly that is
+~465k credits a week, ~2M credits a month, ~$2,000/month of Mireye spend — against an
+alt-data subscription priced at $50k–500k/year. The unit economics work, and the number
+is theirs to keep.
 
-**No credit figure is returned on `/v1/fetch`, `/v1/ask`, `/v1/geocode` or
-`/v1/lookup`.** Only `/v1/proximity` reports `paid_driving_calcs`. So our per-run credit
-accounting is *computed* from the published constants, not read back. **ASSUMED**: that
-the constants in `/v1/meta/plans` are what actually gets debited. Verify against
-`GET /v1/users/me/usage` after the first real run and correct
-`MireyeProvider.CREDIT_COSTS` if it drifts.
+**Rate limits: 60 rpm on Build.** The brief's ThreadPoolExecutor at 8 workers would blow
+through that instantly. `MireyeProvider` has a shared minimum-interval limiter
+defaulting to `MIREYE_RPM=60`, so 8 workers is safe: they queue on the limiter, not on
+429s. Verified in practice — `refusals_24h.throttled_429s` was **0** across the whole
+verification session. The authentication page's claim that "V1 has no metered request
+quotas" is contradicted by the per-plan `rpm`; believe the machine-readable one.
+
+**Reading spend back.** `/v1/proximity` reports `credits_charged` inline. Nothing else
+does, so `MireyeProvider.usage()` computes from the price table — and that computation
+was checked against the account's own meter and matched to the credit (884 = 884). Poll
+`GET /v1/users/me/usage` at the end of a sweep to reconcile, never per call.
 
 ---
 
@@ -535,10 +628,12 @@ Consequences for the build, for the orchestrator to decide on:
   `ingest/greenbook.py` as a cross-check and a citation-independence story, not as the
   primary. It is one CSV; leaving it in costs nothing and makes "we validated their
   field against the federal source" a good line in the feedback field.
-- **Two of the four planned field-requests are already answered** (county attainment
-  status; distance to nearest Class I area). Filing them would return `matched_existing`
-  — which is still a legitimate and filmable outcome, but it is not the interesting one.
-- **The two that are genuinely missing, and should be filed:**
+- **Two of the four planned field-requests turned out to be near-answered.** Filed for
+  real; see §13 for the verbatim outcomes. Class I distance came back `matched_existing`
+  with a live sample. County attainment came back `near_miss_confirm` — because
+  `air_quality_worst_classification` is blank for every non-ozone, non-CO pollutant,
+  which is a limitation we would not have found any other way.
+- **The two that are genuinely missing, and were queued as builds:**
   1. **Background ambient PM2.5 / NO2 concentration at a coordinate** (EPA AQS design
      values). Nothing in the catalog measures ambient concentration. This is the input
      to a NAAQS compliance demonstration and it is pure public federal data.
@@ -552,9 +647,9 @@ Consequences for the build, for the orchestrator to decide on:
      `housing_units_density_per_km2` and nothing else demographic. NJ's EJ law
      (the Nebius failure mode) turns on exactly this and we cannot compute it.
 
-Both #1 and #2 are pure geometry-and-federal-publication asks, which is precisely the
-shape their `accepted_new` path is built for. Their `rejection_code` table tells us in
-advance neither is `commercial_licensed`, `realtime_streaming` or `subjective_score`.
+Both #1 and #2 were accepted as new builds, exactly as predicted — neither tripped
+`commercial_licensed`, `realtime_streaming` or `subjective_score`. Queue positions 2 and
+3, both promised for 6 Aug, which is before the deadline.
 
 Other gaps worth knowing about:
 
@@ -701,46 +796,388 @@ point of the entry.
 
 ---
 
-## 11. Everything we could not verify
+## 11. The provenance shape — where source, fetched and confidence actually live
 
-Flagged here and mirrored as `# ASSUMPTION:` comments in `providers/mireye.py`.
+The README claims every fact carries a source, a timestamp and a confidence. Here is
+exactly where those come from, per endpoint, verified against live responses.
 
-1. **Credit debits are not echoed on `/v1/fetch`, `/v1/ask`, `/v1/geocode`,
-   `/v1/lookup`.** Our per-run credit number is computed from `/v1/meta/plans`
-   constants. Check it against `GET /v1/users/me/usage` after the first sweep.
-2. **The 50-field cap vs preset expansion.** Three docs, two answers. We code to
-   "presets exempt" with a chunking fallback on `400 fields_too_many`. One live call to
-   `{"lat":30.2,"lng":-97.5,"preset":"data_center_siting"}` settles it in ten seconds.
-3. **The exact JSON key for the confidence bucket on `/v1/lookup` facts.** `/v1/lookup`
-   publishes no per-field provenance at all, so we attribute source from the documented
-   list and leave per-fact confidence `None`. If a future response does carry per-field
-   provenance, `_lookup_facts()` should read it instead.
-4. **`/v1/proximity` `nearest` `attributes` payload varies by set.** Documented only for
-   `@airports` (`{"facility_type", "use"}`). We pass whatever comes back through to
-   `ProximityResult.attributes` untouched and never index into it.
-5. **Whether `nearest` with `mode: "straightline"` still returns `distance_km`.** The
-   docs say durations are null in straightline mode and imply distances remain. We read
-   `distance_km` and fall back to `distance_miles × 1.609344`.
-6. **Whether an empty `candidates` array on `nearest` is really a 200.** Docs say "if
-   nothing qualifies within 160 km, `candidates` comes back empty — not an error". We
-   treat an empty list as "no such thing within 160 km" and omit that target from the
-   result dict rather than reporting a zero.
-7. **Field-request rejection behaviour for our two real asks.** No way to know until
-   filed. The client normalises all five dispositions plus the 202 path.
-8. **`fields_unknown` is a hard 400 that kills the whole call**, so one renamed field
-   breaks a sweep. We validate every explicit field name against the public catalog
-   (cached to `data/mireye_catalog.json`) before sending, and drop unknowns with a
-   warning rather than losing the request. Confirm the catalog and the deployed API stay
-   in sync — the docs page's preset expansions already list 10 fields for
-   `data_center_siting` that `/v1/meta/fields` does not publish
-   (`btm_gas_candidacy_flag`, `residential_context_class_1km`, `tax_incentive_stack`,
+### `/v1/fetch` — full per-field provenance
+
+Every field record carries these twelve keys, and nothing else (measured across all 106
+`data_center_siting` fields):
+
+```
+value  unit  source  source_url  confidence  fetched_at
+dataset_vintage  ttl_seconds  notes  status      (+ error, retryable on failures)
+```
+
+A real record from the Ashburn site:
+
+```json
+"in_air_quality_nonattainment": {
+  "value": true,
+  "unit": null,
+  "source": "EPA_GREEN_BOOK",
+  "source_url": "https://www.epa.gov/green-book",
+  "confidence": "high",
+  "fetched_at": "2026-08-05T09:21:18.241184+00:00",
+  "dataset_vintage": "EPA Green Book NAAQS nonattainment designations (local gpkg mirror of the EPA OAQPS FeatureServer)",
+  "ttl_seconds": 2592000,
+  "notes": "True if the point intersects any CURRENT-NAAQS nonattainment area (ozone/PM2.5/PM10/CO/SO2/NO2/lead combined layer); Maintenance/Attainment areas do not set it",
+  "status": "ok"
+}
+```
+
+So the mapping into `base.Fact` is direct: `source` ← `source`, `fetched` ← `fetched_at`
+(falling back to the response-level `fetched_at`), `confidence` ← the bucket, translated.
+`source_url`, `dataset_vintage` and `notes` are concatenated into `Fact.note` so the
+citation trail survives to the output.
+
+**`confidence` is a bucket string, never a number.** Across the 106-field response the
+distribution was `medium` 62, `high` 42, `low` 1, `unknown` 1. The translation table in
+`providers/mireye.py` is `high→0.9, medium→0.6, low→0.3, unknown→None`, the raw bucket
+is preserved verbatim in `Fact.note`, and **`unknown` becomes None rather than a low
+score** — "not measured" and "measured badly" are different claims.
+
+Worth knowing: confidence tracks the *source*, not the value. `elevation` came back
+`medium` because it was served from `USGS_3DEP_COG` (the static DEM) rather than
+`USGS_EPQS` (the dynamic service, which reports `high`). Same number, different
+provenance, honestly different confidence.
+
+**Which fields lack a confidence:** none. Every field record carries the key. But a
+`failed` field carries `"confidence": "unknown"` and `"fetched_at": null`, so it lands
+as `confidence=None` with the response timestamp — which is the correct outcome and not
+an invented score.
+
+The tri-state `status` is real and all three appeared in one response: **98 `ok`,
+7 `absent`, 1 `failed`**. The failure:
+
+```json
+"partial_failures": [
+  {"field": "nearest_rail_line_distance_m", "source": "BTS_RAIL",
+   "error": "source returned null at this coordinate", "retryable": false}
+]
+```
+
+An `absent` field is not an error — it is a cited "nothing here", and it keeps its
+source and a useful note (`in_opportunity_zone` absent carries "point does not intersect
+any designated Opportunity Zone tract"). We keep all three as Facts with `value=None`
+and the status in the note, mirroring Mireye's own rule that a field they could not
+fetch is never silently dropped.
+
+### `/v1/lookup` — no per-field provenance
+
+Confirmed live: the response has one top-level `confidence` (0.95 at our test site,
+alongside `match_method: "geocode_rooftop"`) and **no source, timestamp or confidence on
+any individual value**. `elevation_m`, `fema_flood_zone` and `county_market` arrive bare.
+
+So `MireyeProvider.lookup()` attributes source from Mireye's documented source list and
+leaves per-fact `confidence` **None**. The resolution confidence rides on
+`Location.confidence`, where it belongs. Reusing 0.95 as if it described the FEMA flood
+zone would be inventing a number.
+
+### `/v1/ask` — provenance by citation group
+
+`confidence` is a three-bucket string on the answer as a whole. `citations` groups fields
+by source, each with its own `source_url`, `fetched_at` and bucket. `fields_used` and
+`data_gaps` say what the answer did and did not rest on.
+
+### `/v1/proximity` — provenance is the curated set
+
+Candidates carry `name`, `lat`, `lng`, `attributes`, distances and durations, but no
+per-candidate source or confidence. The provenance is the set itself (`@substations` is
+EIA/HIFLD), so we record it as the source string and leave confidence None.
+
+---
+
+## 12. Intent to preset mapping — every `PRESET_INTENTS` name, resolved
+
+`providers/base.py` gives the planner fourteen intents. Here is what each one actually
+becomes, and which have no Mireye equivalent.
+
+| Intent (`base.PRESET_INTENTS`) | Mireye surface | Cost | Status |
+|---|---|---|---|
+| `terrain` | preset `terrain` (6 fields) | 6 | direct |
+| `land_cover` | preset `land_cover` (5) | 5 | direct |
+| `utilities` | preset `utilities` (27) | 27 | direct |
+| `grid_interconnect` | preset `grid_interconnect` (29) | 29 | direct |
+| `data_center_siting` | preset `data_center_siting` (106) | 106 | direct |
+| `site_selection` | preset `site_selection` (72) | **363** | direct, but 9 parcel-group fields make it expensive |
+| `flood_risk` | preset `flood_risk` (13) | 13 | direct |
+| `natural_hazard` | preset `natural_hazard` (17) | 17 | direct |
+| `wildfire` | preset **`wildfire_underwrite`** (6) | 6 | renamed — the brief called it `wildfire` |
+| `points_of_interest` | preset `points_of_interest` (23) | 23 | direct |
+| `parcel` | 6 explicit `parcel_*` fields | **300** | no preset isolates the parcel; all members are parcel-group |
+| `demographics` | 7 explicit fields | 7 | **partial gap** — see below |
+| `water` | 12 explicit fields | 12 | assembled from `utilities` + `flood_risk` + `data_center_siting` members |
+| `soil` | 7 explicit fields | 7 | assembled; no soil preset exists |
+
+Four of Mireye's fifteen presets are irrelevant to this build and are not mapped:
+`solar_siting`, `wind_siting`, `storage_siting`, `building_lookup`, `boundaries`
+(the jurisdiction fields we get free on `/v1/lookup`).
+
+### Intents with a real gap
+
+- **`demographics` is the weak one.** The catalog has `housing_units_within_1km`,
+  `housing_units_density_per_km2`, `tract_population`, `tract_civilian_labor_force`,
+  `county_population`, `county_population_growth_1yr_pct` and
+  `county_median_household_income` — and **nothing else demographic**. There is no
+  race, no poverty rate, no environmental-justice index, no overburdened-community flag.
+  That is exactly what NJ's EJ law (N.J.S.A. 13:1D-157, the Nebius failure mode) turns
+  on, and we cannot compute it from Mireye. **Candidate field request.**
+- **`water_body` proximity has no distance field.** There is `nearest_waterbody_name`
+  but no `nearest_waterbody_distance_m`. We use `nearest_usgs_gage_distance_m` — the
+  nearest *gauged* stream — and say so in the result note. **Candidate field request.**
+
+---
+
+## 13. The four field requests — filed for real, outcomes verbatim
+
+All four were filed at 09:24 UTC on 5 Aug 2026 against the Ashburn test site, with
+`use_case`, `decision_threshold`, `area_of_interest`, `expected_volume`, `freshness`,
+`known_sources` and `output_preference` filled in, and an `idempotency_key` each. No
+`callback` was sent — this build does not notify anyone (see the guardrails section of
+the build brief); we poll instead.
+
+**They cost 0 credits.** Filing bills the plan's `field_requests_included` allowance,
+not the credit pool. Our plan includes 1; two builds were queued anyway.
+
+Full request and response bodies are in `docs/api-captures/fr1…fr4*.json`.
+
+### 1. County attainment / nonattainment status by pollutant → `awaiting_confirm`
+
+`request_id: fr_72ffcf9048684a17860be106e8590aa2` · HTTP 201 · `waiting_on: requester`
+
+Three `near_miss_confirm` dispositions. Their screener explained the shortfall better
+than I could have, and it is a genuine limitation we would otherwise have hit blind:
+
+> **`air_quality_worst_classification`** — "This field supplies the worst classification
+> among ozone/CO matches only; it is explicitly blank for PM2.5/PM10/lead/SO2/NO2
+> nonattainment areas, so it answers only half of the per-pollutant severity
+> requirement."
+
+> **`air_quality_nonattainment_pollutants`** — "This field identifies pollutants for
+> which the point is in nonattainment, but does not break them out individually per
+> pollutant or supply the severity classification separately."
+
+That matters directly. `agent/pathway.py` picks a nonattainment major-source threshold
+from the classification (Marginal/Moderate 100 tpy, Serious 50, Severe 25, Extreme 10).
+**For a PM2.5 nonattainment county, Mireye returns the pollutant but no classification,
+so we cannot pick a threshold.** Ozone and CO are covered. This is the single most
+useful thing the field-request flow told us, and it is feedback-field material.
+
+Live samples came back with the near-misses: `"8-Hour Ozone (2015 Standard)"` and
+`"Moderate"`, both cited to `EPA_GREEN_BOOK`.
+
+### 2. Distance to nearest Class I area → `matched`
+
+`request_id: fr_bf22e9def8294b34b427c7862b33828e` · HTTP 201 · terminal, zero cost
+
+Three `matched_existing` dispositions, each with a **live cited sample at our own
+location** — not a convenient one of theirs:
+
+```json
+{"disposition": "matched_existing", "field_id": "nearest_class_i_area_distance_m",
+ "reason": "Field directly measures geodesic distance in meters to the nearest Class I federal area (national parks / wilderness > 6000 acres).",
+ "sample": {"value": 63478.439179638815, "unit": "meters", "source": "EPA_CLASS_I_AREAS",
+            "source_url": "https://www.epa.gov/visibility/mandatory-federal-class-i-areas",
+            "fetched_at": "2026-08-05T09:21:18.354199+00:00"}}
+```
+
+Plus `nearest_class_i_area_name` = `"Shenandoah NP"` and `nearest_class_i_area_agency` =
+`"USDI-NPS"`. Answered in 3.1 s, no build, no wait.
+
+### 3. Background ambient PM2.5 / NO2 concentration → `queued`
+
+`request_id: fr_42c2a7c653c84f30be9584644ce0c752` · HTTP 201 · **queue position 2** ·
+`estimated_ready_at: 2026-08-06T09:24:52Z`
+
+Four `accepted_new` sub-asks (PM2.5 and NO2, each decomposed). Their reason:
+
+> "No candidate field addresses EPA AQS design values, PM2.5 background concentration,
+> or regulatory monitor data. The hazard/utility layers offered do not include
+> air-quality monitoring or NAAQS compliance fields."
+
+Field id it will publish under:
+`background_ambient_air_concentration_at_a_coordinate_for_pm2` (and `…_no2`).
+
+### 4. Count and permitted emissions of major stationary sources within X km → `queued`
+
+`request_id: fr_20b6653a4a584fd0ae00d022be197a49` · HTTP 201 · **queue position 3** ·
+`estimated_ready_at: 2026-08-06T09:24:58Z`
+
+Three `accepted_new` sub-asks. Their reasons:
+
+> "No candidate field enumerates major stationary sources or their count within a
+> radius; existing hazards candidates cover air quality nonattainment status and
+> lightning, not source inventory."
+
+> "No candidate field supplies pollutant-specific emission rates (tons/year) from major
+> stationary sources; the candidate set includes utilities and climate layers but no EPA
+> NEI or Title V permit emission data."
+
+> "No candidate field provides facility-level attribution (name, distance) paired with
+> emission totals; this requires source-specific detail beyond the current candidate
+> catalog."
+
+This is the one that matters most. PSD increment consumption is the hardest number in
+`agent/pathway.py` and today we cannot compute it. Both ETAs are **before the Monday
+deadline**, so there is a real chance one goes live in time to demo.
+
+### What to do with these
+
+- **Poll all four before recording the demo.** `GET /v1/field-requests/{request_id}`.
+  `live` means prod `/v1/fetch` returned a real cited non-null value at *our* example
+  location — not that a PR merged. The `resume` call in each response is the exact
+  `/v1/fetch` body that answers the original ask.
+- **fr1 needs a decision.** It is `awaiting_confirm` and blocks on us. Either accept the
+  near-miss (use `air_quality_nonattainment_pollutants` + `air_quality_worst_classification`
+  and accept that non-ozone classifications are blank), or re-POST with the offered
+  fields in `constraints.must_not_be` to force it to screen as a new build. Given we
+  have 1 included field request and two builds already queued, accepting the near-miss
+  and documenting the PM2.5 classification gap is the better trade.
+
+---
+
+## 14. Things that are broken or surprising right now
+
+Found by running against production. All of this is feedback-field material.
+
+1. **The `@airports` curated set is down.** `mode: "driving"` against `@airports`
+   returned `503 proximity_data_unavailable`, retryable:
+
+   > "curated set @airports asset is missing column(s) ['use'] that its default filter
+   > requires -- the filter would match every row and the set would return wrong
+   > answers, so it is refused instead. Rebuild the asset."
+
+   Refusing rather than returning wrong answers is the right call, and the error message
+   is genuinely excellent — it names the column, the consequence and the fix. But it
+   means one of six curated sets is unusable. `MireyeProvider.proximity()` catches
+   `proximity_data_unavailable` and falls back to the geodesic fetch field.
+
+2. **`nearest_airport_distance_m` and `@airports` disagree, and the fetch field is
+   wrong for our use.** The curated set filters FAA NASR to public-use airports
+   (heliports excluded). The fetch field does not filter at all. At Ashburn it returned
+   **"INOVA LOUDOUN HOSPITAL" at 6.2 km** — a hospital helipad. For an FAR Part 77
+   airspace review on a 60 m stack that is the wrong answer, and right now there is no
+   working way to get the filtered one. Flagged in `_PROXIMITY_ROUTES`.
+
+3. **The public field catalog omits 10 fields that presets return.**
+   `GET /v1/meta/fields` publishes 304 fields, but `presets.data_center_siting` names
+   106 — ten of which are absent from the `fields` list:
+   `btm_gas_candidacy_flag`, `residential_context_class_1km`, `tax_incentive_stack`,
    `grading_difficulty_class`, `estimated_annual_power_cost_usd_per_mw`,
    `transmission_redundancy_flag`, `near_epa_repowering_site`,
-   `free_cooling_hours_per_year_10c/15c`, `nearest_urban_area_rtt_floor_ms`). They are
-   preset members that the public catalog omits, which is itself a small doc bug worth
-   reporting in the feedback field.
-9. **Rate limits.** `/v1/meta/plans` says 60 rpm on Build; the authentication page says
-   there are no metered quotas. We honour 60 and make it configurable via `MIREYE_RPM`.
-   If the first sweep never 429s at a higher setting, raise it.
-10. **Whether the contest's `BUILD` signup code puts us on the `build` plan** (25,000
-    credits, 60 rpm, 1 field request) or something custom. Assumed `build`.
+   `free_cooling_hours_per_year_10c/15c`, `nearest_urban_area_rtt_floor_ms`.
+   They return real values, sourced `MIREYE_DERIVED_SITING` and
+   `MIREYE_MODELED_ENERGY_COST`. This bit us: naive catalog validation silently dropped
+   them. `known_fields()` now unions the field list with every preset expansion.
+
+   These are also the only non-federal fields in the catalog — derived and modelled
+   values rather than a cited federal source. Worth knowing before quoting
+   `estimated_annual_power_cost_usd_per_mw` to a buyer.
+
+4. **`credits.used` is eventually consistent and can go backwards.** Observed 0 → 2 →
+   160 → 115 → 536. It converges correctly; it is just not a live meter.
+
+5. **`credits_charged` on `/v1/proximity` is undocumented in prose** but present on
+   every response. It should be on every endpoint — it is the single thing that would
+   make client-side credit accounting trivial instead of a modelling exercise.
+
+6. **The 400s carry no `retryable` key.** `fields_unknown` and `coord_out_of_bounds`
+   return `{"error", "message"}` only, while 404s and 422s include `retryable: false`.
+   A client branching on `detail.retryable` has to handle its absence. Ours falls back
+   to the status code.
+
+---
+
+## 15. Still unverified
+
+Short list now, and none of it blocks the build.
+
+1. **`/v1/runs`** — never called. The sweep uses `/v1/fetch/batch` synchronously, which
+   is verified. If a 3,140-county sweep turns out to need async, `/v1/runs` wraps the
+   same request shape and would need its own testing.
+2. **`/v1/ask/stream`** — never called. Not needed; we use the blocking form.
+3. **`screen` and `labor_shed` proximity ops** — never called. `labor_shed` has a
+   25-credit floor and an `estimate: true` flag that prices it for free; if we ever want
+   "who lives downwind", price it with `estimate` first.
+4. **`clarify` and `no_match` dispositions on `/v1/lookup`** — the code paths exist and
+   are exercised by the `404 address_too_coarse` case, but we never triggered a genuine
+   two-candidate `clarify`. The handling follows their documented shape.
+5. **Field-request `live` transition** — both builds are `queued`. We have not seen a
+   `live` payload, so the resume-call flow after a build completes is coded to the docs,
+   not to an observed response.
+6. **Whether a second `/v1/fetch` of the same coordinate within 24 h is billed again.**
+   Their layer orchestrators keep a 24-hour cache but the docs do not say it is free to
+   the caller. Our own SQLite cache makes this moot for re-runs.
+
+---
+
+## 16. Capture index
+
+Every call made during verification, with its raw request and response in
+`docs/api-captures/`. `credits` are the verified model's numbers.
+
+| File | Endpoint | HTTP | Credits | What it proves |
+|---|---|---|---|---|
+| `01-geocode.json` | `/v1/geocode` | 200 | 1 | rooftop match, `source: "Loudoun"` |
+| `02-lookup-noparcel.json` | `/v1/lookup` | 200 | 1 | full join keys, `confidence: 0.95` |
+| `03-fetch-one-field.json` | `/v1/fetch` | 200 | 1 | per-field provenance shape |
+| `04-fetch-preset-terrain.json` | `/v1/fetch` | 200 | 6 | preset expansion |
+| `05-fetch-preset-data_center_siting.json` | `/v1/fetch` | 200 | 106 | **106 fields, presets exempt from the 50 cap** |
+| `06-fetch-preset-utilities.json` | `/v1/fetch` | 200 | 27 | the whole power layer in one call |
+| `07-fetch-air-permit-fields.json` | `/v1/fetch` | 200 | 9 | nonattainment + Class I for 9 credits |
+| `08-fetch-preset-plus-fields.json` | `/v1/fetch` | 200 | 8 | `preset` + `fields` together is legal |
+| `09-err-fields-unknown.json` | `/v1/fetch` | 400 | 0 | names the bad fields, bills nothing |
+| `10-err-out-of-bounds.json` | `/v1/fetch` | 400 | 0 | US envelope enforcement |
+| `11-err-address-too-coarse.json` | `/v1/geocode` | 404 | 0 | centroid refusal, `retryable: false` |
+| `12-proximity-…-straightline.json` | `/v1/proximity` | 200 | 2 | `credits_charged: 2`, 0.50 km to BEAUMEADE |
+| `13-proximity-nearest-airports-driving.json` | `/v1/proximity` | 503 | 0 | **the `@airports` outage** |
+| `14-err-proximity-unknown-set.json` | `/v1/proximity` | 422 | 0 | only six curated sets exist |
+| `15-ask.json` | `/v1/ask` | 200 | 10 | cited answer, `confidence: high`, trace |
+| `16-proximity-…-driving.json` | `/v1/proximity` | 200 | 60 | `paid_driving_calcs: 5`, `credits_charged: 60` |
+| `17-lookup-with-parcel.json` | `/v1/lookup` | 200 | 300 | real Regrid parcel, 57,289 m² |
+| `18-fetch-batch.json` | `/v1/fetch/batch` | 200 | 4 | index-aligned, bad location isolated |
+| `19-fetch-by-address-parcel-group.json` | `/v1/fetch` | 200 | 300 | **parcel group billed once, not per field** |
+| `fr1-nonattainment.json` + `-status` | `/v1/field-requests` | 201 | 0 | `near_miss_confirm` ×3 |
+| `fr2-class-i.json` + `-status` | `/v1/field-requests` | 201 | 0 | `matched_existing` ×3, live sample |
+| `fr3-ambient-background.json` + `-status` | `/v1/field-requests` | 201 | 0 | `accepted_new`, queue position 2 |
+| `fr4-major-sources.json` + `-status` | `/v1/field-requests` | 201 | 0 | `accepted_new`, queue position 3 |
+
+Everything above is also in `data/cache.sqlite`, keyed by endpoint and canonical params,
+so re-running any of it costs nothing. `python -m providers.cache` reports the totals.
+
+---
+
+## 17. What the test site actually said — the thesis, on real data
+
+Worth recording, because it is the demo. **21571 Beaumeade Cir, Ashburn, VA 20147**,
+resolved at confidence 0.95, rooftop, Loudoun County (FIPS 51107):
+
+| Fact | Value | Source |
+|---|---|---|
+| In NAAQS nonattainment | **true** | `EPA_GREEN_BOOK` |
+| Nonattainment pollutants | **8-Hour Ozone (2015 Standard)** | `EPA_GREEN_BOOK` |
+| Worst classification | **Moderate** | `EPA_GREEN_BOOK` |
+| Also in maintenance for | 8-Hour Ozone (2008 Standard) | `EPA_GREEN_BOOK` |
+| Nearest Class I area | **Shenandoah NP, 63.5 km, USDI-NPS** | `EPA_CLASS_I_AREAS` |
+| Nearest transmission line | 120.7 m, VIRGINIA ELECTRIC & POWER CO, IN SERVICE | `EIA_POWER` |
+| Max voltage within radius | 230 kV | `EIA_POWER` |
+| Nearest substation | 504.5 m (BEAUMEADE, 230 kV) | `EIA_POWER` |
+| Nearest gas pipeline | 3,751 m | `EIA_PIPELINES` |
+| Nearest power plant | Potomac Energy Center, 8.9 km, 766 MW, natural gas | `EIA_POWER` |
+| County interconnection queue | 715 MW active | `LBNL_QUEUED_UP` |
+| Housing units within 1 km | 1,575 (`residential_context_class_1km: dense`) | `CENSUS_TIGERWEB` |
+| Modelled annual power cost | $863,736 per MW | `MIREYE_MODELED_ENERGY_COST` |
+
+Feed that to `agent/pathway.py` and two triggers fire immediately: **ozone nonattainment
+(Moderate → 100 tpy threshold for NOx and VOC, plus 1.15:1 offsets)** and **a Class I
+area at 63 km, inside the 100 km FLM notification radius under 40 CFR 52.21(p)**. On top
+of Virginia DEQ's 1.25× multiplier and the fact that DEQ has approved exactly one air
+permit for a data center campus with on-site gas generation.
+
+The grid facts say this is a superb site — 120 m to a 230 kV line, half a kilometre to a
+substation. That is what Mireye's own deck screens for, and it says yes. The permit
+facts say a 500 MW gas plant here is a multi-year fight. **That gap, on one real parcel,
+is the entire product.**

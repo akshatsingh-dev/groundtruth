@@ -289,6 +289,18 @@ _PROXIMITY_ROUTES: dict[str, dict[str, Any]] = {
         "distance_field": "nearest_airport_distance_m",
         "name_field": "nearest_airport_name",
         "attribute_fields": (),
+        # The two surfaces disagree, and it matters for a stack-height review.
+        # The @airports curated set filters FAA NASR to public-use airports
+        # (facility_type == "airport", heliports excluded). The
+        # nearest_airport_* fetch fields do not filter at all: at the Ashburn
+        # test site the "nearest airport" came back as INOVA LOUDOUN HOSPITAL
+        # at 6.2 km, which is a hospital helipad. For FAR Part 77 airspace
+        # screening on a 60 m stack that is the wrong answer. Treat a
+        # fetch-backed airport distance as "nearest aviation facility" and
+        # confirm with the curated set before relying on it — noting that the
+        # curated set was returning 503 on 5 Aug 2026.
+        "note": "FAA NASR unfiltered — includes heliports, so this can be a hospital "
+        "helipad rather than a public-use airport",
     },
     "urban_area": {
         "set": "@urban_areas",

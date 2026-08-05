@@ -232,6 +232,20 @@ _OFFSET_RATIOS: dict[str, float] = {
     "unclassified": 1.0,
 }
 
+#: Ozone Transport Region major source threshold for NOx and VOC, tons per year.
+#: CAA 184 requires every OTR state to apply moderate-nonattainment requirements
+#: statewide, whether or not the local monitors are clean.
+OTR_MAJOR_THRESHOLD_TPY = 50.0
+
+#: Permit-by-rule and general-permit eligibility gates.
+#: Real state PBRs are not written as a tons-per-year test alone. They carry
+#: equipment and heat-input limits, so a screen that checks only tonnage will
+#: hand a 75 MW combined-cycle plant a permit-by-rule answer it cannot have.
+#: 100 MMBtu/hr is roughly a 10 MW simple-cycle or 15 MW combined-cycle unit,
+#: which is the scale these rules are actually written for.
+PBR_MAX_TPY = 25.0
+PBR_MAX_HEAT_INPUT_MMBTU_HR = 100.0
+
 #: Which PTE pollutants count against which nonattainment designation.
 _NA_POLLUTANT_MAP: dict[str, tuple[str, ...]] = {
     "ozone": ("NOx", "VOC"),
@@ -498,6 +512,23 @@ def determine_pathway(est: EmissionsEstimate, site: SiteContext) -> PathwayResul
             if tpy >= threshold:
                 na_hits.append((status, pollutant, tpy, threshold))
 
+    # Ozone Transport Region. CAA 184 makes every OTR state apply moderate
+    # nonattainment requirements for NOx and VOC statewide, whether or not the
+    # local monitors are clean. Without this a New Jersey parcel with no Green
+    # Book listing scores as attainment and gets a PSD answer it will not get in
+    # practice — which is exactly the Vineland failure mode.
+    if overlay.get("otr") and not site.na_for("ozone"):
+        otr_status = NonattainmentStatus(
+            pollutant="ozone",
+            classification="moderate",
+            area_name=f"{site.state.upper()} statewide (Ozone Transport Region)",
+            source="CAA 184; 40 CFR 51.165",
+        )
+        for pollutant in ("NOx", "VOC"):
+            tpy = est.tons_per_year.get(pollutant, 0.0)
+            if tpy >= OTR_MAJOR_THRESHOLD_TPY:
+                na_hits.append((otr_status, pollutant, tpy, OTR_MAJOR_THRESHOLD_TPY))
+
     if site.nonattainment:
         listing = "; ".join(
             f"{s.pollutant} ({s.classification}, {s.area_name})" for s in site.nonattainment
@@ -609,7 +640,11 @@ def determine_pathway(est: EmissionsEstimate, site: SiteContext) -> PathwayResul
                 f"{config.run_hours:,.0f} hr/yr enforceable cap ({config.run_hours / 8760:.0%} "
                 f"availability)."
             )
-        elif overlay.get("permit_by_rule") and largest_tpy < 25:
+        elif (
+            overlay.get("permit_by_rule")
+            and largest_tpy < PBR_MAX_TPY
+            and est.heat_input_mmbtu_hr <= PBR_MAX_HEAT_INPUT_MMBTU_HR
+        ):
             pathway = Pathway.PERMIT_BY_RULE
             triggers.append(
                 Trigger(
@@ -700,7 +735,7 @@ def determine_pathway(est: EmissionsEstimate, site: SiteContext) -> PathwayResul
                     f"controls than BACT would otherwise require, or a stack height and location "
                     f"change, or waiting for someone else to shut down.",
                     "40 CFR 52.21(c); increment tracking via state SIP and EPA NEI",
-                    months_added=6.0 if pathway is Pathway.MAJOR_PSD else 0.0,
+                    months_added=6.0 if pathway in (Pathway.MAJOR_PSD, Pathway.MAJOR_NA_NSR) else 0.0,
                 )
             )
             if consumed >= 0.95:
@@ -716,7 +751,7 @@ def determine_pathway(est: EmissionsEstimate, site: SiteContext) -> PathwayResul
                     f"{consumed:.0%} of the {pollutant} PSD increment is consumed. Modeling will "
                     f"be tight but is likely to close.",
                     "40 CFR 52.21(c)",
-                    months_added=2.0 if pathway is Pathway.MAJOR_PSD else 0.0,
+                    months_added=2.0 if pathway in (Pathway.MAJOR_PSD, Pathway.MAJOR_NA_NSR) else 0.0,
                 )
             )
 

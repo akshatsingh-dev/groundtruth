@@ -17,12 +17,12 @@ building the turbines. Then the date passes and the building is not running.
 It was not the chips. It was not the money. Hyperscaler capital spending is
 projected above $690 billion in 2026. It was the power.
 
-Not "there is no electricity." The problem is narrower than that. The grid cannot
-connect you fast enough, so you decide to build your own power plant on the site.
-And then you discover that before you can burn a single cubic foot of gas, a state
-agency has to give you a piece of paper called an air permit. That paper takes
-somewhere between four months and five years, depending on facts about the dirt
-you bought that nobody checked before they bought it.
+Not "there is no electricity." The problem is narrower. The grid cannot connect you
+fast enough, so you build your own power plant on the site. And then you discover
+that before you can burn a single cubic foot of gas, a state agency has to give you
+a piece of paper called an air permit. That paper takes between four months and
+five years, depending on facts about the dirt you bought that nobody checked before
+they bought it.
 
 The numbers are not small. Morgan Stanley says US data centers need another
 68 gigawatts between 2026 and 2028, with a 38 gigawatt hole in that. Of 90
@@ -140,8 +140,7 @@ door costs.
 Energy, Constellation, Talen, Vistra, Equinix, or the utilities carrying data
 center load. They price announced capacity as deliverable capacity. A fund manager
 said exactly that in print in July 2026. They lose money every time a project they
-modelled as 2026 slips to 2028. $50k to $500k a year, two to six week sales cycle,
-no procurement department.
+modelled as 2026 slips to 2028. $50k to $500k a year, no procurement department.
 
 **Data center and power developers.** Hyperscaler site-selection teams, colo
 developers, behind-the-meter power developers. They lose money the other way. One
@@ -149,10 +148,10 @@ wrong site is tens of millions in land options, engineering and legal fees, plus
 18 to 36 months of dead time. Nebius is the live example. $250k to $1M a year
 enterprise, or $10k to $25k per site report, which is the realistic first revenue.
 
-**Air permitting consultancies.** Trinity, ERM, Onterris. They do this analysis by
-hand today, so they lose money on the hours. They would rather buy the screen and
-keep the billable interpretation. A licensed professional still signs the opinion.
-That is why they are a channel rather than a competitor.
+**Air permitting consultancies.** Trinity, ERM, Onterris. They do this by hand
+today, so they lose money on the hours. They would rather buy the screen and keep
+the billable interpretation. A licensed professional still signs the opinion. That
+is why they are a channel rather than a competitor.
 
 **Infrastructure lenders.** They underwrite against the announced energization
 date. When the date is wrong, their model is wrong. Same feed, diligence use case.

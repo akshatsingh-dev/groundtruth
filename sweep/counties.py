@@ -56,7 +56,7 @@ import threading
 import time
 import urllib.request
 import zipfile
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
@@ -294,15 +294,25 @@ def _pollutant_key(text: str) -> str | None:
 
 @dataclass
 class NonattainmentIndex:
-    """(state, normalised county name) -> the county's designations."""
+    """Designations keyed by FIPS where the source gives one, and by
+    (state, normalised county name) otherwise.
+
+    FIPS first because county names collide across states and EPA's typography
+    for them is inconsistent. The name key is the fallback for sources that
+    publish text only.
+    """
 
     by_county: dict[tuple[str, str], list[NonattainmentStatus]]
     part_county: set[tuple[str, str]]
     source: str
     fetched: str | None
     available: bool
+    by_fips: dict[str, list[NonattainmentStatus]] = field(default_factory=dict)
+    part_fips: set[str] = field(default_factory=set)
 
     def lookup(self, county: County) -> tuple[list[NonattainmentStatus], bool]:
+        if county.fips in self.by_fips:
+            return list(self.by_fips[county.fips]), county.fips in self.part_fips
         key = (county.state, _norm(county.bare_name))
         return list(self.by_county.get(key, [])), key in self.part_county
 
@@ -349,50 +359,75 @@ def _index_from_ingest() -> NonattainmentIndex | None:
         return None
 
     by_county: dict[tuple[str, str], list[NonattainmentStatus]] = {}
+    by_fips: dict[str, list[NonattainmentStatus]] = {}
     part: set[tuple[str, str]] = set()
+    part_fips: set[str] = set()
+
+    def _get(item, key, default=None):
+        if isinstance(item, dict):
+            return item.get(key, default)
+        return getattr(item, key, default)
+
     try:
-        items = rows.items() if isinstance(rows, dict) else rows
+        items = rows.values() if isinstance(rows, dict) else rows
         for item in items:
-            if isinstance(rows, dict):
-                key_in, statuses = item
-                state, county_name = (key_in if isinstance(key_in, tuple) else (None, None))
-                if state is None:
-                    return None
-            else:
-                state = getattr(item, "state", None) or item.get("state")
-                county_name = getattr(item, "county", None) or item.get("county")
-                statuses = getattr(item, "nonattainment", None) or item.get("nonattainment") or [item]
-            if not state or not county_name:
+            state = _get(item, "state")
+            county_name = _get(item, "county") or _get(item, "name")
+            fips = _get(item, "fips") or _get(item, "county_fips") or _get(item, "geoid")
+            statuses = _get(item, "nonattainment") or [item]
+            if not (state and county_name) and not fips:
                 continue
-            key = (str(state).upper()[:2], _norm(_strip_suffix(str(county_name))))
-            bucket = by_county.setdefault(key, [])
+            key = (
+                (str(state).upper()[:2], _norm(_strip_suffix(str(county_name))))
+                if state and county_name
+                else None
+            )
+            bucket: list[NonattainmentStatus] = []
             for status in statuses:
                 if isinstance(status, NonattainmentStatus):
                     bucket.append(status)
-                elif isinstance(status, dict) and status.get("pollutant"):
+                elif _get(status, "pollutant"):
                     bucket.append(
                         NonattainmentStatus(
-                            pollutant=str(status["pollutant"]).lower(),
-                            classification=str(status.get("classification", "unclassified")).lower(),
-                            area_name=str(status.get("area_name", "")),
-                            source=str(status.get("source", "EPA Green Book")),
-                            fetched=status.get("fetched"),
+                            pollutant=str(_get(status, "pollutant")).lower(),
+                            classification=str(_get(status, "classification", "unclassified")).lower(),
+                            area_name=str(_get(status, "area_name", "")),
+                            source=str(_get(status, "source", "EPA Green Book")),
+                            fetched=_get(status, "fetched"),
                         )
                     )
-            if getattr(item, "part_county", False) or (isinstance(item, dict) and item.get("part_county")):
-                part.add(key)
+            if not bucket:
+                continue
+            is_part = bool(_get(item, "part_county", False))
+            if key:
+                by_county.setdefault(key, []).extend(bucket)
+                if is_part:
+                    part.add(key)
+            if fips:
+                code = str(fips).zfill(5)
+                by_fips.setdefault(code, []).extend(bucket)
+                if is_part:
+                    part_fips.add(code)
     except Exception:
         return None
 
-    by_county = {k: v for k, v in by_county.items() if v}
-    if not by_county:
+    if not by_county and not by_fips:
         return None
+    fetched = None
+    for candidate in ("data_vintage", "VINTAGE", "FETCHED"):
+        value = getattr(greenbook, candidate, None)
+        try:
+            fetched = str(value() if callable(value) else value) if value else fetched
+        except Exception:
+            pass
     return NonattainmentIndex(
         by_county=_collapse(by_county),
         part_county=part,
         source="EPA Green Book via ingest.greenbook",
-        fetched=None,
+        fetched=fetched,
         available=True,
+        by_fips=_collapse_flat(by_fips),
+        part_fips=part_fips,
     )
 
 
@@ -467,14 +502,37 @@ def _index_from_epa_page() -> NonattainmentIndex | None:
     )
 
 
-def _collapse(
-    by_county: dict[tuple[str, str], list[NonattainmentStatus]]
-) -> dict[tuple[str, str], list[NonattainmentStatus]]:
-    """One designation per pollutant per county, keeping the worst classification.
+def _worst(statuses: list[NonattainmentStatus]) -> list[NonattainmentStatus]:
+    """One designation per pollutant, keeping the worst classification.
 
     A county can be nonattainment for ozone under both the 2008 and 2015 NAAQS
     with different classifications. The permit applies the stricter one.
     """
+    worst: dict[str, NonattainmentStatus] = {}
+    for status in statuses:
+        rank = (
+            _SEVERITY.index(status.classification)
+            if status.classification in _SEVERITY
+            else len(_SEVERITY)
+        )
+        current = worst.get(status.pollutant)
+        current_rank = (
+            _SEVERITY.index(current.classification)
+            if current and current.classification in _SEVERITY
+            else len(_SEVERITY)
+        )
+        if current is None or rank < current_rank:
+            worst[status.pollutant] = status
+    return list(worst.values())
+
+
+def _collapse_flat(by_fips: dict[str, list[NonattainmentStatus]]) -> dict[str, list[NonattainmentStatus]]:
+    return {k: _worst(v) for k, v in by_fips.items() if v}
+
+
+def _collapse(
+    by_county: dict[tuple[str, str], list[NonattainmentStatus]]
+) -> dict[tuple[str, str], list[NonattainmentStatus]]:
     out: dict[tuple[str, str], list[NonattainmentStatus]] = {}
     for key, statuses in by_county.items():
         worst: dict[str, NonattainmentStatus] = {}
@@ -818,7 +876,11 @@ def score_county(
         "data_quality": data_quality,
         "data_quality_note": quality_note,
         "part_county_nonattainment": part_county,
-        "county_posture_source": posture.get("source") if posture else None,
+        "county_posture_source": (
+            posture.get("source") or posture.get("source_name") or posture.get("source_url")
+            if posture
+            else None
+        ),
         "mireye_calls": mireye_calls,
         "mireye_credits": round(mireye_credits, 3),
         "scored_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
