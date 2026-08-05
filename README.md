@@ -33,7 +33,7 @@ Developers buy for power, fiber and price. They find this out at month nine.
 
 ---
 
-## The problem, properly
+## The problem
 
 The chips exist. The money exists. The power doesn't.
 
@@ -148,7 +148,7 @@ Screen on NOx alone and you miss it. An oxidation catalyst drops it under 10.
 
 ---
 
-## What "agent" means here
+## What "agent" does
 
 Contest rule: reason, decide, act. Not a website with a map on it.
 
@@ -281,7 +281,7 @@ against the developer at our own demo parcel. Litigation adds months and signals
 county that fights. It also caught a factual error in our own source material: the xAI
 suit is over Colossus 2 in Southaven, Mississippi, not Memphis.
 
-### Plus one that isn't on their list
+
 
 **A hand-entered county posture file.** 27 counties with moratoria, zoning stance and
 board voting history, entered by hand from primary sources. Not a scraper. Faster and
