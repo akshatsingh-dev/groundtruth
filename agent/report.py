@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Any, Iterable
+from typing import Any
 
 from .pathway import Pathway, Trigger
 from .planner import ProjectAssessment

@@ -49,12 +49,11 @@ import os
 import time
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
-from typing import Any, Iterable, Sequence
+from typing import Any, Sequence
 
 from providers.base import FactSet, NullProvider, PhysicalFactsProvider
 
 from .emissions import (
-    Control,
     EmissionsEstimate,
     Fuel,
     GenerationConfig,

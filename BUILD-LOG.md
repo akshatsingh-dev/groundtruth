@@ -414,8 +414,117 @@ the demo reproduces regardless of how someone runs it.
 
 **Still blocked on you:**
 
-1. **`COURTLISTENER_TOKEN`** — free, two minutes, courtlistener.com. This is the
-   "court filings" half of the judging criterion, so it is not optional.
+1. **`COURTLISTENER_TOKEN`** — free, courtlistener.com. Step-by-step walkthrough is
+   at `docs/courtlistener-setup.md`. The token page is
+   `/profile/api-token/`. Note the limits: **5 requests/min, 50/hr, 125/day.** That
+   is why the docket layer caches to disk with a 7-day TTL and the demo replays
+   from cache rather than hitting the API live.
 2. **Email founders@mireye.com** about credits. Draft is written and sitting at
    `outputs/drafts/founders-credits-email.md`. You send it. Not the agent.
 3. **Flip the repo public** before submitting the form.
+
+---
+
+### Wed 5 Aug 2026 — session 1, results
+
+Five of six agents landed. Each one found something that changed the build, which
+is the point of running them in parallel rather than trusting one pass.
+
+**The expensive correction.** The build brief said the 15 January 2026 EPA rule
+(91 Fed. Reg. 1910) *closed* the nonroad-engine loophole. It does the opposite in
+direction. The rule finalised a **conditional exclusion** — turbines drop out of
+the "stationary combustion turbine" definition if they qualify as nonroad engines
+and are certified under Title II — and that exclusion **is not operative**, because
+EPA has not done the Title II rulemaking it depends on. Verified against the
+Federal Register record and three independent law-firm readings; Clark Hill's own
+headline says the rule *eases* permitting.
+
+I had baked the wrong version into `agent/pathway.py`. It is fixed, and pinned by a
+test that fails if the word "closed" ever comes back. The honest version is a better
+story: *anyone underwriting a trailer-mounted fast path today is underwriting an
+open legal question, not a loophole* — with a federal injunction hearing this month.
+
+**The fabricated quote.** "Announced capital is not deliverable capacity. Those are
+different things, and the market keeps pricing them the same." Attributed in the
+brief to a fund manager, in print, July 2026. It does not exist. Zero hits on the
+exact string, not in either article cited around it. It was the best-sounding line
+in the brief and it is exactly the kind of thing a judge spot-checks. Two real
+replacements are in `docs/evidence.md` E2. **Do not use the original.**
+
+Full claim-by-claim ledger is `docs/evidence.md`: 13 confirmed, 5 need rewording,
+1 unsupported.
+
+**Three real bugs in my own engine**, found by the agent whose job was writing your
+explainer docs — it read the code closely enough to catch what the tests missed:
+
+- New Jersey's Ozone Transport Region rule was *stated* in the trigger text and
+  never *applied*. A NJ parcel with no Green Book listing scored major PSD at
+  100 tpy instead of nonattainment NSR at 50. That is the Vineland failure mode,
+  and the bug handed developers the easier of two answers.
+- Consumed PSD increment added months only under PSD, so a nonattainment site with
+  a full increment scored *cheaper* than an attainment one.
+- The permit-by-rule gate tested tons only, so a 75 MW combined-cycle plant scored
+  a Texas permit-by-rule it cannot have. Real PBRs carry heat-input limits.
+
+All three fixed, each with a regression test. **50 tests, all passing.**
+
+**A false claim in my own README.** It said "move 22 miles, minor NSR instead of
+PSD, save 18 months." Not reproducible at 500 MW, and the sweep proves why.
+
+**The national sweep, and its headline finding.** 3,222 counties scored in half a
+second. 3,026 major PSD, 196 major nonattainment NSR, **zero minor**. There is no
+county in the United States where a 500 MW onsite gas plant is a minor source —
+NOx clears the 100 tpy List-of-28 threshold everywhere. The spread for *identical
+equipment* is **1,309 days**. All 21 New Jersey counties tie for slowest at 1,918
+days on the OTR-plus-EJ stack, which is the Vineland failure mode showing up
+nationally without anyone hand-coding it.
+
+Map is `outputs/county_map.html` — 708 KB, self-contained, no external requests,
+renders with JavaScript disabled, works in light and dark.
+
+**Mireye is live and verified.** 884 of 25,000 credits spent (about $0.88), 25
+calls, zero throttles. The credit model in `providers/mireye.py` reproduces their
+meter **exactly** — 884 modelled against 884 billed. Auth is `Bearer <JWT>`.
+Three brief assumptions were wrong: `data_center_siting` is 106 fields not 90,
+`site_selection` is 72 not 54, and `wildfire` is really `wildfire_underwrite`.
+
+**All four field requests fired, and landed as a clean three-way split** — which is
+the best possible outcome on camera:
+
+| Request | Outcome |
+|---|---|
+| Nearest Class I area distance | **matched** — live sample, Shenandoah NP at 63,478 m, cited to USDI-NPS |
+| County nonattainment by pollutant | **near miss** — their field is blank for every non-ozone pollutant |
+| Ambient PM2.5 / NO2 background | **queued**, position 2, ETA 6 Aug |
+| Major stationary sources within X km | **queued**, position 3, ETA 6 Aug |
+
+It also found two live bugs in their API — `@airports` returning 503, and
+`nearest_airport_distance_m` returning a *hospital helipad* for Ashburn, which is
+wrong for a Part 77 stack review. That is genuine feedback-field material.
+
+**The demo site found itself.** Ashburn, Virginia: 120 m to a 230 kV transmission
+line, 504 m to a substation. By Mireye's own siting deck it is an excellent parcel.
+It is also ozone nonattainment, Moderate, with Shenandoah National Park 63 km away
+— inside the 100 km radius that pulls in Federal Land Manager review. A 500 MW
+combined-cycle plant there is roughly 57 months. The same plant in Ellis County,
+Texas is about 20 months.
+
+**That gap, on one real parcel, is the entire product.** Their API says yes. Ours
+says not for four and a half years. Lead with it.
+
+**External data landed too.** 463 nonattainment designations across 245 counties,
+parsed from EPA's dBASE files — there is no CSV, despite what the brief says — with
+171 partial-county areas flagged rather than silently applied countywide. 27
+counties hand-verified, 11 with a moratorium in force. And the xAI docket is found:
+**NAACP v. X.AI Corp., 3:26-cv-00074, N.D. Mississippi**, over Southaven — not
+W.D. Tennessee over Memphis, as the brief had it. Earthjustice is on the docket;
+SELC is not.
+
+**The backtest is 3 cases, and one is a miss.** Vineland NJ and Project Jupiter NM
+both hit on the mechanism that actually bound. xAI Colossus 1 is a miss: the engine
+says major PSD and about two years, and xAI energised in weeks by taking the
+position the turbines were nonroad engines. The engine prices the compliant path
+and has no variable for a developer who runs it anyway and litigates. **Keep the
+miss in the video.** It is what makes the other two credible.
+
+Still running: the agent loop and both search loops.

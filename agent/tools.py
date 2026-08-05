@@ -36,7 +36,7 @@ from __future__ import annotations
 import inspect
 import math
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import TYPE_CHECKING, Any, Callable, Iterable
 
 from providers.base import (
@@ -62,7 +62,6 @@ from .emissions import (
     estimate,
 )
 from .pathway import (
-    MajorSourceNearby,
     NonattainmentStatus,
     Pathway,
     PathwayResult,

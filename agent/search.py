@@ -32,10 +32,9 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any, Callable, Iterable, Sequence
+from typing import Any, Callable, Sequence
 
 from providers.base import (
-    Fact,
     FactSet,
     Location,
     PhysicalFactsProvider,
@@ -50,16 +49,13 @@ from .emissions import (
     GenerationConfig,
     PrimeMover,
     estimate,
-    hours_for_tpy_target,
 )
 from .pathway import (
     NonattainmentStatus,
     Pathway,
     PathwayResult,
     SiteContext,
-    classify_source_category,
     determine_pathway,
-    overlay_for,
     synthetic_minor_cap,
 )
 

@@ -1,0 +1,1422 @@
+{
+  "mode": "deterministic fallback (no LLM)",
+  "model": null,
+  "started": "2026-08-05T09:50:28+00:00",
+  "steps": [
+    {
+      "index": 1,
+      "stage": "setup",
+      "kind": "note",
+      "title": "Auth path: none",
+      "why": "No LLM. Neither CLAUDE_CODE_OAUTH_TOKEN nor ANTHROPIC_API_KEY is set, so the run takes the deterministic scripted path: the same executors, in the same order, with the same adaptive query planning. Only the sequencing stops being model-chosen.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 0.0,
+      "at": "2026-08-05T09:50:28+00:00"
+    },
+    {
+      "index": 2,
+      "stage": "stage 1 \u2014 potential to emit",
+      "kind": "plan",
+      "title": "Estimate PTE before spending a single credit",
+      "why": "Emissions are config-only arithmetic. The answer decides whether this is a major source, and that decides which physical facts are worth buying. Buying facts first and reasoning second is how screens waste credits.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 0.0,
+      "at": "2026-08-05T09:50:28+00:00"
+    },
+    {
+      "index": 3,
+      "stage": "stage 1 \u2014 potential to emit",
+      "kind": "conclusion",
+      "title": "NOx 5,887 tpy against a 250 tpy threshold",
+      "why": null,
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "tons_per_year": {
+          "NOx": 5886.7,
+          "CO": 1508.5,
+          "PM10": 121.4,
+          "PM2.5": 121.4,
+          "SO2": 62.5,
+          "VOC": 38.6,
+          "CO2e": 2023560.0,
+          "HCHO": 13.1
+        }
+      },
+      "conclusion": "Major-source shaped. Dispersion modelling is coming.",
+      "citation": "AP-42 Table 3.1-1 / 3.1-2a / 3.1-3, uncontrolled natural gas turbine > 3 MW",
+      "credits": 0,
+      "elapsed_s": 0.0,
+      "at": "2026-08-05T09:50:28+00:00"
+    },
+    {
+      "index": 4,
+      "stage": "stage 2 \u2014 resolve",
+      "kind": "plan",
+      "title": "Resolve the address to a canonical parcel",
+      "why": "Refuse rather than guess. The county decides the pathway, so a wrong county is a wrong answer with a confident face on it.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 0.0,
+      "at": "2026-08-05T09:50:28+00:00"
+    },
+    {
+      "index": 5,
+      "stage": "stage 2 \u2014 resolve",
+      "kind": "observation",
+      "title": "resolve_site returned",
+      "why": null,
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "resolved": true,
+        "formatted_address": null,
+        "latitude": 39.4862,
+        "longitude": -75.0257,
+        "county": "Cumberland",
+        "state": "NJ",
+        "county_fips": "34011",
+        "parcel_id": null,
+        "confidence": null,
+        "source": "caller-supplied coordinate",
+        "fetched": "2026-08-05T09:50:28+00:00",
+        "permitting_agency": "NJ DEP",
+        "agency_note": "Whole state is in the Ozone Transport Region, so NOx is regulated as if nonattainment regardless of local monitors. NJ DEP also runs an environmental justice law (N.J.S.A. 13:1D-157) that lets it deny a permit in an overburdened community outright. This is the Nebius failure mode.",
+        "lookup_facts": [
+          {
+            "key": "county_fips",
+            "value": "34011",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county",
+            "value": "Cumberland County",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "state",
+            "value": "New Jersey",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "state_fips",
+            "value": "34",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "tract_geoid",
+            "value": "34011041101",
+            "unit": null,
+            "source": "US Census Geocoder (2020 vintage)",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "block_group_geoid",
+            "value": "340110411012",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "block_geoid",
+            "value": "340110411012017",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "congressional_district",
+            "value": "NJ-02",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "cbsa_name",
+            "value": "Vineland, NJ Metro Area",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "cbsa_code",
+            "value": "47220",
+            "unit": null,
+            "source": "US Census Geocoder",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "fema_flood_zone",
+            "value": "X",
+            "unit": null,
+            "source": "FEMA NFHL",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "within_floodplain",
+            "value": false,
+            "unit": null,
+            "source": "FEMA NFHL",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "coastal_high_hazard",
+            "value": false,
+            "unit": null,
+            "source": "FEMA NFHL",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "in_opportunity_zone",
+            "value": true,
+            "unit": null,
+            "source": "US Treasury Qualified Opportunity Zones",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "opportunity_zone_tract_geoid",
+            "value": "34011041100",
+            "unit": null,
+            "source": "US Treasury Qualified Opportunity Zones",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "timezone",
+            "value": "America/New_York",
+            "unit": null,
+            "source": "IANA tz database",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "elevation_m",
+            "value": 32.64278030395508,
+            "unit": "meters",
+            "source": "USGS 3DEP/EPQS",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.population",
+            "value": 157148,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.population_growth_1yr_pct",
+            "value": 0.4738,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.net_domestic_migration",
+            "value": 148,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.building_permits_total_annual",
+            "value": 143,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.building_permits_sf_annual",
+            "value": 143,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.building_permits_yoy_pct",
+            "value": -43.4783,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.hpi_yoy_pct",
+            "value": 9.61,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.employment_total",
+            "value": 60285,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.employment_yoy_pct",
+            "value": 1.0002,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          },
+          {
+            "key": "county_market.median_household_income_usd",
+            "value": 64499,
+            "unit": null,
+            "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+            "fetched": "2026-08-05T09:50:28+00:00",
+            "confidence": null
+          }
+        ]
+      },
+      "conclusion": "Resolved to Cumberland County, NJ (confidence None)",
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 0.0,
+      "at": "2026-08-05T09:50:28+00:00"
+    },
+    {
+      "index": 6,
+      "stage": "stage 3 \u2014 physical read",
+      "kind": "plan",
+      "title": "Choose provider presets for THIS config",
+      "why": "parcel: Boundary and acreage set the fenceline. Ambient air starts there, so it is where the modelling receptors go.; utilities: Gas-fired. Pipeline distance is the most common non-air failure mode \u2014 New Mexico blocked a 2.45 GW site by blocking its lateral, not its plant.; terrain: PTE is at or over the major threshold, so AERMOD is coming. Terrain relief decides whether it is a flat-site run or a complex-terrain run with terrain-following receptors, and complex terrain usually forces a taller stack.; land_cover: AERMET needs surface roughness, albedo and Bowen ratio from land cover to build the meteorological inputs for that AERMOD run.; points_of_interest: Schools, hospitals and residential parcels near the fenceline are both modelling receptors and the opposition map. Engines and major sources need both.; demographics: State has environmental-justice denial authority. Population and EJ indicators within radius decide whether this is a modelling exercise or a discretionary denial risk.; grid_interconnect: Over 200 MW or grid-tied. The interconnect study runs in parallel with the air permit and is frequently the longer pole.",
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "skipped": {
+          "flood_risk": "Flood, wildfire and natural hazard presets decide whether the site is *good*. This screen asks whether they will let you switch it on. Different layer, and not worth the credits here.",
+          "soil": "Foundation design, not permit pathway."
+        }
+      },
+      "conclusion": "Buying 7 presets, skipping 2.",
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 0.0,
+      "at": "2026-08-05T09:50:28+00:00"
+    },
+    {
+      "index": 7,
+      "stage": "stage 3 \u2014 physical read",
+      "kind": "observation",
+      "title": "get_physical_facts returned",
+      "why": null,
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "intents": [
+          "parcel",
+          "utilities",
+          "terrain",
+          "land_cover",
+          "points_of_interest",
+          "demographics",
+          "grid_interconnect"
+        ],
+        "reason": "Boundary and acreage set the fenceline. Ambient air starts there, so it is where the modelling receptors go.; Gas-fired. Pipeline distance is the most common non-air failure mode \u2014 New Mexico blocked a 2.45 GW site by blocking its lateral, not its plant.; PTE is at or over the major threshold, so AERMOD is coming. Terrain relief decides whether it is a flat-site run or a complex-terrain run with terrain-following receptors, and complex terrain usually forces a taller stack.; AERMET needs surface roughness, albedo and Bowen ratio from land cover to build the meteorological inputs for that AERMOD run.; Schools, hospitals and residential parcels near the fenceline are both modelling receptors and the opposition map. Engines and major sources need both.; State has environmental-justice denial authority. Population and EJ indicators within radius decide whether this is a modelling exercise or a discretionary denial risk.; Over 200 MW or grid-tied. The interconnect study runs in parallel with the air permit and is frequently the longer pole.",
+        "fields_returned": 99,
+        "facts": [
+          {
+            "key": "nearest_power_plant_name",
+            "value": "Howard Down",
+            "unit": null,
+            "source": "EIA_POWER",
+            "fetched": "2026-08-05T09:30:51.245604+00:00",
+            "confidence": 0.9
+          },
+          {
+            "key": "nearest_power_plant_distance_m",
+            "value": 830.3,
+            "unit": "meters",
+            "source": "EIA_POWER",
+            "fetched": "2026-08-05T09:30:51.245588+00:00",
+            "confidence": 0.9
+          },
+          {
+            "key": "nearest_power_plant_primary_fuel",
+            "value": "natural gas",
+            "unit": null,
+            "source": "EIA_POWER",
+            "fetched": "2026-08-05T09:30:51.245617+00:00",
+            "confidence": 0.9
+          },
+          {
+            "key": "nearest_power_plant_capacity_mw",
+            "value": 55.0,
+            "unit": "megawatts",
+            "source": "EIA_POWER",
+            "fetched": "2026-08-05T09:30:51.245628+00:00",
+            "confidence": 0.9
+          },
+          {
+            "key": "nearest_transmission_line_distance_m",
+            "value": 723.4,
+            "unit": "meters",
+            "source": "EIA_POWER",
+            "fetched": "2026-08-05T09:30:51.042494+00:00",
+            "confidence": 0.9
+          },
+          {
+            "key": "nearest_transmission_line_voltage_kv",
+            "value": 69.0,
+            "unit": "kilovolts",
+            "source": "EIA_POWER",
+            "fetched": "2026-08-05T09:30:51.042520+00:00",
+            "confidence": 0.9
+          }
+        ],
+        "mapped_to_site_context": {
+          "transmission_km": "nearest_transmission_line_distance_m",
+          "transmission_kv": "nearest_transmission_line_voltage_kv"
+        },
+        "note": "Every value above carries its own source and fetch timestamp."
+      },
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 2.84,
+      "at": "2026-08-05T09:50:30+00:00"
+    },
+    {
+      "index": 8,
+      "stage": "stage 3 \u2014 physical read",
+      "kind": "plan",
+      "title": "Choose proximity targets",
+      "why": "gas_pipeline: Fuel supply. Over ~25 km the lateral becomes its own permitting project with its own easements and its own opposition.; transmission: Voltage and distance decide whether this is behind the meter or an interconnection.; substation: Point of interconnection for any grid-tied portion.; airport: Turbine stacks are tall, and complex terrain makes them taller. FAA obstruction review and thermal plume review both key off airport distance.; urban_area: Who lives downwind. Receptor grid and opposition risk.; school: Sensitive receptor, and the single most reliable predictor of an organised hearing.",
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "skipped": {}
+      },
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 2.84,
+      "at": "2026-08-05T09:50:30+00:00"
+    },
+    {
+      "index": 9,
+      "stage": "stage 3 \u2014 physical read",
+      "kind": "observation",
+      "title": "get_proximity returned",
+      "why": null,
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "targets": [
+          "gas_pipeline",
+          "transmission",
+          "substation",
+          "airport",
+          "urban_area",
+          "school"
+        ],
+        "reason": "Fuel supply. Over ~25 km the lateral becomes its own permitting project with its own easements and its own opposition.; Voltage and distance decide whether this is behind the meter or an interconnection.; Point of interconnection for any grid-tied portion.; Turbine stacks are tall, and complex terrain makes them taller. FAA obstruction review and thermal plume review both key off airport distance.; Who lives downwind. Receptor grid and opposition risk.; Sensitive receptor, and the single most reliable predictor of an organised hearing.",
+        "results": {
+          "transmission": {
+            "distance_km": 0.72,
+            "name": null,
+            "by_road": false,
+            "attributes": {
+              "nearest_transmission_line_voltage_kv": 69.0,
+              "nearest_transmission_line_voltage_class": "UNDER 100",
+              "max_transmission_line_voltage_kv_within_radius": 69.0,
+              "field": "nearest_transmission_line_distance_m",
+              "notes": [
+                "confidence=high; https://atlas.eia.gov/"
+              ]
+            },
+            "source": "EIA_POWER",
+            "fetched": "2026-08-05T09:30:51.042494+00:00"
+          },
+          "substation": {
+            "distance_km": 0.72,
+            "name": null,
+            "by_road": false,
+            "attributes": {
+              "nearest_substation_status": "IN SERVICE",
+              "field": "nearest_substation_distance_m",
+              "notes": [
+                "confidence=high; https://atlas.eia.gov/"
+              ]
+            },
+            "source": "EIA_POWER",
+            "fetched": "2026-08-05T09:30:51.052008+00:00"
+          },
+          "airport": {
+            "distance_km": 4.56,
+            "name": "KROELINGER",
+            "by_road": false,
+            "attributes": {
+              "field": "nearest_airport_distance_m",
+              "notes": [
+                "FAA NASR unfiltered \u2014 includes heliports, so this can be a hospital helipad rather than a public-use airport",
+                "confidence=high; https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/"
+              ]
+            },
+            "source": "FAA_NASR",
+            "fetched": "2026-08-05T09:30:54.040210+00:00"
+          },
+          "urban_area": {
+            "distance_km": 0.0,
+            "name": null,
+            "by_road": false,
+            "attributes": {
+              "field": "nearest_urban_area_distance_m",
+              "notes": [
+                "confidence=high; vintage=Census 2020 Urban Areas (TIGER/Line); 0.0 m when the point lies inside an urban area; else geodesic distance to the nearest urban-area boundary within 100 km; https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html"
+              ]
+            },
+            "source": "CENSUS_TIGER_URBAN",
+            "fetched": "2026-08-05T09:30:54.608346+00:00"
+          },
+          "school": {
+            "distance_km": 0.34,
+            "name": "Vineland Public Schools",
+            "by_road": false,
+            "attributes": {
+              "field": "nearest_school_distance_m",
+              "notes": [
+                "confidence=medium; vintage=2026-07-22.0; geodesic distance to the nearest open school; Overture conflation confidence 0.92; https://docs.overturemaps.org/guides/places/"
+              ]
+            },
+            "source": "OVERTURE_PLACES",
+            "fetched": "2026-08-05T09:30:50.528061+00:00"
+          }
+        },
+        "missing": [
+          "gas_pipeline"
+        ],
+        "mapped_to_site_context": {
+          "transmission_km": "proximity:transmission",
+          "nearest_airport_km": "proximity:airport"
+        }
+      },
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 13.99,
+      "at": "2026-08-05T09:50:41+00:00"
+    },
+    {
+      "index": 10,
+      "stage": "stage 4 \u2014 regulatory",
+      "kind": "plan",
+      "title": "Load Green Book, county file and dockets",
+      "why": "Attainment status is the single fact most likely to flip the pathway. The county file and the docket search are the non-air blockers that a pure air screen misses.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 13.99,
+      "at": "2026-08-05T09:50:41+00:00"
+    },
+    {
+      "index": 11,
+      "stage": "stage 4 \u2014 regulatory",
+      "kind": "observation",
+      "title": "get_regulatory_context returned",
+      "why": null,
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "fips": "34011",
+        "county": "Cumberland",
+        "state": "NJ",
+        "nonattainment": [
+          {
+            "pollutant": "ozone",
+            "classification": "serious",
+            "area_name": "Philadelphia-Atlantic City, PA-NJ",
+            "source": "EPA Green Book (8-Hour Ozone (2015))",
+            "fetched": "2026-07-31"
+          },
+          {
+            "pollutant": "ozone",
+            "classification": "marginal",
+            "area_name": "Philadelphia-Atlantic City, PA-NJ",
+            "source": "EPA Green Book (8-Hour Ozone (2008))",
+            "fetched": "2026-07-31"
+          }
+        ],
+        "moratorium": false,
+        "moratorium_note": null,
+        "zoning_posture": null,
+        "litigation": [
+          "MONTGOMERY v. DATAONE USA LLC \u2014 1:26-cv-05972 \u2014 D.N.J. \u2014 filed 2026-05-26 \u2014 28:1332 Diversity-Torts to Land",
+          "MOTLEY v. COSMED GROUP, INC. \u2014 2:24-cv-09063 \u2014 D.N.J. \u2014 filed 2024-09-09 \u2014 28:1441 Notice of Removal- Product Liability"
+        ],
+        "sources": {
+          "greenbook": {
+            "available": true,
+            "note": "2 designation(s)",
+            "source": "EPA Green Book, 40 CFR 81"
+          },
+          "counties": {
+            "available": true,
+            "note": "county not in the file",
+            "source": "ingest/counties.json (hand entered)"
+          },
+          "dockets": {
+            "available": true,
+            "note": "2 case(s)",
+            "source": "CourtListener / RECAP"
+          }
+        },
+        "gaps": [
+          "Not indexed by any wired source: class_i_area_distance, psd_increment_consumed, background_ambient_concentration. These are pure geometry or monitor data over public federal boundaries \u2014 request_field is the right route, not a bespoke ingest."
+        ],
+        "state_overlay": {
+          "agency": "NJ DEP",
+          "timeline_multiplier": 1.6,
+          "permit_by_rule": false,
+          "state_toxics": true,
+          "ozone_transport_region": true,
+          "ej_denial_authority": true,
+          "notes": "Whole state is in the Ozone Transport Region, so NOx is regulated as if nonattainment regardless of local monitors. NJ DEP also runs an environmental justice law (N.J.S.A. 13:1D-157) that lets it deny a permit in an overburdened community outright. This is the Nebius failure mode.",
+          "source": "NJ DEP EJ Law N.J.S.A. 13:1D-157, effective April 2023"
+        },
+        "unknowns": [
+          "class_i_area_distance",
+          "psd_increment_consumed",
+          "background_ambient_concentration"
+        ]
+      },
+      "conclusion": "Not indexed by any wired source: class_i_area_distance, psd_increment_consumed, background_ambient_concentration. These are pure geometry or monitor data over public federal boundaries \u2014 request_field is the right route, not a bespoke ingest.",
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 12,
+      "stage": "stage 4 \u2014 regulatory",
+      "kind": "observation",
+      "title": "request_field: nearest_class_i_area_km",
+      "why": "No preset covers this and it is a real physical-world field. Requesting it beats building an ingest for it.",
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "field_name": "nearest_class_i_area_km",
+        "description": "Great-circle distance from a coordinate to the nearest Clean Air Act Class I area (national parks and wilderness over 5,000 acres, 40 CFR 81 Subpart D). Pure geometry over published federal boundaries. Drives the AQRV and visibility analysis in every PSD application.",
+        "requested_at": "2026-08-05T09:50:42+00:00",
+        "supported": false,
+        "outcome": "error",
+        "note": "field_request needs at least one example location \u2014 it is what seeds the build's eval cases and where the field is verified on prod"
+      },
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 13,
+      "stage": "stage 4 \u2014 regulatory",
+      "kind": "observation",
+      "title": "request_field: background_pm25_ug_m3",
+      "why": "No preset covers this and it is a real physical-world field. Requesting it beats building an ingest for it.",
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "field_name": "background_pm25_ug_m3",
+        "description": "Background ambient PM2.5 and NO2 concentration at a coordinate, from the nearest representative EPA monitor. Every NAAQS modelling demonstration adds modelled impact to this number.",
+        "requested_at": "2026-08-05T09:50:42+00:00",
+        "supported": false,
+        "outcome": "error",
+        "note": "field_request needs at least one example location \u2014 it is what seeds the build's eval cases and where the field is verified on prod"
+      },
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 14,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "plan",
+      "title": "Run the decision tree",
+      "why": "Source category, then threshold, then PTE against threshold, then the overlays that add months.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 15,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Source category",
+      "why": "Simple cycle, no steam cycle, so not a 'steam electric plant' and no boiler. Not a listed category despite 4,200 MMBtu/hr of heat input. Major source threshold is 250 tpy. Worth confirming with the state \u2014 a few agencies read the boiler entry more broadly than EPA does.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "40 CFR 52.21(b)(1)(i)(a); the 'List of 28' named source categories",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 16,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Applicable major-source threshold",
+      "why": "250 tpy \u2014 not a listed category",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "40 CFR 52.21(b)(1)(i)(a); the 'List of 28' named source categories",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 17,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Potential to emit vs threshold",
+      "why": "NOx at 5,887 tpy against 50 tpy. 8,760 hr/yr \u2014 no enforceable cap, so PTE is computed at full-time operation regardless of intended dispatch",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "40 CFR 52.21(b)(4)",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 18,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Nonattainment Designation",
+      "why": "FIRED \u2014 Cumberland County, NJ is designated nonattainment for: ozone (serious, Philadelphia-Atlantic City, PA-NJ); ozone (marginal, Philadelphia-Atlantic City, PA-NJ).",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "EPA Green Book, 40 CFR 81",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 19,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Major Nonattainment Nsr",
+      "why": "FIRED \u2014 NOx PTE of 5,887 tpy is over the 50 tpy major threshold for a serious ozone nonattainment area. Requires LAER (no cost defense, unlike BACT) and 1.20:1 emission offsets \u2014 7,064 tons of verified reductions bought from existing sources in the area.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "CAA 173; 40 CFR 51.165(a)(1)(iv)(A)",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 20,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Class I Aqrv",
+      "why": "clear \u2014 No Class I area within screening range.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "40 CFR 52.21(p)",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 21,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Title V",
+      "why": "FIRED \u2014 Title V operating permit required \u2014 criteria pollutant PTE 5,887 tpy over 100 tpy. Runs after the construction permit; usually does not block construction but does add annual compliance cost and a public comment window of its own.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "40 CFR Part 70",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 22,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "State Toxics",
+      "why": "FIRED \u2014 NJ runs a state air toxics program on top of the federal HAP rules. Expect a separate modeling demonstration for formaldehyde and, for engines, acrolein. This often drives stack height more than the NAAQS analysis does.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "NJ DEP EJ Law N.J.S.A. 13:1D-157, effective April 2023",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 23,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Ozone Transport Region",
+      "why": "FIRED \u2014 NJ is in the Ozone Transport Region. NOx is subject to nonattainment-style requirements statewide regardless of local monitor data, and the major source threshold for VOC/NOx is 50 tpy.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "CAA 184; 40 CFR 51.165",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 24,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Ej Denial Authority",
+      "why": "FIRED \u2014 NJ gives the agency authority to deny a permit outright in an overburdened community, independent of whether the emissions modeling passes. This is a discretionary denial risk, not a timeline risk.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "NJ DEP EJ Law N.J.S.A. 13:1D-157, effective April 2023",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 25,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "reasoning",
+      "title": "Litigation",
+      "why": "FIRED \u2014 2 federal case(s) touching this developer or county: MONTGOMERY v. DATAONE USA LLC \u2014 1:26-cv-05972 \u2014 D.N.J. \u2014 filed 2026-05-26 \u2014 28:1332 Diversity-Torts to Land; MOTLEY v. COSMED GROUP, INC. \u2014 2:24-cv-09063 \u2014 D.N.J. \u2014 filed 2024-09-09 \u2014 28:1441 Notice of Removal- Product Liability",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "CourtListener / RECAP",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 26,
+      "stage": "stage 5 \u2014 pathway",
+      "kind": "conclusion",
+      "title": "Pathway",
+      "why": "Major nonattainment NSR: 41-104 months (likely 66)",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": "agent/pathway.py decision tree",
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 27,
+      "stage": "stage 6 \u2014 act",
+      "kind": "plan",
+      "title": "Config search at this parcel",
+      "why": "Before moving the project, find out whether the equipment can move the pathway. Free, and controls are cheaper than land.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 28,
+      "stage": "stage 6 \u2014 act",
+      "kind": "conclusion",
+      "title": "Switch to solid oxide fuel cells",
+      "why": "Solid oxide fuel cells emit almost no criteria pollutants, which usually takes the air permit off the critical path entirely. CO2 is not solved \u2014 they still burn gas. Much higher capital cost per MW, a supplier list you can count on one hand, and lead times that are themselves the constraint at data center scale.",
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "options": [
+          {
+            "label": "Switch to solid oxide fuel cells",
+            "config": "400 MW fuel_cell on natural_gas (uncontrolled), no enforceable hour cap (PTE at 8760)",
+            "pathway": "minor_nsr",
+            "pathway_label": "Minor NSR construction permit",
+            "months_low": 12.4,
+            "months_likely": 21.6,
+            "months_high": 34.0,
+            "rank_delta": 3,
+            "months_saved": 44.4,
+            "controlling_pollutant": "CO",
+            "controlling_tpy": 9.1,
+            "availability": 1.0,
+            "cost_note": "Solid oxide fuel cells emit almost no criteria pollutants, which usually takes the air permit off the critical path entirely. CO2 is not solved \u2014 they still burn gas. Much higher capital cost per MW, a supplier list you can count on one hand, and lead times that are themselves the constraint at data center scale.",
+            "hard_stops": [],
+            "triggers_cleared": [
+              "major_nonattainment_nsr",
+              "nsps_turbine",
+              "title_v"
+            ],
+            "warnings": [],
+            "tons_per_year": {
+              "NOx": 3.2,
+              "CO": 9.1,
+              "PM10": 0.3,
+              "PM2.5": 0.3,
+              "SO2": 0.0,
+              "VOC": 0.3,
+              "CO2e": 1426128.0,
+              "HCHO": 0.0
+            }
+          },
+          {
+            "label": "Add SCR",
+            "config": "400 MW simple_cycle_turbine on natural_gas (scr), no enforceable hour cap (PTE at 8760)",
+            "pathway": "major_nonattainment_nsr",
+            "pathway_label": "Major nonattainment NSR",
+            "months_low": 41.0,
+            "months_likely": 66.0,
+            "months_high": 103.8,
+            "rank_delta": 0,
+            "months_saved": 0.0,
+            "controlling_pollutant": "NOx",
+            "controlling_tpy": 588.7,
+            "availability": 1.0,
+            "cost_note": "SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO.",
+            "hard_stops": [],
+            "triggers_cleared": [],
+            "warnings": [],
+            "tons_per_year": {
+              "NOx": 588.7,
+              "CO": 1508.5,
+              "PM10": 121.4,
+              "PM2.5": 121.4,
+              "SO2": 62.5,
+              "VOC": 38.6,
+              "CO2e": 2023560.0,
+              "HCHO": 13.1
+            }
+          },
+          {
+            "label": "Add oxidation catalyst",
+            "config": "400 MW simple_cycle_turbine on natural_gas (oxidation_catalyst), no enforceable hour cap (PTE at 8760)",
+            "pathway": "major_nonattainment_nsr",
+            "pathway_label": "Major nonattainment NSR",
+            "months_low": 41.0,
+            "months_likely": 66.0,
+            "months_high": 103.8,
+            "rank_delta": 0,
+            "months_saved": 0.0,
+            "controlling_pollutant": "NOx",
+            "controlling_tpy": 5886.7,
+            "availability": 1.0,
+            "cost_note": "An oxidation catalyst cuts CO by about 90% and VOC by about half. No reagent, no storage tank, small pressure drop, and it is cheap next to SCR. Worth checking first whenever CO is the pollutant sitting over the threshold \u2014 on an uncontrolled turbine that is more often the case than people expect.",
+            "hard_stops": [],
+            "triggers_cleared": [],
+            "warnings": [],
+            "tons_per_year": {
+              "NOx": 5886.7,
+              "CO": 150.8,
+              "PM10": 121.4,
+              "PM2.5": 121.4,
+              "SO2": 62.5,
+              "VOC": 19.3,
+              "CO2e": 2023560.0,
+              "HCHO": 3.9
+            }
+          },
+          {
+            "label": "Add SCR + oxidation catalyst",
+            "config": "400 MW simple_cycle_turbine on natural_gas (scr, oxidation_catalyst), no enforceable hour cap (PTE at 8760)",
+            "pathway": "major_nonattainment_nsr",
+            "pathway_label": "Major nonattainment NSR",
+            "months_low": 41.0,
+            "months_likely": 66.0,
+            "months_high": 103.8,
+            "rank_delta": 0,
+            "months_saved": 0.0,
+            "controlling_pollutant": "NOx",
+            "controlling_tpy": 588.7,
+            "availability": 1.0,
+            "cost_note": "SCR is the standard NOx answer and it is also the expensive one: catalyst, reactor volume in the exhaust path, and an ammonia or urea storage and handling system on site, which brings its own safety review and often its own local permit. Small heat-rate penalty from the pressure drop. It does nothing for CO. An oxidation catalyst cuts CO by about 90% and VOC by about half. No reagent, no storage tank, small pressure drop, and it is cheap next to SCR. Worth checking first whenever CO is the pollutant sitting over the threshold \u2014 on an uncontrolled turbine that is more often the case than people expect.",
+            "hard_stops": [],
+            "triggers_cleared": [],
+            "warnings": [],
+            "tons_per_year": {
+              "NOx": 588.7,
+              "CO": 150.8,
+              "PM10": 121.4,
+              "PM2.5": 121.4,
+              "SO2": 62.5,
+              "VOC": 19.3,
+              "CO2e": 2023560.0,
+              "HCHO": 3.9
+            }
+          }
+        ]
+      },
+      "conclusion": "Switch to solid oxide fuel cells: Major nonattainment NSR -> Minor NSR construction permit, ~44 months, 100% availability.",
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 29,
+      "stage": "stage 6 \u2014 act",
+      "kind": "plan",
+      "title": "Alternate-site search",
+      "why": "Major nonattainment NSR at the announced parcel. The permit you need is decided by where the land is, so search outward across county and state lines for ground where the same plant gets a faster answer.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 14.0,
+      "at": "2026-08-05T09:50:42+00:00"
+    },
+    {
+      "index": 30,
+      "stage": "stage 6 \u2014 act",
+      "kind": "conclusion",
+      "title": "Move 37 miles SSW to Kent County, DE. Major PSD instead of Major nonattainment NSR. Save ~39 months.",
+      "why": null,
+      "tool": null,
+      "tool_input": null,
+      "result": {
+        "origin": {
+          "county": "Cumberland",
+          "state": "NJ",
+          "pathway": "major_nonattainment_nsr",
+          "months_likely": 66.0
+        },
+        "rings_km": [
+          15.0,
+          30.0,
+          60.0,
+          120.0
+        ],
+        "candidates_considered": 24,
+        "candidates_resolved": 21,
+        "unresolved_sample": [
+          {
+            "latitude": 39.01838,
+            "longitude": -74.67845,
+            "ring_km": 60.0,
+            "unresolved": true,
+            "reason": "No county or state returned for this point (open water, or outside the provider's coverage). An unscreened parcel is not an attainment parcel, so it is dropped rather than ranked."
+          },
+          {
+            "latitude": 39.19912,
+            "longitude": -73.68053,
+            "ring_km": 120.0,
+            "unresolved": true,
+            "reason": "No county or state returned for this point (open water, or outside the provider's coverage). An unscreened parcel is not an attainment parcel, so it is dropped rather than ranked."
+          },
+          {
+            "latitude": 38.44324,
+            "longitude": -74.6691,
+            "ring_km": 120.0,
+            "unresolved": true,
+            "reason": "No county or state returned for this point (open water, or outside the provider's coverage). An unscreened parcel is not an attainment parcel, so it is dropped rather than ranked."
+          }
+        ],
+        "best": {
+          "label": "Kent County, DE (39.0184, -75.3729)",
+          "latitude": 39.018381,
+          "longitude": -75.37295,
+          "county": "Kent",
+          "state": "DE",
+          "county_fips": "10001",
+          "distance_km": 60.0,
+          "distance_miles": 37.3,
+          "bearing": "SSW",
+          "pathway": "major_psd",
+          "pathway_label": "Major PSD",
+          "months_low": 15.5,
+          "months_likely": 27.0,
+          "months_high": 40.5,
+          "rank_delta": 1,
+          "months_saved": 39.0,
+          "hard_stops": [],
+          "triggers_cleared": [
+            "ej_denial_authority",
+            "major_nonattainment_nsr",
+            "nonattainment_designation",
+            "ozone_transport_region",
+            "state_toxics"
+          ],
+          "triggers_added": [
+            "major_psd"
+          ],
+          "gas_pipeline_km": null,
+          "transmission_km": null,
+          "geocode_confidence": null,
+          "provenance": {
+            "county_fips": {
+              "source": "US Census Geocoder",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county": {
+              "source": "US Census Geocoder",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "state": {
+              "source": "US Census Geocoder",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "state_fips": {
+              "source": "US Census Geocoder",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "tract_geoid": {
+              "source": "US Census Geocoder (2020 vintage)",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "block_group_geoid": {
+              "source": "US Census Geocoder",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "block_geoid": {
+              "source": "US Census Geocoder",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "congressional_district": {
+              "source": "US Census Geocoder",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "cbsa_name": {
+              "source": "US Census Geocoder",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "cbsa_code": {
+              "source": "US Census Geocoder",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "fema_flood_zone": {
+              "source": "FEMA NFHL",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "within_floodplain": {
+              "source": "FEMA NFHL",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "coastal_high_hazard": {
+              "source": "FEMA NFHL",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "in_opportunity_zone": {
+              "source": "US Treasury Qualified Opportunity Zones",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "timezone": {
+              "source": "IANA tz database",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "elevation_m": {
+              "source": "USGS 3DEP/EPQS",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.population": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.population_growth_1yr_pct": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.net_domestic_migration": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.building_permits_total_annual": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.building_permits_sf_annual": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.building_permits_yoy_pct": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.hpi_yoy_pct": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.employment_total": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.employment_yoy_pct": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "county_market.median_household_income_usd": {
+              "source": "US Census PEP/BPS/ACS, FHFA, BLS QCEW",
+              "fetched": "2026-08-05T09:52:20+00:00",
+              "confidence": null
+            },
+            "domestic_well_household_density_class": {
+              "source": "USGS_SELF_SUPPLIED_HOUSEHOLDS",
+              "fetched": "2026-08-05T09:52:20.790023+00:00",
+              "confidence": 0.6
+            },
+            "domestic_well_households_per_km2": {
+              "source": "USGS_SELF_SUPPLIED_HOUSEHOLDS",
+              "fetched": "2026-08-05T09:52:20.789972+00:00",
+              "confidence": 0.6
+            },
+            "nearest_power_plant_capacity_mw": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:20.902748+00:00",
+              "confidence": 0.9
+            },
+            "nearest_power_plant_distance_m": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:20.902718+00:00",
+              "confidence": 0.9
+            },
+            "nearest_power_plant_name": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:20.902729+00:00",
+              "confidence": 0.9
+            },
+            "nearest_power_plant_primary_fuel": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:20.902739+00:00",
+              "confidence": 0.9
+            },
+            "nearest_sewer_service_area_distance_m": {
+              "source": "EPA_SEWERSHEDS",
+              "fetched": "2026-08-05T09:52:21.297536+00:00",
+              "confidence": 0.6
+            },
+            "nearest_wastewater_plant_distance_m": {
+              "source": "EPA_CWNS",
+              "fetched": "2026-08-05T09:52:20.810404+00:00",
+              "confidence": 0.6
+            },
+            "nearest_wastewater_plant_name": {
+              "source": "EPA_CWNS",
+              "fetched": "2026-08-05T09:52:20.810465+00:00",
+              "confidence": 0.6
+            },
+            "nearest_wastewater_plant_population_served": {
+              "source": "EPA_CWNS",
+              "fetched": "2026-08-05T09:52:20.810475+00:00",
+              "confidence": 0.6
+            },
+            "nearest_water_service_area_distance_m": {
+              "source": "EPA_CWS_SERVICE_AREAS",
+              "fetched": "2026-08-05T09:52:21.397311+00:00",
+              "confidence": 0.6
+            },
+            "sewer_service_area_provenance": {
+              "source": "EPA_SEWERSHEDS",
+              "fetched": "2026-08-05T09:52:21.297526+00:00",
+              "confidence": 0.6
+            },
+            "sewer_service_area_provider": {
+              "source": "EPA_SEWERSHEDS",
+              "fetched": "2026-08-05T09:52:21.297515+00:00",
+              "confidence": 0.6
+            },
+            "transmission_lines_within_radius_count": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:20.833721+00:00",
+              "confidence": 0.9
+            },
+            "water_service_area_provenance": {
+              "source": "EPA_CWS_SERVICE_AREAS",
+              "fetched": "2026-08-05T09:52:21.397349+00:00",
+              "confidence": 0.6
+            },
+            "water_system_name": {
+              "source": "EPA_CWS_SERVICE_AREAS",
+              "fetched": "2026-08-05T09:52:21.397331+00:00",
+              "confidence": 0.6
+            },
+            "within_sewer_service_area": {
+              "source": "EPA_SEWERSHEDS",
+              "fetched": "2026-08-05T09:52:21.297439+00:00",
+              "confidence": 0.6
+            },
+            "within_water_service_area": {
+              "source": "EPA_CWS_SERVICE_AREAS",
+              "fetched": "2026-08-05T09:52:21.397203+00:00",
+              "confidence": 0.6
+            },
+            "max_transmission_line_voltage_class_within_radius": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:21.437236+00:00",
+              "confidence": null
+            },
+            "max_transmission_line_voltage_kv_within_radius": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:21.437236+00:00",
+              "confidence": null
+            },
+            "nearest_gas_pipeline_distance_m": {
+              "source": "EIA_PIPELINES",
+              "fetched": "2026-08-05T09:52:21.437236+00:00",
+              "confidence": null
+            },
+            "nearest_transmission_line_distance_m": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:21.437236+00:00",
+              "confidence": null
+            },
+            "nearest_transmission_line_owner": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:21.437236+00:00",
+              "confidence": null
+            },
+            "nearest_transmission_line_status": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:21.437236+00:00",
+              "confidence": null
+            },
+            "nearest_transmission_line_voltage_basis": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:21.437236+00:00",
+              "confidence": null
+            },
+            "nearest_transmission_line_voltage_class": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:21.437236+00:00",
+              "confidence": null
+            },
+            "nearest_transmission_line_voltage_kv": {
+              "source": "EIA_POWER",
+              "fetched": "2026-08-05T09:52:21.437236+00:00",
+              "confidence": null
+            },
+            "geocode": {
+              "source": "caller-supplied coordinate",
+              "fetched": "2026-08-05T09:52:18+00:00",
+              "confidence": null
+            }
+          }
+        },
+        "delta_statement": "Move 37 miles SSW to Kent County, DE. Major PSD instead of Major nonattainment NSR. Save ~39 months.",
+        "crossed_county_line": true,
+        "crossed_state_line": true,
+        "credits_spent": 120,
+        "notes": [
+          "DE is not one of the states modelled in detail, so its timeline is the federal default and its state-specific triggers (toxics programs, transport region, EJ statutes) are not evaluated. Some of the apparent gain may be that gap rather than a real difference. Confirm with the state agency before optioning land on it."
+        ]
+      },
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 223.28,
+      "at": "2026-08-05T09:54:11+00:00"
+    },
+    {
+      "index": 31,
+      "stage": "stage 7 \u2014 output",
+      "kind": "conclusion",
+      "title": "2% on the announced schedule",
+      "why": "16 months to the announced date. 3 months to prepare a complete application plus 66 months of agency review = 69 months required. Slack -53 months against a sigma of 15.7 months, taken from the 41-104 month range for Major nonattainment NSR.",
+      "tool": null,
+      "tool_input": null,
+      "result": null,
+      "conclusion": null,
+      "citation": null,
+      "credits": 0,
+      "elapsed_s": 223.28,
+      "at": "2026-08-05T09:54:11+00:00"
+    }
+  ]
+}
