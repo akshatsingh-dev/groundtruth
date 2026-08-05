@@ -364,6 +364,8 @@ constraint.
 ### It's what happens anywhere capital arrives faster than
 permitting capacity, and India has that gap wider than anywhere.
 
+### India Expansion
+
 Axis Capital says India's announced targets of **6 to 8 GW by 2030 look inflated**, and
 puts the realistic figure at **3.4 to 3.6 GW** operational by mid-2030, with a downside
 case around 2.8 GW. Operational stock today is about **1.8 GW of IT load** (Savills, H1
