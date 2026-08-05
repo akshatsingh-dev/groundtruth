@@ -321,13 +321,37 @@ is $17.4B over 5 years for 300 MW, which is $11.6M per MW-year. The spot counter
 implies $13.2M per MW-year, 1.14x. Right direction, right magnitude. The high case
 **fails** that check at 1.9x and is labelled as failing.
 
+### Satellite imagery → is there a hole in the ground
+
+Sentinel-2 L2A off AWS Open Data, found through Element 84 Earth Search. **No credential,
+no signing, no new dependencies.** Copernicus and Planetary Computer both need tokens, so
+this route means a clone with zero keys reproduces the numbers. Pure-Python UTM
+projection, a windowed COG reader, and a PNG writer.
+
+Mireye was the first call and it carries Sentinel-2 already (`ndvi_current`,
+`ndvi_change_5y`). It cannot answer this, and that's measured rather than argued.
+`ndvi_change_5y` reads **+0.038 at the fastest data center buildout on record**, because
+the 10 m cell happens to be a tree. On Jupiter it reads three times *more negative* on
+untouched desert than on the actual construction. Filed as a field request.
+
+**What it changes:** it separates a press release from concrete. The method is validated
+on xAI Memphis as a positive control, at 23.8% excess disturbance, with the change mask
+landing tight on the buildout and correctly ignoring the pre-existing factory roof. The
+load-bearing idea is a control ring around the footprint: two thirds of the raw Memphis
+signal is autumn senescence, and a Vineland crop rotation nets out to nothing.
+
+It also corrected our own work. Two coordinates in `backtest/cases.py` were approximate
+and both were wrong. Memphis was 7.31 km off the real site. Jupiter's published point is
+empty desert, and a disturbance-ranked scan found the construction 6.21 km SSE, 1.1 km
+from a substation and 3.3 km from an EIA-860M generator marked "more than 50 percent
+complete."
+
+**Project Jupiter has a very large hole in the ground.** What it lost was the gas, not
+the dirt. Which is the sharper version of the whole thesis: the ground was never the
+constraint.
+
 ### In progress
 
-- **Satellite imagery, Sentinel-2.** Is there a hole in the ground yet. Compares the
-  announced groundbreaking date against observable clearing on the parcel. 60% of
-  announced behind-the-meter generation exists only as an announcement, and this is how
-  you tell which 60%. Validating against xAI Memphis as a positive control, because that
-  one did get built and any method that can't see it is broken.
 - **Local news signal.** Opposition shows up in a county newspaper months before it shows
   up in a permit denial. Being reconciled against the 27 hand-entered records to see
   whether it reproduces postures that were verified by hand.
