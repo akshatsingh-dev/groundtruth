@@ -207,8 +207,8 @@ key: `.venv/bin/python -m pytest -q`.
   first moment. The live Mireye implementation. A SQLite cache so re-runs cost nothing.
   An unresolvable address raises rather than returning a guess.
 - `agent/planner.py`, `agent/tools.py`, `agent/report.py`. The tool-calling loop, the
-  11 tools it can call, and the report renderer. The demo run made 13 tool calls across
-  those 11 tools and spent 94 Mireye credits.
+  13 tools it can call, and the report renderer. The demo run made 13 tool calls across
+  those 13 tools and spent 94 Mireye credits.
 - `agent/search.py`. Both search loops.
 - `ingest/greenbook.py`, `ingest/dockets.py`, `ingest/counties.py`. The EPA Green Book
   parsed to `data/greenbook.json`, CourtListener returning real federal dockets, and 27

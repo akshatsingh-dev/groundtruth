@@ -169,7 +169,7 @@ flowchart LR
     E -->|no| H
 ```
 
-Real tool-calling loop over eleven tools. Not a chain of `if` statements. The model picks
+Real tool-calling loop over thirteen tools. Not a chain of `if` statements. The model picks
 which Mireye calls to make. The engines decide what's true. Nothing in the output is a
 number the model wrote in prose.
 
@@ -483,7 +483,7 @@ agent/
   pathway.py     decision engine. List of 28, NSR, overlays, timelines.
   planner.py     the tool-calling loop. 3 auth paths, one keyless.
   search.py      alternate-site + config search. This is the "act".
-  tools.py       11 tool schemas, shared across backends.
+  tools.py       13 tool schemas, shared across backends.
   report.py      terminal / markdown / JSON, with a provenance appendix.
 providers/
   base.py        PhysicalFactsProvider. Going international is a data problem.
