@@ -43,8 +43,8 @@ flowchart TD
     C --> D["PTE = AP-42 factor x heat input x 8,760 hr<br/>tons/year"]
 
     D --> E{"On the List of 28?<br/>40 CFR 52.21"}
-    E -->|"Combined cycle, >250 MMBtu/hr<br/>= steam electric plant"| F["Major at <b>100 tpy</b>"]
-    E -->|"Simple cycle: no steam cycle<br/>Engines: not listed"| G["Major at <b>250 tpy</b>"]
+    E -->|"Combined cycle, >250 MMBtu/hr<br/>= steam electric plant"| F["Major at 100 tpy"]
+    E -->|"Simple cycle: no steam cycle<br/>Engines: not listed"| G["Major at 250 tpy"]
 
     F --> H{"County attainment status<br/>EPA Green Book"}
     G --> H
@@ -57,16 +57,16 @@ flowchart TD
     J --> L
     K --> L
 
-    L -->|"Over"| M["<b>Major review</b><br/>BACT or LAER + offsets<br/>AERMOD - public comment"]
-    L -->|"Under, only via<br/>enforceable hour cap"| N["<b>Synthetic minor</b>"]
-    L -->|"Under"| O["<b>Minor NSR</b> or permit by rule"]
+    L -->|"Over"| M["Major review<br/>BACT or LAER + offsets<br/>AERMOD - public comment"]
+    L -->|"Under, only via<br/>enforceable hour cap"| N["Synthetic minor"]
+    L -->|"Under"| O["Minor NSR or permit by rule"]
 
     M --> P["Overlays that add months regardless"]
     N --> P
     O --> P
 
     P --> Q["Class I within 100 km - PSD increment consumed<br/>Title V - NSPS/NESHAP - state toxics<br/>moratorium - zoning - litigation - gas reachability"]
-    Q --> R["<b>Pathway + months range + probability</b><br/>every trigger carrying its citation"]
+    Q --> R["Pathway + months range + probability<br/>every trigger carrying its citation"]
 ```
 
 Three things in there that are worth knowing:
